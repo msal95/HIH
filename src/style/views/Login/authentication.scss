@@ -1,0 +1,48 @@
+.container {
+  &__welcome-title {
+    color: #5e5873;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 0px;
+  }
+  &__welcome-description {
+    color: #5e5873;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+  }
+  &__input-field {
+    font-size: 12px !important;
+    color: #b9b9c3 !important;
+  }
+  &__form-label {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #6e6b7b;
+  }
+  &__form-check-label {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    color: #6e6b7b;
+  }
+  &__option-selector {
+    display: flex;
+    align-items: center;
+  }
+  &__option-heading {
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 24px;
+    color: #131313;
+  }
+  &__add-project-button-icon {
+    cursor: pointer;
+    margin-left: 18px;
+  }
+}

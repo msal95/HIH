@@ -1,0 +1,80 @@
+.checkbox-container {
+  width: 70px;
+  //   padding: 0px 10px;
+  border: 1px solid #b9b9c3;
+  border-radius: 5px;
+}
+
+.checkbox-input {
+  margin-left: 12px;
+}
+
+.checkbox-icon {
+  border-left: 1px solid #b9b9c3;
+  margin-left: 10px;
+  line-height: 34px;
+  padding-left: 1px;
+}
+.checkbox-title {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  color: #82868b;
+  margin-left: 24px;
+  margin-top: 8px;
+}
+
+.flows-container {
+  border: 1px solid #b9b9c3;
+  border-radius: 5px;
+}
+
+.workflow-title {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  color: #6e6b7b;
+  flex-wrap: wrap;
+  display: flex;
+}
+
+.workflow-sub-title {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  color: #82868b;
+}
+.workflow-activity {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  color: #82868b;
+}
+
+.activity-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: flex-end;
+}
+
+.workflow-edited-time {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #b9b9c3;
+}
+
+.workflow-no-warning {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  color: #d89c46;
+  padding-top: 22px;
+}
+
+.flows-icons {
+  width: 25px;
+  border: 1px solid #808088;
+  border-radius: 3px;
+}
