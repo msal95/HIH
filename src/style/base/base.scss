@@ -1,0 +1,130 @@
+.modal-title {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  color: #101010;
+}
+
+.titleClass {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 24px;
+  color: #101010;
+  margin-bottom: 0px !important;
+  margin-top: -4px;
+}
+
+.modal-description {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #82868b;
+}
+
+.subTitleClass {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  color: #82868b;
+}
+
+.icon-title {
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: 0.366667px;
+  color: #82868b;
+  text-align: center;
+  cursor: pointer;
+}
+
+.connect-btn {
+  width: 95px !important;
+  background-color: #7367f0 !important;
+}
+
+.new-project {
+  font-size: 18px;
+  font-weight: 500;
+  color: #848484;
+  background: #f6f6f6;
+  border-radius: 3px;
+  padding: 16px 14px;
+}
+
+.project-btn-create {
+  width: 137px !important;
+  height: 38px;
+  background-color: #7367f0 !important;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  padding: 0px;
+}
+
+.project-btn-cancel {
+  height: 38px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  letter-spacing: 0.4px;
+  color: #7367f0;
+  margin-right: 16px;
+}
+
+.pointer-icon {
+  cursor: pointer;
+}
+
+.disconnect-heading {
+  display: flex;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: #848484;
+  background: #f6f6f6;
+  border-radius: 3px;
+  padding: 16px 14px;
+  flex: 0.3;
+  width: 277px;
+  margin-bottom: 2rem;
+}
+
+.button-container {
+  width: 109px;
+}
+
+.create-node-button-text {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 18px;
+  display: flex;
+  color: #7367f0;
+  margin-top: 8px;
+}
+.content-area-wrapper {
+  border: 0px !important;
+  width: 100%;
+}
+.custom-card-title {
+  font-weight: 500;
+  font-size: 15px !important;
+  line-height: 24px;
+  color: #121212;
+}
+
+.folder-class {
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 22px;
+  color: #82868b;
+}
+
+.view-all-class {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  text-decoration-line: underline;
+  cursor: pointer;
+  color: #7367f0;
+}

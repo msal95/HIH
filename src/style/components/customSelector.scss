@@ -1,0 +1,13 @@
+.custom-selector {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  border: 0.5px solid #d8d6de;
+  border-radius: 5px;
+  padding: 0px 13px;
+
+  &__default-option {
+    padding: 9px 0px;
+  }
+}
