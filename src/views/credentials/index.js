@@ -18,6 +18,7 @@ import SendGrid from "../../components/SendGrid/SendGrid";
 import "../../style/base/base.scss";
 import CredentialsFilter from "./CredentialsFilter";
 import { toast } from "react-hot-toast";
+import { useLocation, useParams } from "react-router-dom";
 
 const dummyData = [
   { id: 1, name: "SendGrid", image: sendGrid },
@@ -44,9 +45,10 @@ const colourOptions = [
 const MySwal = withReactContent(Swal);
 
 const Credentials = () => {
+  const location = useLocation();
   // ** States
   const [searchTerm, setSearchTerm] = useState("");
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(!!location?.state?.showModal ?? false);
   const [isSendGridData, setIsSendGridData] = useState(false);
   const [isCredential, setIsCredential] = useState(false);
   const [isSelectedCredential, setIsSelectedCredential] = useState(false);
@@ -57,6 +59,8 @@ const Credentials = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [isNewProject, setIsNewProject] = useState(false);
   const [optionsData, setOptionsData] = useState(colourOptions);
+
+  console.log("🚀 ~ file: index.js:63 ~ Credentials ~ location:", location);
 
   useEffect(() => {
     const searchedData = dummyData.filter((post) => {

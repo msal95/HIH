@@ -6,17 +6,27 @@ import { Button, Form } from "reactstrap";
 import InputField from "../InputField/InputField";
 
 export default function CreateNewProject(props) {
-  const { onSubmit, onCancel } = props;
+  const {
+    onSubmit,
+    onCancel,
+    title = "New Project",
+    isEdit = false,
+    data,
+  } = props;
+  console.log(
+    "🚀 ~ file: CreateNewProject.js:16 ~ CreateNewProject ~ data:",
+    data
+  );
   return (
     <>
       <h3 className="new-project">
         <Layers size={24} className="me-1" />
-        New Project
+        {title}
       </h3>
       <Formik
         initialValues={{
-          projectName: "",
-          description: "",
+          projectName: isEdit ? data?.name : "",
+          description: isEdit ? "Description" : "",
         }}
         validationSchema={SendGridCreateProjectValidationSchema}
         onSubmit={onSubmit}

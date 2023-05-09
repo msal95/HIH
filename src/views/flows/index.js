@@ -2,7 +2,17 @@
 import classnames from "classnames";
 import { Fragment, useState } from "react";
 import { Plus } from "react-feather";
-import { Button, Col, Row } from "reactstrap";
+import {
+  Button,
+  Col,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Row,
+  UncontrolledDropdown,
+} from "reactstrap";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 import Sidebar from "./Sidebar";
 
@@ -16,6 +26,10 @@ import CustomCard from "../../components/CustomCard/CustomCard";
 import Divider from "../../components/Divider/Divider";
 import WorkFlowsCard from "../../components/WorkFlowsCard/WorkFlowsCard";
 import "../../style/base/base.scss";
+import CustomModal from "../../components/CustomModal/CustomModal";
+import CreateNewProject from "../../components/CreateNewProject/CreateNewProject";
+import DropDown from "../../components/DropDown/DropDown";
+import { useNavigate } from "react-router-dom";
 
 const dummyData = [
   { id: 1, name: "SendGrid", image: sendGrid },
@@ -24,17 +38,109 @@ const dummyData = [
   { id: 4, name: "Untitled Credential", image: atTheRate },
   { id: 5, name: "Untitled Credential", image: atTheRate },
 ];
+
+const options = [
+  { id: 1, title: "Option 1" },
+  { id: 2, title: "Option 2" },
+  { id: 3, title: "Option 3" },
+  { id: 4, title: "Option 4" },
+];
+
+const MySwal = withReactContent(Swal);
+
 const WorkFlows = () => {
   // ** States
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [credentialsData, setCredentialsData] = useState(dummyData);
   const [isViewAll, setIsViewAll] = useState(false);
+  const [show, setShow] = useState(false);
+  const [isNewProject, setIsNewProject] = useState(false);
+  const [selectedItem, setSelectedItem] = useState();
+  const [isEdit, setIsEdit] = useState(false);
+
+  const navigate = useNavigate();
+
+  const onClickDiscardModal = () => {
+    setShow(false);
+  };
+
+  const handleToggleModal = () => {
+    setShow((prevState) => !prevState);
+  };
+
+  const handleCreateProject = (values) => {
+    console.log(
+      "🚀 ~ file: Sidebar.js:87 ~ handleCreateProject ~ values:",
+      values
+    );
+    setShow(false);
+    return null;
+  };
 
   const handleViewAll = () => {
     setIsViewAll((prevState) => !prevState);
   };
 
   const foldersData = isViewAll ? credentialsData : credentialsData.slice(0, 3);
+
+  const onHandleCredentials = () => {
+    const params = {
+      showModal: true,
+    };
+    // navigate("credentials");
+    navigate("/apps/credentials", { state: params });
+  };
+
+  const onHandleDelete = async (data) => {
+    return MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      customClass: {
+        confirmButton: "btn btn-primary",
+        cancelButton: "btn btn-outline-danger ms-1",
+      },
+      buttonsStyling: false,
+      preConfirm: () => {
+        const deletedItem = credentialsData.filter(
+          (item) => item.id !== data.id
+        );
+        setCredentialsData(deletedItem);
+      },
+    }).then(function (result) {
+      console.log("🚀 ~ file: index.js:70 ~ onHandleDelete ~ result:", result);
+      if (result.value) {
+        MySwal.fire({
+          icon: "success",
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          customClass: {
+            confirmButton: "btn btn-success",
+          },
+        });
+      }
+    });
+  };
+
+  const onHandleView = (item) => {
+    setSelectedItem(item);
+    // setIsCredential(true);
+    // setIsSelectedCredential(true);
+    // setIsSendGridData(true);
+    setIsEdit(true);
+    setShow(true);
+  };
+
+  const onHandleEdit = (item) => {
+    setSelectedItem(item);
+    // setIsCredential(true);
+    // setIsSelectedCredential(true);
+    // setIsSendGridData(true);
+    setIsEdit(true);
+    setShow(true);
+  };
 
   return (
     <div className="content-area-wrapper">
@@ -59,10 +165,50 @@ const WorkFlows = () => {
                 sm={6}
                 className="content-header-right text-md-end d-md-block"
               >
-                <Button color="primary" onClick={() => {}} block>
-                  Create
-                  <Plus size={20} className="ms-1" color="#fff" />
-                </Button>
+                {isNewProject ? (
+                  <Button color="primary" onClick={handleToggleModal} block>
+                    Create
+                    <Plus size={20} className="ms-1" color="#fff" />
+                  </Button>
+                ) : (
+                  <UncontrolledDropdown
+                    className="chart-dropdown"
+                    style={{
+                      marginLeft: 2,
+                    }}
+                  >
+                    <DropdownToggle
+                      color="primary"
+                      // onClick={handleToggleModal}
+                      block
+                      // className="bg-transparent btn-sm border-0 p-0"
+                    >
+                      Create
+                      <Plus size={20} className="ms-1" color="#fff" />
+                    </DropdownToggle>
+                    <DropdownMenu end>
+                      <DropdownItem
+                        className="w-100"
+                        // onClick={() => onHandleView(data)}
+                      >
+                        Flows
+                      </DropdownItem>
+                      <DropdownItem
+                        className="w-100"
+                        onClick={onHandleCredentials}
+                      >
+                        Credentials
+                      </DropdownItem>
+                      <DropdownItem
+                        className="w-100"
+                        onClick={handleToggleModal}
+                      >
+                        Folder
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                  // </Button>
+                )}
               </Col>
             </Row>
 
@@ -85,9 +231,9 @@ const WorkFlows = () => {
                       isIcon
                       colNumber={4}
                       titleClass="custom-card-title"
-                      // onHandleEdit={onHandleEdit}
-                      // onHandleView={onHandleView}
-                      // onHandleDelete={onHandleDelete}
+                      onHandleEdit={onHandleEdit}
+                      onHandleView={onHandleView}
+                      onHandleDelete={onHandleDelete}
                     />
                   </Fragment>
                 );
@@ -97,6 +243,21 @@ const WorkFlows = () => {
           </Col>
         </div>
       </div>
+      <CustomModal
+        toggleModal={handleToggleModal}
+        onDiscard={onClickDiscardModal}
+        show={show}
+      >
+        <div className="p-1">
+          <CreateNewProject
+            onCancel={onClickDiscardModal}
+            onSubmit={handleCreateProject}
+            isEdit={isEdit}
+            data={selectedItem}
+            title={isEdit ? "Edit Folder" : "Create Folder"}
+          />
+        </div>
+      </CustomModal>
     </div>
   );
 };
