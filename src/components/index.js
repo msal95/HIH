@@ -11,6 +11,7 @@ import OffCanvas from "./OffCanvas/OffCanvas";
 import Sidebar from "./Sidebar/Sidebar";
 import WorkFlowsCard from "./WorkFlowsCard/WorkFlowsCard";
 import CreateNewProject from "./CreateNewProject/CreateNewProject";
+import Tree from "./TreeNode/Tree";
 
 export default {
   InputField,
@@ -26,4 +27,5 @@ export default {
   Sidebar,
   WorkFlowsCard,
   CreateNewProject,
+  Tree,
 };
