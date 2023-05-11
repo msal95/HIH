@@ -13,23 +13,21 @@ import {
 } from "reactstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useNavigate } from "react-router-dom";
 
-import Sidebar from "./Sidebar";
-
-// ** Styles
+// ** Local Imports
 import atTheRate from "@src/assets/images/icons/social/at-credentiali-con.png";
 import gmail from "@src/assets/images/icons/social/gmai-logo.png";
 import microsoft from "@src/assets/images/icons/social/microsoft.png";
 import sendGrid from "@src/assets/images/icons/social/sendgrid.png";
 import "@styles/react/apps/app-email.scss";
+import CreateNewProject from "../../components/CreateNewProject/CreateNewProject";
 import CustomCard from "../../components/CustomCard/CustomCard";
+import CustomModal from "../../components/CustomModal/CustomModal";
 import Divider from "../../components/Divider/Divider";
 import WorkFlowsCard from "../../components/WorkFlowsCard/WorkFlowsCard";
 import "../../style/base/base.scss";
-import CustomModal from "../../components/CustomModal/CustomModal";
-import CreateNewProject from "../../components/CreateNewProject/CreateNewProject";
-import DropDown from "../../components/DropDown/DropDown";
-import { useNavigate } from "react-router-dom";
+import Sidebar from "./Sidebar";
 
 const dummyData = [
   { id: 1, name: "SendGrid", image: sendGrid },
@@ -37,13 +35,6 @@ const dummyData = [
   { id: 3, name: "Microsoft", image: microsoft },
   { id: 4, name: "Untitled Credential", image: atTheRate },
   { id: 5, name: "Untitled Credential", image: atTheRate },
-];
-
-const options = [
-  { id: 1, title: "Option 1" },
-  { id: 2, title: "Option 2" },
-  { id: 3, title: "Option 3" },
-  { id: 4, title: "Option 4" },
 ];
 
 const MySwal = withReactContent(Swal);
@@ -87,7 +78,6 @@ const WorkFlows = () => {
     const params = {
       showModal: true,
     };
-    // navigate("credentials");
     navigate("/apps/credentials", { state: params });
   };
 
@@ -126,18 +116,12 @@ const WorkFlows = () => {
 
   const onHandleView = (item) => {
     setSelectedItem(item);
-    // setIsCredential(true);
-    // setIsSelectedCredential(true);
-    // setIsSendGridData(true);
     setIsEdit(true);
     setShow(true);
   };
 
   const onHandleEdit = (item) => {
     setSelectedItem(item);
-    // setIsCredential(true);
-    // setIsSelectedCredential(true);
-    // setIsSendGridData(true);
     setIsEdit(true);
     setShow(true);
   };
@@ -181,7 +165,6 @@ const WorkFlows = () => {
                       color="primary"
                       // onClick={handleToggleModal}
                       block
-                      // className="bg-transparent btn-sm border-0 p-0"
                     >
                       Create
                       <Plus size={20} className="ms-1" color="#fff" />

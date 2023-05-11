@@ -4,6 +4,8 @@ import { Search } from "react-feather";
 import { Button, Col, Input, InputGroup, InputGroupText } from "reactstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { toast } from "react-hot-toast";
+import { useLocation } from "react-router-dom";
 
 // ** Local Imports
 import atTheRate from "@src/assets/images/icons/social/at-credentiali-con.png";
@@ -17,8 +19,6 @@ import Divider from "../../components/Divider/Divider";
 import SendGrid from "../../components/SendGrid/SendGrid";
 import "../../style/base/base.scss";
 import CredentialsFilter from "./CredentialsFilter";
-import { toast } from "react-hot-toast";
-import { useLocation, useParams } from "react-router-dom";
 
 const dummyData = [
   { id: 1, name: "SendGrid", image: sendGrid },
@@ -150,7 +150,6 @@ const Credentials = () => {
   };
 
   const onDiscardSelectedCredential = () => {
-    // setShow(true);
     setIsCredential(false);
     setIsSelectedCredential(false);
     setIsSendGridData(false);

@@ -1,7 +1,5 @@
 // ** React Imports
-import { Fragment, forwardRef, useCallback, useEffect, useState } from "react";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+import { Fragment, forwardRef, useEffect, useState } from "react";
 import {
   ChevronDown,
   Edit3,
@@ -10,8 +8,8 @@ import {
   Search,
   Trash2,
 } from "react-feather";
-
-// ** Reactstrap Imports
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import {
   Card,
   Col,
@@ -25,16 +23,15 @@ import {
   Row,
   UncontrolledDropdown,
 } from "reactstrap";
+import axios from "axios";
 
+// Local Imports
 import arrowIcon from "@src/assets/images/icons/Arrow.png";
 import nemtLogo from "@src/assets/images/icons/Nemt-logo.png";
 import webHook from "@src/assets/images/icons/Webhook.png";
 import sendGrid from "@src/assets/images/icons/social/sendgrid.png";
 import "../../style/views/workFlows.scss";
 import DropDown from "../DropDown/DropDown";
-import DataTable from "react-data-table-component";
-import ReactPaginate from "react-paginate";
-import axios from "axios";
 
 // ** Bootstrap Checkbox Component
 
@@ -68,10 +65,8 @@ axios.get("/api/datatables/initial-data").then((response) => {
 });
 
 const WorkFlowsCard = () => {
-  // const [currentPage, setCurrentPage] = useState(0);
   const [selectedRows, setSelectedRows] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
-  // const [isCheckedItem, setIsCheckedItem] = useState([]);
   const [flowsData, setFlowsData] = useState(newData);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -142,16 +137,6 @@ const WorkFlowsCard = () => {
   };
 
   const allSelected = selectedRows.length === newData.length;
-  // const indeterminate =
-  //   selectedRows.length > 0 && selectedRows.length < newData.length;
-
-  // if (!flowsData.length) {
-  //   return (
-  //     <div className="d-flex justify-content-center align-items-center">
-  //       <h4>No Search Record Found For `{searchTerm}`</h4>
-  //     </div>
-  //   );
-  // }
 
   return (
     <Fragment>
@@ -164,7 +149,6 @@ const WorkFlowsCard = () => {
                   type="checkbox"
                   className="checkbox-input"
                   checked={allSelected}
-                  // indeterminate={indeterminate}
                   onChange={handleSelectAllRows}
                 />
                 <UncontrolledDropdown className="chart-dropdown checkbox-icon">
@@ -198,11 +182,9 @@ const WorkFlowsCard = () => {
                 <Search className="text-muted" size={14} />
               </InputGroupText>
               <Input
-                // value={searchedList}
                 placeholder="Search for App"
                 value={searchTerm}
                 onChange={handleSearchTerm}
-                // onChange={handleSearchedList}
               />
             </InputGroup>
 

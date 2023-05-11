@@ -1,7 +1,6 @@
 // ** React Imports
-import { Link } from "react-router-dom";
-
-// ** Third Party Components
+import { useState } from "react";
+import { toast } from "react-hot-toast";
 import classnames from "classnames";
 import {
   Edit3,
@@ -12,8 +11,6 @@ import {
   Trash2,
 } from "react-feather";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import Tree, { TreeNode } from "rc-tree";
-import "rc-tree/assets/index.css";
 
 // ** Reactstrap Imports
 import {
@@ -21,11 +18,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
-  FormGroup,
-  Input,
-  Label,
   ListGroup,
-  ListGroupItem,
   Modal,
   ModalBody,
   ModalFooter,
@@ -33,68 +26,12 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 
+// Local Imports
 import polygon from "@src/assets/images/icons/polygon.png";
-import { Fragment, useState } from "react";
 import CreateNewProject from "../../components/CreateNewProject/CreateNewProject";
 import CustomModal from "../../components/CustomModal/CustomModal";
 import "../../style/views/Login/authentication.scss";
-import { toast } from "react-hot-toast";
 
-const sideBarData = [
-  {
-    id: 1,
-    label: "NEMT Automation",
-    // data: {
-    data: [
-      { id: 1, label: "New Folder 1" },
-      { id: 2, label: "New Folder 2" },
-      { id: 3, label: "New Folder 3" },
-    ],
-    // },
-  },
-  {
-    id: 1,
-    label: "HIH Automation",
-    // data: {
-    data: [
-      { id: 1, label: "New Folder 1" },
-      { id: 2, label: "New Folder 2" },
-      { id: 3, label: "New Folder 3" },
-    ],
-    // },
-  },
-];
-
-const dummyData = [
-  {
-    key: "0-0",
-    title: "Node 0-0",
-    children: [
-      {
-        key: "0-0-0",
-        title: "Node 0-0-0",
-      },
-      {
-        key: "0-0-1",
-        title: "Node 0-0-1",
-      },
-    ],
-  },
-  {
-    key: "0-1",
-    title: "Node 0-1",
-    children: [
-      {
-        key: "0-1-0",
-        title: "Node 0-1-0",
-      },
-      {
-        key: "0-1-1",
-        title: "Node 0-1-1",
-      },
-    ],
-  },
-];
 const Sidebar = (props) => {
   // ** Props
   const { sidebarOpen } = props;
