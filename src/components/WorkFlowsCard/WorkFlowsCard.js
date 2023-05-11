@@ -1,13 +1,7 @@
 // ** React Imports
-import { Fragment, forwardRef, useState } from "react";
-
-// ** Table Data & Columns
-import ExpandableTable, { data, columns } from "./data";
-
-// ** Add New Modal Component
-// import AddNewModal from "./AddNewModal";
-
-// ** Third Party Components
+import { Fragment, forwardRef, useCallback, useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import {
   ChevronDown,
   Edit3,
@@ -40,6 +34,7 @@ import "../../style/views/workFlows.scss";
 import DropDown from "../DropDown/DropDown";
 import DataTable from "react-data-table-component";
 import ReactPaginate from "react-paginate";
+import axios from "axios";
 
 // ** Bootstrap Checkbox Component
 
@@ -57,43 +52,107 @@ const options = [
   { id: 4, title: "Option 4" },
 ];
 
+const MySwal = withReactContent(Swal);
+
 const BootstrapCheckbox = forwardRef((props, ref) => (
   <div className="form-check">
     <Input type="checkbox" ref={ref} {...props} />
   </div>
 ));
 
-const WorkFlowsCard = () => {
-  const [currentPage, setCurrentPage] = useState(0);
+let newData;
 
-  // ** Function to handle filter
-  const handlePagination = (page) => {
-    setCurrentPage(page.selected);
+// ** Get initial Data
+axios.get("/api/datatables/initial-data").then((response) => {
+  newData = response.data;
+});
+
+const WorkFlowsCard = () => {
+  // const [currentPage, setCurrentPage] = useState(0);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [isChecked, setIsChecked] = useState(false);
+  // const [isCheckedItem, setIsCheckedItem] = useState([]);
+  const [flowsData, setFlowsData] = useState(newData);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const searchedData = newData.filter((post) => {
+      return post.full_name.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+    setFlowsData(searchedData);
+  }, [searchTerm]);
+
+  const handleSearchTerm = (event) => {
+    setSearchTerm(event.target.value);
   };
-  const CustomPagination = () => (
-    <ReactPaginate
-      previousLabel={""}
-      nextLabel={""}
-      forcePage={currentPage}
-      onPageChange={(page) => handlePagination(page)}
-      pageCount={10}
-      breakLabel={"..."}
-      pageRangeDisplayed={2}
-      marginPagesDisplayed={2}
-      activeClassName="active"
-      pageClassName="page-item"
-      breakClassName="page-item"
-      nextLinkClassName="page-link"
-      pageLinkClassName="page-link"
-      breakLinkClassName="page-link"
-      previousLinkClassName="page-link"
-      nextClassName="page-item next-item"
-      previousClassName="page-item prev-item"
-      containerClassName={
-        "pagination react-paginate separated-pagination pagination-sm justify-content-end pe-1"
+
+  const handleCheckboxChange = (e) => {
+    setIsChecked(e.target.checked);
+    // handleStatusChange(e.target.checked);
+  };
+
+  const onHandleDelete = async (data) => {
+    return MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      customClass: {
+        confirmButton: "btn btn-primary",
+        cancelButton: "btn btn-outline-danger ms-1",
+      },
+      buttonsStyling: false,
+      preConfirm: () => {
+        const deletedItem = flowsData.filter((item) => item.id !== data.id);
+        setFlowsData(deletedItem);
+      },
+    }).then(function (result) {
+      if (result.value) {
+        MySwal.fire({
+          icon: "success",
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          customClass: {
+            confirmButton: "btn btn-success",
+          },
+        });
       }
-    />
-  );
+    });
+  };
+
+  const handleSelectAllRows = (event) => {
+    if (event.target.checked) {
+      const allRows = newData.map((row) => row.id);
+      setSelectedRows(allRows);
+    } else {
+      setSelectedRows([]);
+    }
+  };
+
+  const handleItemSelection = (id) => {
+    const existingItem = selectedRows.filter((item) => item === id);
+
+    if (!!existingItem.length) {
+      setSelectedRows(selectedRows.filter((item) => item !== id));
+    } else {
+      // selectedRows.push([id]);
+      setSelectedRows([...selectedRows, id]);
+    }
+  };
+
+  const allSelected = selectedRows.length === newData.length;
+  // const indeterminate =
+  //   selectedRows.length > 0 && selectedRows.length < newData.length;
+
+  // if (!flowsData.length) {
+  //   return (
+  //     <div className="d-flex justify-content-center align-items-center">
+  //       <h4>No Search Record Found For `{searchTerm}`</h4>
+  //     </div>
+  //   );
+  // }
+
   return (
     <Fragment>
       <Card>
@@ -101,7 +160,13 @@ const WorkFlowsCard = () => {
           <Col md="4" sm="12">
             <div className="d-flex  align-items-center mt-1">
               <div className="d-flex align-items-center checkbox-container">
-                <Input type="checkbox" className="checkbox-input" />
+                <Input
+                  type="checkbox"
+                  className="checkbox-input"
+                  checked={allSelected}
+                  // indeterminate={indeterminate}
+                  onChange={handleSelectAllRows}
+                />
                 <UncontrolledDropdown className="chart-dropdown checkbox-icon">
                   <DropdownToggle
                     color=""
@@ -135,6 +200,8 @@ const WorkFlowsCard = () => {
               <Input
                 // value={searchedList}
                 placeholder="Search for App"
+                value={searchTerm}
+                onChange={handleSearchTerm}
                 // onChange={handleSearchedList}
               />
             </InputGroup>
@@ -142,209 +209,130 @@ const WorkFlowsCard = () => {
             <DropDown title="Filters" options={options} />
           </Col>
         </Row>
-        {/* <div className="flows-container d-flex  px-1 pt-1 m-1">
-          <div className="container p-0">
-            <Col md={12} className="d-flex">
-              <div className="form-check me-1">
-                <Input type="checkbox" />
+        {!flowsData.length && (
+          <div className="d-flex justify-content-center align-items-center p-3">
+            <h4>No Search Record Found For `{searchTerm}`</h4>
+          </div>
+        )}
+        {flowsData.map((item) => {
+          return (
+            <div
+              key={item.id}
+              className="flows-container d-flex  px-1 pt-1 m-1"
+            >
+              <div className="container-xxl p-0">
+                <Col
+                  md={12}
+                  sm={12}
+                  className="d-flex"
+                  style={{ paddingBottom: 10 }}
+                >
+                  <Col md={4} sm={12} className="d-flex">
+                    <div className="form-check me-1">
+                      <Input
+                        type="checkbox"
+                        checked={selectedRows.includes(item.id)}
+                        onChange={() => handleItemSelection(item.id)}
+                      />
+                    </div>
+                    <div>
+                      <p className="workflow-title">{item.full_name}</p>
+                      <div className="d-flex align-items-center">
+                        {nodesData?.map((item, index) => {
+                          return (
+                            <Fragment key={item.id}>
+                              {!item.isIcon ? (
+                                <div
+                                  className={`flows-icons ${
+                                    index > 1 && "ms-1"
+                                  }`}
+                                >
+                                  <img
+                                    src={item.icon}
+                                    alt="NEMT Logo"
+                                    width="24px"
+                                    height="24px"
+                                    style={{ padding: 2 }}
+                                  />
+                                </div>
+                              ) : (
+                                <img
+                                  src={item.icon}
+                                  alt="NEMT Logo"
+                                  width="15px"
+                                  height="8px"
+                                />
+                              )}
+                            </Fragment>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </Col>
+                  <Col md={4} sm={12}>
+                    <p className="workflow-sub-title">{item.post}</p>
+                    <p className="workflow-edited-time m-0">
+                      Edited 1 minute ago
+                    </p>
+                  </Col>
+                  <Col md={4} sm={12} className="activity-container">
+                    <div className="d-flex align-items-center">
+                      <p className="workflow-activity p-0 m-0 me-1 ">
+                        {isChecked ? "Active" : "InActive"}
+                      </p>
+                      <FormGroup switch className="me-1">
+                        <Input
+                          className="primary"
+                          type="switch"
+                          role="switch"
+                          checked={isChecked}
+                          onChange={handleCheckboxChange}
+                        />
+                      </FormGroup>
+                      <UncontrolledDropdown
+                        className="chart-dropdown"
+                        style={{
+                          marginLeft: 2,
+                        }}
+                      >
+                        <DropdownToggle
+                          color=""
+                          className="bg-transparent btn-sm border-0 p-0"
+                        >
+                          <MoreVertical size={18} className="cursor-pointer" />
+                        </DropdownToggle>
+                        <DropdownMenu end>
+                          <DropdownItem
+                            className="w-100"
+                            // onClick={() => onHandleView(data)}
+                          >
+                            <Eye size={17} className="me-1" />
+                            View
+                          </DropdownItem>
+                          <DropdownItem
+                            className="w-100"
+                            // onClick={() => onHandleEdit(data)}
+                          >
+                            <Edit3 size={17} className="me-1" />
+                            Edit
+                          </DropdownItem>
+                          <DropdownItem
+                            className="w-100"
+                            onClick={() => onHandleDelete(item)}
+                          >
+                            <Trash2 size={17} className="me-1" />
+                            Delete
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
+                    </div>
+                    <p className="workflow-no-warning">No warning</p>
+                  </Col>
+                </Col>
               </div>
-              <Col md={4}>
-                <p className="workflow-title">Real-time Trip Activity Alerts</p>
-              </Col>
-              <Col md={4}>
-                <p className="workflow-sub-title">Activity Notifications</p>
-              </Col>
-              <Col md={4} className="activity-container">
-                <div className="d-flex align-items-center">
-                  <p className="workflow-activity p-0 m-0 me-1 ">Activity</p>
-                  <FormGroup switch className="me-1">
-                    <Input className="primary" type="switch" role="switch" />
-                  </FormGroup>
-                  <UncontrolledDropdown
-                    className="chart-dropdown"
-                    style={{
-                      marginLeft: 2,
-                    }}
-                  >
-                    <DropdownToggle
-                      color=""
-                      className="bg-transparent btn-sm border-0 p-0"
-                    >
-                      <MoreVertical size={18} className="cursor-pointer" />
-                    </DropdownToggle>
-                    <DropdownMenu end>
-                      <DropdownItem
-                        className="w-100"
-                        // onClick={() => onHandleView(data)}
-                      >
-                        <Eye size={17} className="me-1" />
-                        View
-                      </DropdownItem>
-                      <DropdownItem
-                        className="w-100"
-                        // onClick={() => onHandleEdit(data)}
-                      >
-                        <Edit3 size={17} className="me-1" />
-                        Edit
-                      </DropdownItem>
-                      <DropdownItem
-                        className="w-100"
-                        // onClick={() => onHandleDelete(data)}
-                      >
-                        <Trash2 size={17} className="me-1" />
-                        Delete
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
-                </div>
-              </Col>
-            </Col>
-            <Col md={12} className="d-flex">
-              <Col md={4} className="ms-3">
-                <div className="d-flex align-items-center">
-                  {nodesData?.map((item, index) => {
-                    return (
-                      <Fragment key={item.id}>
-                        {!item.isIcon ? (
-                          <div className={`flows-icons ${index > 1 && "ms-1"}`}>
-                            <img
-                              src={item.icon}
-                              alt="NEMT Logo"
-                              width="24px"
-                              height="24px"
-                              style={{ padding: 2 }}
-                            />
-                          </div>
-                        ) : (
-                          <img
-                            src={item.icon}
-                            alt="NEMT Logo"
-                            width="15px"
-                            height="8px"
-                          />
-                        )}
-                      </Fragment>
-                    );
-                  })}
-                </div>
-              </Col>
-              <Col md={4}>
-                <p className="workflow-edited-time">Edited 1 minute ago</p>
-              </Col>
-              <Col md={4} className="activity-container">
-                <p className="workflow-no-warning">No warning</p>
-              </Col>
-            </Col>
-          </div>
-        </div> */}
-        {/* <div className="flows-container d-flex  px-1 pt-1 m-1">
-          <div className="container p-0">
-            <Col md={12} sm={12} className="d-flex">
-              <Col md={4} sm={12} className="d-flex">
-                <div className="form-check me-1">
-                  <Input type="checkbox" />
-                </div>
-                <div>
-                  <p className="workflow-title">
-                    Real-time Trip Activity Alerts
-                  </p>
-                  <div className="d-flex align-items-center">
-                    {nodesData?.map((item, index) => {
-                      return (
-                        <Fragment key={item.id}>
-                          {!item.isIcon ? (
-                            <div
-                              className={`flows-icons ${index > 1 && "ms-1"}`}
-                            >
-                              <img
-                                src={item.icon}
-                                alt="NEMT Logo"
-                                width="24px"
-                                height="24px"
-                                style={{ padding: 2 }}
-                              />
-                            </div>
-                          ) : (
-                            <img
-                              src={item.icon}
-                              alt="NEMT Logo"
-                              width="15px"
-                              height="8px"
-                            />
-                          )}
-                        </Fragment>
-                      );
-                    })}
-                  </div>
-                </div>
-              </Col>
-              <Col md={4} sm={12}>
-                <p className="workflow-sub-title">Activity Notifications</p>
-                <p className="workflow-edited-time">Edited 1 minute ago</p>
-              </Col>
-              <Col md={4} sm={12} className="activity-container">
-                <div className="d-flex align-items-center">
-                  <p className="workflow-activity p-0 m-0 me-1 ">Activity</p>
-                  <FormGroup switch className="me-1">
-                    <Input className="primary" type="switch" role="switch" />
-                  </FormGroup>
-                  <UncontrolledDropdown
-                    className="chart-dropdown"
-                    style={{
-                      marginLeft: 2,
-                    }}
-                  >
-                    <DropdownToggle
-                      color=""
-                      className="bg-transparent btn-sm border-0 p-0"
-                    >
-                      <MoreVertical size={18} className="cursor-pointer" />
-                    </DropdownToggle>
-                    <DropdownMenu end>
-                      <DropdownItem
-                        className="w-100"
-                        // onClick={() => onHandleView(data)}
-                      >
-                        <Eye size={17} className="me-1" />
-                        View
-                      </DropdownItem>
-                      <DropdownItem
-                        className="w-100"
-                        // onClick={() => onHandleEdit(data)}
-                      >
-                        <Edit3 size={17} className="me-1" />
-                        Edit
-                      </DropdownItem>
-                      <DropdownItem
-                        className="w-100"
-                        // onClick={() => onHandleDelete(data)}
-                      >
-                        <Trash2 size={17} className="me-1" />
-                        Delete
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
-                </div>
-                <p className="workflow-no-warning">No warning</p>
-              </Col>
-            </Col>
-          </div>
-        </div> */}
-        <div className="react-dataTable">
-          <DataTable
-            noHeader
-            pagination
-            data={data}
-            columns={columns}
-            // selectableRows
-            className="react-dataTable"
-            paginationComponent={CustomPagination}
-            paginationDefaultPage={currentPage + 1}
-            paginationRowsPerPageOptions={[10, 25, 50, 100]}
-            // selectableRowsComponent={BootstrapCheckbox}
-            highlightOnHover
-          />
-        </div>
+            </div>
+          );
+        })}
       </Card>
     </Fragment>
   );

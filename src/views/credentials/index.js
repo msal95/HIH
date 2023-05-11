@@ -60,8 +60,6 @@ const Credentials = () => {
   const [isNewProject, setIsNewProject] = useState(false);
   const [optionsData, setOptionsData] = useState(colourOptions);
 
-  console.log("🚀 ~ file: index.js:63 ~ Credentials ~ location:", location);
-
   useEffect(() => {
     const searchedData = dummyData.filter((post) => {
       return post.name.toLowerCase().includes(searchTerm.toLowerCase());

@@ -175,9 +175,9 @@ export const columns = [
     // sortable: (row) => row.full_name,
     cell: (row) => (
       <div className="d-flex align-items-center">
-        <div className="form-check me-1">
+        {/* <div className="form-check me-1">
           <Input type="checkbox" />
-        </div>
+        </div> */}
         <div>
           <p className="workflow-title">Real-time Trip Activity Alerts</p>
           <div className="d-flex align-items-center">
