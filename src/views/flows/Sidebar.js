@@ -40,7 +40,6 @@ const Sidebar = (props) => {
   const [isNewProject, setIsNewProject] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hoverItem, setHoverItem] = useState(null);
-  console.log("🚀 ~ file: Sidebar.js:94 ~ hoverItem:", hoverItem);
 
   const [nodes, setNodes] = useState([
     {

@@ -51,6 +51,14 @@ const WorkFlows = () => {
 
   const navigate = useNavigate();
 
+  const API_URL = import.meta.env.REACT_APP_API_URL;
+  console.log(
+    "🚀 ~ file: index.js:55 ~ WorkFlows ~ API_URL:",
+    API_URL,
+    import.meta.env.REACT_APP_API_URL,
+    import.meta.env
+  );
+
   const onClickDiscardModal = () => {
     setShow(false);
   };

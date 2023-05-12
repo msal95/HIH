@@ -1,11 +1,19 @@
 // ** Reactstrap Imports
 import { Fragment, useEffect, useState } from "react";
 import { Search } from "react-feather";
-import { Button, Col, Input, InputGroup, InputGroupText } from "reactstrap";
+import {
+  Button,
+  Col,
+  Input,
+  InputGroup,
+  InputGroupText,
+  Spinner,
+} from "reactstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { toast } from "react-hot-toast";
 import { useLocation } from "react-router-dom";
+import { useQuery } from "react-query";
 
 // ** Local Imports
 import atTheRate from "@src/assets/images/icons/social/at-credentiali-con.png";
@@ -19,6 +27,8 @@ import Divider from "../../components/Divider/Divider";
 import SendGrid from "../../components/SendGrid/SendGrid";
 import "../../style/base/base.scss";
 import CredentialsFilter from "./CredentialsFilter";
+import { deleteCredential, getCredentialsList } from "../../../api/apiMethods";
+import NoRecordFound from "../../components/NoRecordFound/NoRecordFound";
 
 const dummyData = [
   { id: 1, name: "SendGrid", image: sendGrid },
@@ -46,13 +56,18 @@ const MySwal = withReactContent(Swal);
 
 const Credentials = () => {
   const location = useLocation();
+  console.log(
+    "🚀 ~ file: index.js:59 ~ Credentials ~ location:",
+    location?.state
+  );
   // ** States
   const [searchTerm, setSearchTerm] = useState("");
   const [show, setShow] = useState(!!location?.state?.showModal ?? false);
   const [isSendGridData, setIsSendGridData] = useState(false);
   const [isCredential, setIsCredential] = useState(false);
   const [isSelectedCredential, setIsSelectedCredential] = useState(false);
-  const [credentialsData, setCredentialsData] = useState(dummyData);
+  const [allCredentialsData, setAllCredentialsData] = useState();
+  const [credentialsData, setCredentialsData] = useState();
   const [searchedList, setSearchedList] = useState("");
   const [addCredentialsList, setAddCredentialsList] = useState(dummyData);
   const [selectedItem, setSelectedItem] = useState();
@@ -60,11 +75,23 @@ const Credentials = () => {
   const [isNewProject, setIsNewProject] = useState(false);
   const [optionsData, setOptionsData] = useState(colourOptions);
 
+  // API Call
+  const { isLoading, data, error, refetch } = useQuery("credentialsList", () =>
+    getCredentialsList().then((res) => {
+      setCredentialsData(res.data.data.data);
+      setAllCredentialsData(res.data.data.data);
+    })
+  );
+
   useEffect(() => {
-    const searchedData = dummyData.filter((post) => {
-      return post.name.toLowerCase().includes(searchTerm.toLowerCase());
-    });
-    setCredentialsData(searchedData);
+    if (searchTerm?.length) {
+      const searchedData = allCredentialsData.filter((post) => {
+        return post.name.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+      setCredentialsData(searchedData);
+    } else {
+      setCredentialsData(allCredentialsData);
+    }
   }, [searchTerm]);
 
   useEffect(() => {
@@ -111,13 +138,12 @@ const Credentials = () => {
       },
       buttonsStyling: false,
       preConfirm: () => {
-        const deletedItem = credentialsData.filter(
-          (item) => item.id !== data.id
-        );
-        setCredentialsData(deletedItem);
+        deleteCredential(data.id);
       },
     }).then(function (result) {
-      console.log("🚀 ~ file: index.js:70 ~ onHandleDelete ~ result:", result);
+      if (result.value) {
+        refetch();
+      }
       if (result.value) {
         MySwal.fire({
           icon: "success",
@@ -229,14 +255,14 @@ const Credentials = () => {
           </InputGroup>
 
           <div className="row">
-            {addCredentialsList.map((item) => {
+            {credentialsData.map((item) => {
               return (
                 <div
                   className="col-md-2 d-flex flex-column align-items-center mt-2 ps-0"
                   key={item.id}
                 >
                   <img
-                    src={item.image}
+                    src={import.meta.env.VITE_API_URL + item.integration.image}
                     alt="Google Icon"
                     width="56px"
                     height="56px"
@@ -257,6 +283,22 @@ const Credentials = () => {
       </>
     );
   };
+
+  if (isLoading) {
+    return (
+      <div className="container-xxl d-flex justify-content-center align-items-center">
+        <Spinner type="grow" color="primary" />
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="container-xxl d-flex justify-content-center align-items-center">
+        <Spinner type="grow" color="primary" />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -285,12 +327,15 @@ const Credentials = () => {
             handleSearchTerm={handleSearchTerm}
           />
           <div className="row">
+            {!credentialsData?.length && searchTerm?.length && (
+              <NoRecordFound searchTerm={searchTerm} />
+            )}
             {credentialsData.map((item) => {
               return (
                 <Fragment key={item.id}>
                   <CustomCard
                     name={item.name}
-                    image={item.image}
+                    image={item.integration.image}
                     data={item}
                     onHandleEdit={onHandleEdit}
                     onHandleView={onHandleView}
