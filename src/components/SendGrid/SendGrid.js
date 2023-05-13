@@ -1,36 +1,19 @@
-import React from "react";
-import { Button, Col, Form, Row } from "reactstrap";
 import { Formik } from "formik";
-import { Layers, ZapOff } from "react-feather";
+import React from "react";
+import { ZapOff } from "react-feather";
+import { Button, Col, Form, Row } from "reactstrap";
 
 // Local Imports
-import {
-  SendGridCreateProjectValidationSchema,
-  SendGridValidationSchema,
-} from "../../utility/validationSchemas/CredentialsValidationSchema";
-import CustomHeading from "../CustomHeading/CustomHeading";
-import InputField from "../InputField/InputField";
-import projectIcon from "@src/assets/images/icons/file-icons/project-icon.png";
 import avatar from "@src/assets/images/icons/file-icons/Avtar.png";
+import groupIcon from "@src/assets/images/icons/file-icons/Group.png";
 import edit from "@src/assets/images/icons/file-icons/edit.png";
 import folderIcon from "@src/assets/images/icons/file-icons/folder-icon.png";
-import groupIcon from "@src/assets/images/icons/file-icons/Group.png";
 import infoIcon from "@src/assets/images/icons/file-icons/info-icon.png";
+import projectIcon from "@src/assets/images/icons/file-icons/project-icon.png";
+import { SendGridValidationSchema } from "../../utility/validationSchemas/CredentialsValidationSchema";
 import CreateNewProject from "../CreateNewProject/CreateNewProject";
-
-// const colourOptions = [
-//   {
-//     value: "add-new",
-//     label: "Add New Customer",
-//     type: "button",
-//     color: "flat-success",
-//   },
-//   { value: "ocean", label: "Ocean" },
-//   { value: "blue", label: "Blue" },
-//   { value: "purple", label: "Purple" },
-//   { value: "red", label: "Red" },
-//   { value: "orange", label: "Orange" },
-// ];
+import CustomHeading from "../CustomHeading/CustomHeading";
+import InputField from "../InputField/InputField";
 
 export default function SendGrid(props) {
   const {
@@ -42,6 +25,8 @@ export default function SendGrid(props) {
     handleOnCreateNewProject,
     optionsData,
   } = props;
+  console.log("🚀 ~ file: SendGrid.js:28 ~ SendGrid ~ item:", item);
+  const { id, name, data, type } = item ?? {};
 
   return (
     <>
@@ -55,11 +40,11 @@ export default function SendGrid(props) {
         <Col md={7}>
           <Formik
             initialValues={{
-              name: "",
+              name: name ?? "",
               location: "",
               authType: "",
-              authUrl: "",
-              clientId: "",
+              authUrl: data?.auth_url ?? "",
+              clientId: data?.client_id ?? "",
             }}
             validationSchema={SendGridValidationSchema}
             onSubmit={onPressCredentials}

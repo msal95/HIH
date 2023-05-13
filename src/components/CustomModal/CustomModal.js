@@ -20,7 +20,7 @@ export default function CustomModal(props) {
         className="bg-transparent"
         toggle={toggleModal}
       ></ModalHeader>
-      <ModalBody className="pb-5 px-0">{children}</ModalBody>
+      <ModalBody className="pb-5">{children}</ModalBody>
     </Modal>
   );
 }

@@ -12,7 +12,7 @@ import {
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { toast } from "react-hot-toast";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 
 // ** Local Imports
@@ -56,10 +56,7 @@ const MySwal = withReactContent(Swal);
 
 const Credentials = () => {
   const location = useLocation();
-  console.log(
-    "🚀 ~ file: index.js:59 ~ Credentials ~ location:",
-    location?.state
-  );
+
   // ** States
   const [searchTerm, setSearchTerm] = useState("");
   const [show, setShow] = useState(!!location?.state?.showModal ?? false);
@@ -71,17 +68,27 @@ const Credentials = () => {
   const [searchedList, setSearchedList] = useState("");
   const [addCredentialsList, setAddCredentialsList] = useState(dummyData);
   const [selectedItem, setSelectedItem] = useState();
+  console.log(
+    "🚀 ~ file: index.js:71 ~ Credentials ~ selectedItem:",
+    selectedItem
+  );
   const [isEdit, setIsEdit] = useState(false);
   const [isNewProject, setIsNewProject] = useState(false);
   const [optionsData, setOptionsData] = useState(colourOptions);
 
   // API Call
-  const { isLoading, data, error, refetch } = useQuery("credentialsList", () =>
-    getCredentialsList().then((res) => {
-      setCredentialsData(res.data.data.data);
-      setAllCredentialsData(res.data.data.data);
-    })
+  const { isLoading, data, error, refetch, isFetching, isError } = useQuery(
+    "credentialsList",
+    () => getCredentialsList()
   );
+
+  useEffect(() => {
+    if (!!data?.data?.data.data.length) {
+      setCredentialsData(data?.data?.data?.data);
+      setAllCredentialsData(data?.data?.data?.data);
+      setAddCredentialsList(data?.data?.data?.data);
+    }
+  }, [isFetching]);
 
   useEffect(() => {
     if (searchTerm?.length) {
@@ -95,10 +102,14 @@ const Credentials = () => {
   }, [searchTerm]);
 
   useEffect(() => {
-    const searchedData = dummyData.filter((post) => {
-      return post.name.toLowerCase().includes(searchedList.toLowerCase());
-    });
-    setAddCredentialsList(searchedData);
+    if (searchedList.length) {
+      const searchedData = allCredentialsData.filter((post) => {
+        return post.name.toLowerCase().includes(searchedList.toLowerCase());
+      });
+      setAddCredentialsList(searchedData);
+    } else {
+      setAddCredentialsList(allCredentialsData);
+    }
   }, [searchedList]);
 
   const handleSearchTerm = (event) => {
@@ -184,6 +195,10 @@ const Credentials = () => {
   };
 
   const onClickSendGridCredential = (item) => {
+    console.log(
+      "🚀 ~ file: index.js:199 ~ onClickSendGridCredential ~ item:",
+      item
+    );
     setIsCredential(true);
     setIsSelectedCredential(true);
     setIsSendGridData(true);
@@ -255,7 +270,10 @@ const Credentials = () => {
           </InputGroup>
 
           <div className="row">
-            {credentialsData.map((item) => {
+            {!addCredentialsList?.length && !!searchedList?.length && (
+              <NoRecordFound searchTerm={searchedList} />
+            )}
+            {addCredentialsList?.map((item) => {
               return (
                 <div
                   className="col-md-2 d-flex flex-column align-items-center mt-2 ps-0"
@@ -292,10 +310,18 @@ const Credentials = () => {
     );
   }
 
-  if (isLoading) {
+  // if (isLoading || isFetching) {
+  //   return (
+  //     <div className="container-xxl d-flex justify-content-center align-items-center">
+  //       <Spinner type="grow" color="primary" />
+  //     </div>
+  //   );
+  // }
+
+  if (isError) {
     return (
       <div className="container-xxl d-flex justify-content-center align-items-center">
-        <Spinner type="grow" color="primary" />
+        <h3>{error.message}</h3>
       </div>
     );
   }
@@ -327,10 +353,10 @@ const Credentials = () => {
             handleSearchTerm={handleSearchTerm}
           />
           <div className="row">
-            {!credentialsData?.length && searchTerm?.length && (
+            {!credentialsData?.length && !!searchTerm?.length && (
               <NoRecordFound searchTerm={searchTerm} />
             )}
-            {credentialsData.map((item) => {
+            {credentialsData?.map((item) => {
               return (
                 <Fragment key={item.id}>
                   <CustomCard
