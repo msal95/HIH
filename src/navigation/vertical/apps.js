@@ -24,6 +24,25 @@ export default [
     navLink: "/apps/credentials",
   },
   {
+    id: "builderApp",
+    title: "Builder",
+    icon: <FileText size={20} />,
+    children: [
+      {
+        id: "Editor",
+        title: "Editor",
+        icon: <Circle size={12} />,
+        navLink: "/apps/editor",
+      },
+      {
+        id: "view",
+        title: "View",
+        icon: <Circle size={12} />,
+        navLink: "/apps/view",
+      },
+    ],
+  },
+  {
     id: "flows",
     title: "Flows",
     icon: (

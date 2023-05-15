@@ -3,6 +3,7 @@
   "version": "9.0.0",
   "private": true,
   "dependencies": {
+    "@bpmn-io/form-js": "^0.15.0-alpha.1",
     "@casl/ability": "^6.3.2",
     "@casl/react": "^3.1.0",
     "@esbuild-plugins/node-globals-polyfill": "^0.1.1",
