@@ -32,6 +32,7 @@ import webHook from "@src/assets/images/icons/Webhook.png";
 import sendGrid from "@src/assets/images/icons/social/sendgrid.png";
 import "../../style/views/workFlows.scss";
 import DropDown from "../DropDown/DropDown";
+import NoRecordFound from "../NoRecordFound/NoRecordFound";
 
 // ** Bootstrap Checkbox Component
 
@@ -191,11 +192,7 @@ const WorkFlowsCard = () => {
             <DropDown title="Filters" options={options} />
           </Col>
         </Row>
-        {!flowsData.length && (
-          <div className="d-flex justify-content-center align-items-center p-3">
-            <h4>No Search Record Found For `{searchTerm}`</h4>
-          </div>
-        )}
+        {!flowsData.length && <NoRecordFound searchTerm={searchTerm} />}
         {flowsData.map((item) => {
           return (
             <div

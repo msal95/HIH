@@ -5,7 +5,7 @@ import { Search } from "react-feather";
 import { Form, Input, InputGroup, InputGroupText, Row } from "reactstrap";
 import DropDown from "../../components/DropDown/DropDown";
 
-const CredentialsFilter = ({ searchTerm, handleSearchTerm }) => {
+const CredentialsFilter = (props) => {
   const options = [
     { id: 1, title: "Option 1" },
     { id: 2, title: "Option 2" },
@@ -13,12 +13,14 @@ const CredentialsFilter = ({ searchTerm, handleSearchTerm }) => {
     { id: 4, title: "Option 4" },
   ];
 
+  const { searchTerm, handleSearchTerm, searchClass = "col-md-4" } = props;
+
   return (
     <div id="faq-search-filter">
       <div className="row mt-4">
         <div className="col-md-9 col-12 mb-2">
           <Row>
-            <div className="col-md-4">
+            <div className={searchClass}>
               <Form
                 className="faq-search-input"
                 onSubmit={(e) => e.preventDefault()}

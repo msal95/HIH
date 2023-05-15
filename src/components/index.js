@@ -11,7 +11,8 @@ import OffCanvas from "./OffCanvas/OffCanvas";
 import Sidebar from "./Sidebar/Sidebar";
 import WorkFlowsCard from "./WorkFlowsCard/WorkFlowsCard";
 import CreateNewProject from "./CreateNewProject/CreateNewProject";
-import Tree from "./TreeNode/Tree";
+import MoreVerticalDropdown from "./MoreVerticalDropdown/MoreVerticalDropdown";
+import NoRecordFound from "./NoRecordFound/NoRecordFound";
 
 export default {
   InputField,
@@ -27,5 +28,6 @@ export default {
   Sidebar,
   WorkFlowsCard,
   CreateNewProject,
-  Tree,
+  MoreVerticalDropdown,
+  NoRecordFound,
 };

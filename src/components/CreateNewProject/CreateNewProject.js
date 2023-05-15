@@ -4,14 +4,28 @@ import { Layers } from "react-feather";
 import { SendGridCreateProjectValidationSchema } from "../../utility/validationSchemas/CredentialsValidationSchema";
 import { Button, Form } from "reactstrap";
 import InputField from "../InputField/InputField";
+const colourOptions = [
+  // {
+  //   value: "add-new",
+  //   label: "Add New Customer",
+  //   type: "button",
+  //   color: "flat-success",
+  // },
+  { value: "ocean", label: "Ocean" },
+  { value: "blue", label: "Blue" },
+  { value: "purple", label: "Purple" },
+  { value: "red", label: "Red" },
+  { value: "orange", label: "Orange" },
+];
 
 export default function CreateNewProject(props) {
   const {
     onSubmit,
     onCancel,
-    title = "New Project",
+    title = "Create Project",
     isEdit = false,
     data,
+    isWorkFLow = false,
   } = props;
   console.log(
     "🚀 ~ file: CreateNewProject.js:16 ~ CreateNewProject ~ data:",
@@ -27,6 +41,7 @@ export default function CreateNewProject(props) {
         initialValues={{
           projectName: isEdit ? data?.name : "",
           description: isEdit ? "Description" : "",
+          location: "",
         }}
         validationSchema={SendGridCreateProjectValidationSchema}
         onSubmit={onSubmit}
@@ -51,17 +66,33 @@ export default function CreateNewProject(props) {
               errorType={errors.projectName && touched.projectName}
               errorMessage={errors.projectName}
             />
-            <InputField
-              label="Description"
-              type="textarea"
-              name="description"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.description}
-              placeholder="Project Description"
-              errorType={errors.description && touched.description}
-              errorMessage={errors.description}
-            />
+            {isWorkFLow ? (
+              <InputField
+                label="Location"
+                name="location"
+                onChange={(selectedOption) => {
+                  handleChange("location")(selectedOption.value);
+                }}
+                onBlur={handleBlur}
+                value={values.location}
+                optionsData={colourOptions}
+                isOption
+                errorType={errors.location && touched.location}
+                errorMessage={errors.location}
+              />
+            ) : (
+              <InputField
+                label="Description"
+                type="textarea"
+                name="description"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.description}
+                placeholder="Project Description"
+                errorType={errors.description && touched.description}
+                errorMessage={errors.description}
+              />
+            )}
 
             <div className="d-flex float-end">
               <Button
@@ -78,7 +109,7 @@ export default function CreateNewProject(props) {
                 onClick={handleSubmit}
                 className="project-btn-create"
               >
-                Create Project
+                {title}
               </Button>
             </div>
           </Form>

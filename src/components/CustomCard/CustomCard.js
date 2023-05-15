@@ -1,5 +1,5 @@
 import React from "react";
-import { Edit3, Eye, Folder, MoreVertical, Trash2 } from "react-feather";
+import { Edit3, Eye, Folder, Image, MoreVertical, Trash2 } from "react-feather";
 import {
   Card,
   CardBody,
@@ -13,6 +13,7 @@ import {
 } from "reactstrap";
 
 import "../../style/components/customCard.scss";
+import MoreVerticalDropdown from "../MoreVerticalDropdown/MoreVerticalDropdown";
 
 export default function CustomCard(props) {
   const {
@@ -32,14 +33,24 @@ export default function CustomCard(props) {
       <Card className="custom-card shadow-none ">
         <CardHeader className="d-flex justify-content-between align-items-start custom-card__card-header">
           {!!image && (
-            <img src={image} alt="Google Icon" width="37px" height="37px" />
+            <img
+              src={import.meta.env.VITE_API_URL + image}
+              alt="Google Icon"
+              width="37px"
+              height="37px"
+            />
           )}
           {isIcon && (
             <div className="custom-card__card-icon">
               <Folder size={14} color="#7367F0" />
             </div>
           )}
-          <UncontrolledDropdown
+          <MoreVerticalDropdown
+            handleView={() => onHandleView(data)}
+            handleEdit={() => onHandleEdit(data)}
+            handleDelete={() => onHandleDelete(data)}
+          />
+          {/* <UncontrolledDropdown
             className="chart-dropdown"
             style={{
               marginLeft: 2,
@@ -74,7 +85,7 @@ export default function CustomCard(props) {
                 Delete
               </DropdownItem>
             </DropdownMenu>
-          </UncontrolledDropdown>
+          </UncontrolledDropdown> */}
         </CardHeader>
         <CardBody>
           <CardTitle
