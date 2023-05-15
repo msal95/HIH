@@ -1,6 +1,8 @@
 // ** React Imports
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
+import Editor from "../../views/builder/Editor";
+import ViewFormRender from "../../views/builder/ViewFormRender";
 
 const Chat = lazy(() => import("../../views/apps/chat"));
 const Todo = lazy(() => import("../../views/apps/todo"));
@@ -34,6 +36,22 @@ const Permissions = lazy(() =>
 );
 
 const AppRoutes = [
+  {
+    element: <Editor />,
+    path: "/apps/editor",
+    meta: {
+      appLayout: true,
+      className: "email-application",
+    },
+  },
+  {
+    element: <ViewFormRender />,
+    path: "/apps/view",
+    meta: {
+      appLayout: true,
+      className: "email-application",
+    },
+  },
   {
     element: <Credentials />,
     path: "/apps/credentials",
