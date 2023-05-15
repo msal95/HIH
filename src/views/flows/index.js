@@ -1,6 +1,6 @@
 // ** React Imports
 import classnames from "classnames";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Plus } from "react-feather";
 import {
   Button,
@@ -28,6 +28,9 @@ import Divider from "../../components/Divider/Divider";
 import WorkFlowsCard from "../../components/WorkFlowsCard/WorkFlowsCard";
 import "../../style/base/base.scss";
 import Sidebar from "./Sidebar";
+import CredentialsFilter from "../credentials/CredentialsFilter";
+import { getProjectLists } from "../../../api/apiMethods";
+import { useQuery } from "react-query";
 
 const dummyData = [
   { id: 1, name: "SendGrid", image: sendGrid },
@@ -47,12 +50,56 @@ const WorkFlows = () => {
   const [show, setShow] = useState(false);
   const [isNewProject, setIsNewProject] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
+  const [selectedTab, setSelectedTab] = useState("projects");
   const [isEdit, setIsEdit] = useState(false);
+  const [isWorkFLow, setIsWorkFLow] = useState(false);
+  const [isProjects, setIsProjects] = useState(false);
+  const [projects, setProjects] = useState(null);
+  console.log("🚀 ~ file: index.js:54 ~ WorkFlows ~ projects:", projects);
+
+  let headerTitle;
+
+  if (isEdit) {
+    headerTitle = "Edit Folder";
+  } else if (isWorkFLow) {
+    headerTitle = "Create Workflows";
+  } else {
+    headerTitle = "Create Folder";
+  }
+
+  const { isLoading, data, error, refetch, isFetching, isError } = useQuery(
+    "projectsList",
+    () => getProjectLists()
+  );
+
+  console.log(
+    "🚀 ~ file: Sidebar.js:97 ~ data:",
+    data?.data?.data,
+    isError,
+    error
+  );
+
+  useEffect(() => {
+    // if (data?.data?.data?.folders?.length) {
+
+    setProjects(data?.data?.data);
+    // }
+  }, [isFetching]);
 
   const navigate = useNavigate();
 
+  const handleActiveTab = (node) => {
+    console.log("🚀 ~ file: index.js:92 ~ handleActiveTab ~ node:", node);
+    setSelectedTab(node.name);
+  };
+
   const onClickDiscardModal = () => {
     setShow(false);
+  };
+
+  const onHandleCreateWorkFLows = () => {
+    setIsWorkFLow((prevState) => !prevState);
+    setShow(true);
   };
 
   const handleToggleModal = () => {
@@ -128,7 +175,10 @@ const WorkFlows = () => {
 
   return (
     <div className="content-area-wrapper">
-      <Sidebar />
+      <Sidebar
+        handleActiveTab={handleActiveTab}
+        setSelectedTab={setSelectedTab}
+      />
       <div className="content-right overflow-auto h-100">
         <div className="content-body">
           <div
@@ -138,6 +188,12 @@ const WorkFlows = () => {
             onClick={() => setSidebarOpen(false)}
           ></div>
           <Col className="container-xxl col-12">
+            <CredentialsFilter
+              searchClass="col-md-6"
+              // searchTerm={searchTerm}
+              // setSearchTerm={setSearchTerm}
+              // handleSearchTerm={handleSearchTerm}
+            />
             <Row>
               <Col md={9} sm={6} className="content-header-left mb-2">
                 <h2 className="content-header-title float-start mb-0">
@@ -172,7 +228,7 @@ const WorkFlows = () => {
                     <DropdownMenu end>
                       <DropdownItem
                         className="w-100"
-                        // onClick={() => onHandleView(data)}
+                        onClick={onHandleCreateWorkFLows}
                       >
                         Flows
                       </DropdownItem>
@@ -203,7 +259,7 @@ const WorkFlows = () => {
                   {isViewAll ? "View Less" : "View All"}
                 </p>
               </div>
-              {foldersData.map((item) => {
+              {projects?.map((item) => {
                 return (
                   <Fragment key={item.id}>
                     <CustomCard
@@ -220,8 +276,25 @@ const WorkFlows = () => {
                   </Fragment>
                 );
               })}
+              {/* {foldersData.map((item) => {
+                return (
+                  <Fragment key={item.id}>
+                    <CustomCard
+                      name={item.name}
+                      // image={item.image}
+                      data={item}
+                      isIcon
+                      colNumber={4}
+                      titleClass="custom-card-title"
+                      onHandleEdit={onHandleEdit}
+                      onHandleView={onHandleView}
+                      onHandleDelete={onHandleDelete}
+                    />
+                  </Fragment>
+                );
+              })} */}
             </div>
-            <WorkFlowsCard />
+            {/* <WorkFlowsCard /> */}
           </Col>
         </div>
       </div>
@@ -229,6 +302,7 @@ const WorkFlows = () => {
         toggleModal={handleToggleModal}
         onDiscard={onClickDiscardModal}
         show={show}
+        modalClass={isWorkFLow ? "modal-fullscreen" : "modal-lg"}
       >
         <div className="p-1">
           <CreateNewProject
@@ -236,7 +310,8 @@ const WorkFlows = () => {
             onSubmit={handleCreateProject}
             isEdit={isEdit}
             data={selectedItem}
-            title={isEdit ? "Edit Folder" : "Create Folder"}
+            title={headerTitle}
+            isWorkFLow={isWorkFLow}
           />
         </div>
       </CustomModal>

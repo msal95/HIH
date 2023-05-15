@@ -280,7 +280,9 @@ const Credentials = () => {
                   key={item.id}
                 >
                   <img
-                    src={import.meta.env.VITE_API_URL + item.integration.image}
+                    src={
+                      import.meta.env.VITE_API_URL + item?.integration?.image
+                    }
                     alt="Google Icon"
                     width="56px"
                     height="56px"
@@ -291,7 +293,7 @@ const Credentials = () => {
                     className="icon-title mt-1"
                     onClick={() => onClickSendGridCredential(item)}
                   >
-                    {item.name}
+                    {item?.name}
                   </h3>
                 </div>
               );
@@ -360,8 +362,8 @@ const Credentials = () => {
               return (
                 <Fragment key={item.id}>
                   <CustomCard
-                    name={item.name}
-                    image={item.integration.image}
+                    name={item?.name}
+                    image={item?.integration?.image}
                     data={item}
                     onHandleEdit={onHandleEdit}
                     onHandleView={onHandleView}

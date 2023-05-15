@@ -11,8 +11,8 @@ import {
   Trash2,
 } from "react-feather";
 import PerfectScrollbar from "react-perfect-scrollbar";
-
-// ** Reactstrap Imports
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import {
   Button,
   DropdownItem,
@@ -32,12 +32,15 @@ import polygon from "@src/assets/images/icons/polygon.png";
 import CreateNewProject from "../../components/CreateNewProject/CreateNewProject";
 import CustomModal from "../../components/CustomModal/CustomModal";
 import "../../style/views/Login/authentication.scss";
-import { getProjectLists } from "../../../api/apiMethods";
+import { deleteFolder, getProjectLists } from "../../../api/apiMethods";
 import { useQuery } from "react-query";
+
+const MySwal = withReactContent(Swal);
 
 const Sidebar = (props) => {
   // ** Props
-  const { sidebarOpen } = props;
+  const { sidebarOpen, handleActiveTab, setSelectedTab } = props;
+  console.log("🚀 ~ file: Sidebar.js:43 ~ setSelectedTab:", setSelectedTab);
 
   const [show, setShow] = useState(false);
   const [isNewProject, setIsNewProject] = useState(false);
@@ -80,6 +83,7 @@ const Sidebar = (props) => {
   //   childNodes: [],
   // },
   const [selectedNode, setSelectedNode] = useState(null);
+  console.log("🚀 ~ file: Sidebar.js:85 ~ selectedNode:", selectedNode);
   const [newNodeLabel, setNewNodeLabel] = useState("");
   const [isEdit, setIsEdit] = useState(false);
   const [isSubNode, setIsSubNode] = useState(false);
@@ -94,7 +98,12 @@ const Sidebar = (props) => {
     () => getProjectLists()
   );
 
-  // console.log("🚀 ~ file: Sidebar.js:97 ~ data:", data);
+  console.log(
+    "🚀 ~ file: Sidebar.js:97 ~ data:",
+    data?.data?.data,
+    isError,
+    error
+  );
 
   useEffect(() => {
     // if (data?.data?.data?.folders?.length) {
@@ -135,7 +144,7 @@ const Sidebar = (props) => {
       if (node.id === id) {
         return { node, parent: null };
       }
-      if (node.descendants.length > 0) {
+      if (node?.descendants?.length > 0) {
         const { node: foundNode, parent } = findNode(id, node.descendants);
         if (foundNode) {
           return { node: foundNode, parent: parent || node };
@@ -181,24 +190,61 @@ const Sidebar = (props) => {
     onClickDiscardFolderModal();
   }
 
-  function deleteNode(id) {
-    const { node, parent } = findNode(id, nodes);
-    if (!node) {
-      return;
-    }
-    if (!parent) {
-      // Delete root node
-      setNodes(nodes.filter((n) => n.id !== id));
-    } else {
-      // Delete child node
-      const index = parent.descendants.findIndex((n) => n.id === id);
-      if (index !== -1) {
-        parent.descendants.splice(index, 1);
-        setNodes([...nodes]);
+  // function deleteNode(id) {
+  //   const { node, parent } = findNode(id, nodes);
+  //   if (!node) {
+  //     return;
+  //   }
+  //   if (!parent) {
+  //     // Delete root node
+  //     setNodes(nodes.filter((n) => n.id !== id));
+  //   } else {
+  //     // Delete child node
+  //     const index = parent.descendants.findIndex((n) => n.id === id);
+  //     if (index !== -1) {
+  //       parent.descendants.splice(index, 1);
+  //       setNodes([...nodes]);
+  //     }
+  //   }
+  //   toast.success("Node Deleted Successfully.");
+  // }
+  const onHandleDelete = async (data) => {
+    console.log("🚀 ~ file: Sidebar.js:208 ~ onHandleDelete ~ data:", data);
+    return MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      customClass: {
+        confirmButton: "btn btn-primary",
+        cancelButton: "btn btn-outline-danger ms-1",
+      },
+      buttonsStyling: false,
+      preConfirm: () => {
+        // deleteCredential(data.id);
+        deleteFolder(hoverItem.id);
+      },
+    }).then(function (result) {
+      console.log(
+        "🚀 ~ file: Sidebar.js:224 ~ onHandleDelete ~ result:",
+        result
+      );
+      if (result.value) {
+        refetch();
       }
-    }
-    toast.success("Node Deleted Successfully.");
-  }
+      if (result.value) {
+        MySwal.fire({
+          icon: "success",
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          customClass: {
+            confirmButton: "btn btn-success",
+          },
+        });
+      }
+    });
+  };
 
   function editNode(id, newLabel) {
     const { node } = findNode(id, nodes);
@@ -227,10 +273,10 @@ const Sidebar = (props) => {
     setIsEdit(true);
   };
 
-  const handleDeleteNode = () => {
-    deleteNode(hoverItem.id);
-    setSelectedNode(null);
-  };
+  // const handleDeleteNode = () => {
+  //   onHandleDelete(hoverItem.id);
+  //   setSelectedNode(null);
+  // };
 
   function renderTree(nodes, level = 0) {
     const indent = level * 10;
@@ -274,9 +320,13 @@ const Sidebar = (props) => {
             </div>
           ) : (
             <div
-              className=" d-flex justify-content-between container__folders-list"
+              className={`d-flex justify-content-between container__folders-list ${
+                setSelectedTab === node.name && "bg-danger"
+              }`}
               onMouseEnter={() => handleOnMouseEnter(node)}
               onMouseLeave={handleOnMouseLeave}
+              onClick={() => handleActiveTab(node)}
+              // style={setSelectedTab === node.name && { background: "red" }}
             >
               <div style={{ marginLeft: indent }}>
                 <Folder size={18} className="me-1" />
@@ -290,53 +340,48 @@ const Sidebar = (props) => {
                   //   handleModalToggle();
                   // }}
                 >
-                  {node.name?.length > 6
-                    ? `${node.name.substr(0, 5)}...`
-                    : node.name}
+                  {node?.name?.length > 50
+                    ? `${node?.name.substr(0, 5)}...`
+                    : node?.name}
                 </span>
               </div>
-              {hoverItem &&
-                hoverItem.id === node.id &&
-                hoverItem.parent_id === node.parent_id && (
-                  <div className="d-flex">
-                    <Plus
-                      size={16}
-                      color="#131313"
-                      className="cursor-pointer me-1"
-                      onClick={() => handleAddSubNode(node)}
-                    />
-                    <UncontrolledDropdown
-                      className="chart-dropdown"
-                      style={{ paddingBottom: 5, transition: "ease" }}
+              {hoverItem && hoverItem.uuid === node.uuid && (
+                <div className="d-flex">
+                  <Plus
+                    size={16}
+                    color="#131313"
+                    className="cursor-pointer me-1"
+                    onClick={() => handleAddSubNode(node)}
+                  />
+                  <UncontrolledDropdown
+                    className="chart-dropdown"
+                    style={{ paddingBottom: 5, transition: "ease" }}
+                  >
+                    <DropdownToggle
+                      color=""
+                      className="bg-transparent btn-sm border-0 p-0"
                     >
-                      <DropdownToggle
-                        color=""
-                        className="bg-transparent btn-sm border-0 p-0"
+                      <MoreVertical size={18} className="cursor-pointer" />
+                    </DropdownToggle>
+                    <DropdownMenu end>
+                      <DropdownItem
+                        className="w-100"
+                        onClick={() => handleEditNode(node)}
                       >
-                        <MoreVertical size={18} className="cursor-pointer" />
-                      </DropdownToggle>
-                      <DropdownMenu end>
-                        <DropdownItem
-                          className="w-100"
-                          onClick={() => handleEditNode(node)}
-                        >
-                          <Edit3 size={17} className="me-1" />
-                          Edit
-                        </DropdownItem>
-                        <DropdownItem
-                          className="w-100"
-                          onClick={handleDeleteNode}
-                        >
-                          <Trash2 size={17} className="me-1" />
-                          Delete
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </UncontrolledDropdown>
-                  </div>
-                )}
+                        <Edit3 size={17} className="me-1" />
+                        Edit
+                      </DropdownItem>
+                      <DropdownItem className="w-100" onClick={onHandleDelete}>
+                        <Trash2 size={17} className="me-1" />
+                        Delete
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                </div>
+              )}
             </div>
           )}
-          {node.descendants.length > 0 &&
+          {node?.descendants?.length > 0 &&
             renderTree(node.descendants, level + 1)}
         </div>
       );
@@ -360,13 +405,13 @@ const Sidebar = (props) => {
     return null;
   };
 
-  if (isLoading) {
-    return (
-      <div className="container-xxl d-flex justify-content-center align-items-center">
-        <Spinner type="grow" color="primary" />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="container-xxl d-flex justify-content-center align-items-center">
+  //       <Spinner type="grow" color="primary" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -482,8 +527,13 @@ const Sidebar = (props) => {
                       />
                     </div>
                   </div>
-
-                  {renderTree(nodes)}
+                  {isLoading ? (
+                    <div className="d-flex justify-content-center align-items-center">
+                      <Spinner type="grow" color="primary" />
+                    </div>
+                  ) : (
+                    renderTree(nodes)
+                  )}
 
                   <div>
                     <Modal
