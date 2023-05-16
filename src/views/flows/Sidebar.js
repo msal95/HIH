@@ -39,8 +39,19 @@ const MySwal = withReactContent(Swal);
 
 const Sidebar = (props) => {
   // ** Props
-  const { sidebarOpen, handleActiveTab, setSelectedTab } = props;
-  console.log("🚀 ~ file: Sidebar.js:43 ~ setSelectedTab:", setSelectedTab);
+  const {
+    sidebarOpen,
+    handleActiveTab,
+    selectedTab,
+    projects,
+    folders,
+    setIsProjects,
+    isLoading,
+    handleActiveTabSubFolders,
+    handleActiveTabFolders,
+  } = props;
+  console.log("🚀 ~ file: Sidebar.js:43 ~ projects:", projects);
+  // console.log("🚀 ~ file: Sidebar.js:43 ~ setSelectedTab:", selectedTab);
 
   const [show, setShow] = useState(false);
   const [isNewProject, setIsNewProject] = useState(false);
@@ -83,7 +94,7 @@ const Sidebar = (props) => {
   //   childNodes: [],
   // },
   const [selectedNode, setSelectedNode] = useState(null);
-  console.log("🚀 ~ file: Sidebar.js:85 ~ selectedNode:", selectedNode);
+  // console.log("🚀 ~ file: Sidebar.js:85 ~ selectedNode:", selectedNode);
   const [newNodeLabel, setNewNodeLabel] = useState("");
   const [isEdit, setIsEdit] = useState(false);
   const [isSubNode, setIsSubNode] = useState(false);
@@ -93,27 +104,26 @@ const Sidebar = (props) => {
   // };
 
   // API Call
-  const { isLoading, data, error, refetch, isFetching, isError } = useQuery(
-    "projectsList",
-    () => getProjectLists()
-  );
+  // const { isLoading, data, error, refetch, isFetching, isError } = useQuery(
+  //   "projectsList",
+  //   () => getProjectLists()
+  // );
 
-  console.log(
-    "🚀 ~ file: Sidebar.js:97 ~ data:",
-    data?.data?.data,
-    isError,
-    error
-  );
+  // console.log(
+  //   "🚀 ~ file: Sidebar.js:97 ~ data:",
+  //   data?.data?.data,
+  //   isError,
+  //   error
+  // );
 
-  useEffect(() => {
-    // if (data?.data?.data?.folders?.length) {
+  // useEffect(() => {
+  //   // if (data?.data?.data?.folders?.length) {
 
-    setNodes(data?.data?.data[0]?.folders);
-    // }
-  }, [isFetching]);
+  //   setNodes(data?.data?.data[0]?.folders);
+  //   // }
+  // }, [isFetching]);
 
   const handleOnMouseEnter = (node) => {
-    console.log("🚀 ~ file: Sidebar.js:106 ~ handleOnMouseEnter ~ node:", node);
     setHoverItem(node);
   };
 
@@ -281,6 +291,12 @@ const Sidebar = (props) => {
   function renderTree(nodes, level = 0) {
     const indent = level * 10;
     return nodes?.map((node) => {
+      console.log(
+        "🚀 ~ file: Sidebar.js:388 ~ returnnodes?.map ~ node:",
+        selectedTab === node.name,
+        selectedTab,
+        node.name
+      );
       // console.log(
       //   "🚀 ~ file: Sidebar.js:230 ~ returndata?.data?.data?.folders?.map ~ node:",
       //   hoverItem?.id === node?.id,
@@ -295,37 +311,51 @@ const Sidebar = (props) => {
       //   hoverItem?.parent_id === node?.parent_id
       // );
       return (
-        <div key={node.id} className="px-1" style={{ paddingTop: 8 }}>
-          {node.isNewProject ? (
+        <div
+          key={node.id}
+          className={`px-1 mt-1 ${
+            selectedTab === node.name && "bg-primary text-light"
+          } `}
+          style={{ paddingTop: 5, paddingBottom: 5 }}
+        >
+          {node.is_project ? (
             <div className="container__option-selector">
-              <img
-                src={polygon}
-                alt="Polygon icon"
-                className="me-1"
-                width="10px"
-                height="7px"
-              />
-              <Layers size={16} className="me-1" color="#131313" />
-              <span className="container__option-heading">{node.name}</span>
-
-              <Plus
-                size={16}
-                color="#131313"
-                className="me-50 container__add-project-button-icon"
-                onClick={() => {
-                  handleModalToggle();
-                }}
-              />
-              <MoreVertical size={16} className="float-end" color="#131313" />
+              <div
+                onClick={() => handleActiveTabFolders(node.name)}
+                className="cursor-pointer"
+              >
+                <img
+                  src={polygon}
+                  alt="Polygon icon"
+                  className="me-1"
+                  width="10px"
+                  height="7px"
+                />
+                <Layers size={16} className="me-1" color="#131313" />
+                <span className="container__option-heading">
+                  {node.name?.length > 7
+                    ? `${node.name.substr(0, 7)}...`
+                    : node.name}
+                </span>
+              </div>
+              <div className="d-flex align-items-center">
+                <Plus
+                  size={16}
+                  color="#131313"
+                  className="me-50 container__add-project-button-icon"
+                  onClick={() => {
+                    handleModalToggle();
+                  }}
+                />
+                <MoreVertical size={16} className="float-end" color="#131313" />
+              </div>
             </div>
           ) : (
             <div
-              className={`d-flex justify-content-between container__folders-list ${
-                setSelectedTab === node.name && "bg-danger"
-              }`}
+              className={`d-flex justify-content-between container__folders-list `}
               onMouseEnter={() => handleOnMouseEnter(node)}
               onMouseLeave={handleOnMouseLeave}
-              onClick={() => handleActiveTab(node)}
+              onClick={() => handleActiveTabSubFolders(node.name)}
               // style={setSelectedTab === node.name && { background: "red" }}
             >
               <div style={{ marginLeft: indent }}>
@@ -340,8 +370,8 @@ const Sidebar = (props) => {
                   //   handleModalToggle();
                   // }}
                 >
-                  {node?.name?.length > 50
-                    ? `${node?.name.substr(0, 5)}...`
+                  {node?.name?.length > 7
+                    ? `${node?.name.substr(0, 7)}...`
                     : node?.name}
                 </span>
               </div>
@@ -381,8 +411,7 @@ const Sidebar = (props) => {
               )}
             </div>
           )}
-          {node?.descendants?.length > 0 &&
-            renderTree(node.descendants, level + 1)}
+          {node?.tree?.length > 0 && renderTree(node.tree, level + 1)}
         </div>
       );
     });
@@ -423,8 +452,20 @@ const Sidebar = (props) => {
         <div className="sidebar">
           <div className="sidebar-content email-app-sidebar">
             <div className="email-app-menu">
-              <div className="d-flex justify-content-between px-1 py-1">
-                <h3>Projects</h3>
+              <div
+                className={`d-flex justify-content-between px-1 py-1 ${
+                  selectedTab === "projects" && "bg-primary text-light"
+                }`}
+              >
+                <h3
+                  className={`cursor-pointer`}
+                  onClick={() => {
+                    handleActiveTab("projects");
+                    setIsProjects(true);
+                  }}
+                >
+                  Projects
+                </h3>
                 <Plus
                   size={17}
                   onClick={handleToggleModal}
@@ -436,67 +477,7 @@ const Sidebar = (props) => {
                 options={{ wheelPropagation: false }}
               >
                 <ListGroup tag="div" className="list-group-messages">
-                  {/* {sideBarData.map((item) => {
-                    return (
-                      <Fragment key={item.id}>
-                        <ListGroupItem className="m-0 p-0">
-                          <div className="container__option-selector ps-1">
-                            <img
-                              src={polygon}
-                              alt="Polygon icon"
-                              className="me-1"
-                              width="10px"
-                              height="7px"
-                            />
-                            <Layers
-                              size={16}
-                              className="me-1"
-                              color="#131313"
-                            />
-                            <span className="container__option-heading">
-                              {item.label?.length > 9
-                                ? `${item.label.substr(0, 10)}...`
-                                : item.label}
-                            </span>
-
-                            <Plus
-                              size={16}
-                              color="#131313"
-                              className="me-50 container__add-project-button-icon"
-                              onClick={handleToggleModal}
-                            />
-                            <MoreVertical
-                              size={16}
-                              className="float-end"
-                              color="#131313"
-                            />
-                          </div>
-                        </ListGroupItem>
-                        {item?.data.map((options) => {
-                          return (
-                            <ListGroupItem
-                              tag={Link}
-                              to="/apps/email/inbox"
-                              onClick={() => handleFolder("inbox")}
-                              key={options.id}
-                              action
-                              style={{
-                                paddingTop: 12,
-                                paddingBottom: 0,
-                                paddingLeft: 36,
-                              }}
-                            >
-                              <Folder size={18} className="me-75" />
-                              <span className="align-middle">
-                                {options.label}
-                              </span>
-                            </ListGroupItem>
-                          );
-                        })}
-                      </Fragment>
-                    );
-                  })} */}
-                  <div className="container__option-selector px-1">
+                  {/* <div className="container__option-selector px-1">
                     <div>
                       <img
                         src={polygon}
@@ -507,10 +488,9 @@ const Sidebar = (props) => {
                       />
                       <Layers size={16} className="me-1" color="#131313" />
                       <span className="container__option-heading">
-                        {/* {item.label?.length > 9
-                                ? `${item.label.substr(0, 10)}...`
-                                : item.label} */}
-                        NEMT
+                        {item.name?.length > 9
+                          ? `${item.name.substr(0, 10)}...`
+                          : item.name}
                       </span>
                     </div>
                     <div>
@@ -526,13 +506,13 @@ const Sidebar = (props) => {
                         color="#131313"
                       />
                     </div>
-                  </div>
+                  </div> */}
                   {isLoading ? (
                     <div className="d-flex justify-content-center align-items-center">
                       <Spinner type="grow" color="primary" />
                     </div>
                   ) : (
-                    renderTree(nodes)
+                    renderTree(projects)
                   )}
 
                   <div>

@@ -31,6 +31,7 @@ import Sidebar from "./Sidebar";
 import CredentialsFilter from "../credentials/CredentialsFilter";
 import { getProjectLists } from "../../../api/apiMethods";
 import { useQuery } from "react-query";
+import { isPromise } from "formik";
 
 const dummyData = [
   { id: 1, name: "SendGrid", image: sendGrid },
@@ -53,9 +54,12 @@ const WorkFlows = () => {
   const [selectedTab, setSelectedTab] = useState("projects");
   const [isEdit, setIsEdit] = useState(false);
   const [isWorkFLow, setIsWorkFLow] = useState(false);
-  const [isProjects, setIsProjects] = useState(false);
-  const [projects, setProjects] = useState(null);
-  console.log("🚀 ~ file: index.js:54 ~ WorkFlows ~ projects:", projects);
+  const [isProjects, setIsProjects] = useState(true);
+  console.log("🚀 ~ file: index.js:58 ~ WorkFlows ~ isProjects:", isProjects);
+  const [projects, setProjects] = useState([]);
+  const [folders, setFolders] = useState([]);
+  const [isActiveMainFolder, setIsActiveMainFolder] = useState(false);
+  const [isActiveSubFolder, setIsActiveSubFolder] = useState(false);
 
   let headerTitle;
 
@@ -67,22 +71,26 @@ const WorkFlows = () => {
     headerTitle = "Create Folder";
   }
 
+  let flowsLabel;
+
+  if (isProjects) {
+    flowsLabel = "All Projects";
+  } else if (isActiveMainFolder) {
+    flowsLabel = "Folders";
+  }
+
   const { isLoading, data, error, refetch, isFetching, isError } = useQuery(
     "projectsList",
     () => getProjectLists()
   );
 
-  console.log(
-    "🚀 ~ file: Sidebar.js:97 ~ data:",
-    data?.data?.data,
-    isError,
-    error
-  );
+  console.log("🚀 ~ file: index.js:72 ~ WorkFlows ~ data:", data?.data?.data);
 
   useEffect(() => {
     // if (data?.data?.data?.folders?.length) {
 
     setProjects(data?.data?.data);
+    setFolders(data?.data?.data[0]?.tree);
     // }
   }, [isFetching]);
 
@@ -90,7 +98,25 @@ const WorkFlows = () => {
 
   const handleActiveTab = (node) => {
     console.log("🚀 ~ file: index.js:92 ~ handleActiveTab ~ node:", node);
-    setSelectedTab(node.name);
+    setSelectedTab(node);
+    setIsActiveSubFolder(false);
+    setIsActiveMainFolder(false);
+  };
+
+  const handleActiveTabFolders = (node) => {
+    console.log("🚀 ~ file: index.js:92 ~ handleActiveTab ~ node:", node);
+    setSelectedTab(node);
+    setIsActiveMainFolder(true);
+    setIsProjects(false);
+    setIsActiveSubFolder(false);
+  };
+
+  const handleActiveTabSubFolders = (node) => {
+    console.log("🚀 ~ file: index.js:92 ~ handleActiveTab ~ node:", node);
+    setSelectedTab(node);
+    setIsActiveSubFolder(true);
+    setIsProjects(false);
+    setIsActiveMainFolder(false);
   };
 
   const onClickDiscardModal = () => {
@@ -173,11 +199,56 @@ const WorkFlows = () => {
     setShow(true);
   };
 
+  // const selectedData = ()=>{
+  //   if(isActiveMainFolder){
+  //     return(
+
+  //     )
+  //   }else if(isActiveSubFolder){
+  //     return(
+
+  //     )
+  //   }else{
+  //     projects?.map((item) => {
+  //       return (
+  //         <Fragment key={item.id}>
+  //           <CustomCard
+  //             name={item.name}
+  //             // image={item.image}
+  //             data={item}
+  //             isIcon
+  //             colNumber={4}
+  //             titleClass="custom-card-title"
+  //             onHandleEdit={onHandleEdit}
+  //             onHandleView={onHandleView}
+  //             onHandleDelete={onHandleDelete}
+  //           />
+  //         </Fragment>
+  //       );
+  //     })
+  //   }
+  //   // {}
+  // }
+
+  if (isError) {
+    return (
+      <div className="container-xxl d-flex justify-content-center align-items-center">
+        <h3>{error.message}</h3>
+      </div>
+    );
+  }
+
   return (
     <div className="content-area-wrapper">
       <Sidebar
         handleActiveTab={handleActiveTab}
-        setSelectedTab={setSelectedTab}
+        handleActiveTabSubFolders={handleActiveTabSubFolders}
+        handleActiveTabFolders={handleActiveTabFolders}
+        selectedTab={selectedTab}
+        projects={projects}
+        folders={folders}
+        isLoading={isLoading}
+        setIsProjects={setIsProjects}
       />
       <div className="content-right overflow-auto h-100">
         <div className="content-body">
@@ -205,7 +276,7 @@ const WorkFlows = () => {
                 sm={6}
                 className="content-header-right text-md-end d-md-block"
               >
-                {isNewProject ? (
+                {isProjects ? (
                   <Button color="primary" onClick={handleToggleModal} block>
                     Create
                     <Plus size={20} className="ms-1" color="#fff" />
@@ -254,47 +325,51 @@ const WorkFlows = () => {
 
             <div className="row">
               <div className="d-flex justify-content-between">
-                <p className="folder-class">Folder</p>
-                <p className="view-all-class" onClick={handleViewAll}>
-                  {isViewAll ? "View Less" : "View All"}
-                </p>
+                <p className="folder-class">{flowsLabel}</p>
+                {!isProjects && isActiveMainFolder && (
+                  <p className="view-all-class" onClick={handleViewAll}>
+                    {isViewAll ? "View Less" : "View All"}
+                  </p>
+                )}
               </div>
-              {projects?.map((item) => {
-                return (
-                  <Fragment key={item.id}>
-                    <CustomCard
-                      name={item.name}
-                      // image={item.image}
-                      data={item}
-                      isIcon
-                      colNumber={4}
-                      titleClass="custom-card-title"
-                      onHandleEdit={onHandleEdit}
-                      onHandleView={onHandleView}
-                      onHandleDelete={onHandleDelete}
-                    />
-                  </Fragment>
-                );
-              })}
-              {/* {foldersData.map((item) => {
-                return (
-                  <Fragment key={item.id}>
-                    <CustomCard
-                      name={item.name}
-                      // image={item.image}
-                      data={item}
-                      isIcon
-                      colNumber={4}
-                      titleClass="custom-card-title"
-                      onHandleEdit={onHandleEdit}
-                      onHandleView={onHandleView}
-                      onHandleDelete={onHandleDelete}
-                    />
-                  </Fragment>
-                );
-              })} */}
+              {isProjects &&
+                projects?.map((item) => {
+                  return (
+                    <Fragment key={item.id}>
+                      <CustomCard
+                        name={item.name}
+                        // image={item.image}
+                        data={item}
+                        isIcon
+                        colNumber={4}
+                        titleClass="custom-card-title"
+                        onHandleEdit={onHandleEdit}
+                        onHandleView={onHandleView}
+                        onHandleDelete={onHandleDelete}
+                      />
+                    </Fragment>
+                  );
+                })}
+              {isActiveMainFolder &&
+                foldersData.map((item) => {
+                  return (
+                    <Fragment key={item.id}>
+                      <CustomCard
+                        name={item.name}
+                        // image={item.image}
+                        data={item}
+                        isIcon
+                        colNumber={4}
+                        titleClass="custom-card-title"
+                        onHandleEdit={onHandleEdit}
+                        onHandleView={onHandleView}
+                        onHandleDelete={onHandleDelete}
+                      />
+                    </Fragment>
+                  );
+                })}
             </div>
-            {/* <WorkFlowsCard /> */}
+            {(isActiveMainFolder || isActiveSubFolder) && <WorkFlowsCard />}
           </Col>
         </div>
       </div>
