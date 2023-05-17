@@ -30,9 +30,27 @@ export const formJsonEditor = async (data) => {
       throw error;
     }
 };
+export const getEditorJsonById = async (form_json_editor_id) => {
+    try {
+      const response = await API_URL_LOCAL.get(`/api/form-builder/get-editor-json/${form_json_editor_id}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+};
+export const getEditorAllForm = async () => {
+    try {
+      const response = await API_URL_LOCAL.get(`/api/form-builder/get-editor-all-form`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+};
 export const formValueSave = async (data) => {
     try {
-      const response = await API_URL_LOCAL.post('/api/folder/', data);
+      const response = await API_URL_LOCAL.post('/api/form-builder/form-value-save/', data);
       return response.data;
     } catch (error) {
       console.error(error);

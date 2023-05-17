@@ -3,6 +3,7 @@ import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import Editor from "../../views/builder/Editor";
 import ViewFormRender from "../../views/builder/ViewFormRender";
+import FormListing from "../../views/builder/FormListing";
 
 const Chat = lazy(() => import("../../views/apps/chat"));
 const Todo = lazy(() => import("../../views/apps/todo"));
@@ -47,6 +48,14 @@ const AppRoutes = [
   {
     element: <ViewFormRender />,
     path: "/apps/view",
+    meta: {
+      appLayout: true,
+      className: "email-application",
+    },
+  },
+  {
+    element: <FormListing />,
+    path: "/apps/form/listing",
     meta: {
       appLayout: true,
       className: "email-application",
