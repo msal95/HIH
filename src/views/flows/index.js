@@ -29,9 +29,17 @@ import WorkFlowsCard from "../../components/WorkFlowsCard/WorkFlowsCard";
 import "../../style/base/base.scss";
 import Sidebar from "./Sidebar";
 import CredentialsFilter from "../credentials/CredentialsFilter";
-import { getProjectLists } from "../../../api/apiMethods";
+import {
+  createFolder,
+  createProjects,
+  deleteFolder,
+  deleteProject,
+  editFolder,
+  editProject,
+  getProjectLists,
+} from "../../../api/apiMethods";
 import { useQuery } from "react-query";
-import { isPromise } from "formik";
+import { toast } from "react-hot-toast";
 
 const dummyData = [
   { id: 1, name: "SendGrid", image: sendGrid },
@@ -51,11 +59,13 @@ const WorkFlows = () => {
   const [show, setShow] = useState(false);
   const [isNewProject, setIsNewProject] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
+
+  const [selectedNode, setSelectedNode] = useState(null);
   const [selectedTab, setSelectedTab] = useState("projects");
   const [isEdit, setIsEdit] = useState(false);
+  const [isEditProject, setIsEditProject] = useState(false);
   const [isWorkFLow, setIsWorkFLow] = useState(false);
   const [isProjects, setIsProjects] = useState(true);
-  console.log("🚀 ~ file: index.js:58 ~ WorkFlows ~ isProjects:", isProjects);
   const [projects, setProjects] = useState([]);
   const [folders, setFolders] = useState([]);
   const [isActiveMainFolder, setIsActiveMainFolder] = useState(false);
@@ -67,6 +77,8 @@ const WorkFlows = () => {
     headerTitle = "Edit Folder";
   } else if (isWorkFLow) {
     headerTitle = "Create Workflows";
+  } else if (isProjects) {
+    headerTitle = "Create Project";
   } else {
     headerTitle = "Create Folder";
   }
@@ -84,8 +96,6 @@ const WorkFlows = () => {
     () => getProjectLists()
   );
 
-  console.log("🚀 ~ file: index.js:72 ~ WorkFlows ~ data:", data?.data?.data);
-
   useEffect(() => {
     // if (data?.data?.data?.folders?.length) {
 
@@ -97,14 +107,12 @@ const WorkFlows = () => {
   const navigate = useNavigate();
 
   const handleActiveTab = (node) => {
-    console.log("🚀 ~ file: index.js:92 ~ handleActiveTab ~ node:", node);
     setSelectedTab(node);
     setIsActiveSubFolder(false);
     setIsActiveMainFolder(false);
   };
 
   const handleActiveTabFolders = (node) => {
-    console.log("🚀 ~ file: index.js:92 ~ handleActiveTab ~ node:", node);
     setSelectedTab(node);
     setIsActiveMainFolder(true);
     setIsProjects(false);
@@ -112,7 +120,6 @@ const WorkFlows = () => {
   };
 
   const handleActiveTabSubFolders = (node) => {
-    console.log("🚀 ~ file: index.js:92 ~ handleActiveTab ~ node:", node);
     setSelectedTab(node);
     setIsActiveSubFolder(true);
     setIsProjects(false);
@@ -132,20 +139,165 @@ const WorkFlows = () => {
     setShow((prevState) => !prevState);
   };
 
+  const handleToggleCreateProjectModal = () => {
+    handleToggleModal();
+    setIsNewProject(true);
+  };
+
+  const handleToggleCreateFolderModal = (node) => {
+    handleToggleModal();
+    setSelectedNode(node);
+    setSelectedTab(node.name);
+    setIsProjects(false);
+    setIsActiveMainFolder(true);
+  };
+
+  const handleToggleCreateSubFolderModal = (node) => {
+    handleToggleModal();
+    setSelectedNode(node);
+    setSelectedTab(node.name);
+    setIsProjects(false);
+    setIsActiveMainFolder(false);
+    setIsActiveSubFolder(true);
+  };
+
+  const handleCreateFolder = (values) => {
+    try {
+      const projectData = {
+        name: values.projectName,
+        project_id: selectedNode.id,
+      };
+      createFolder(projectData).then((res) => {
+        if (res.status === 201) {
+          setSelectedNode(null);
+          handleToggleModal();
+          refetch();
+          toast.success("New Folder Added Successfully.");
+        }
+      });
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
+        error
+      );
+    }
+  };
+
+  const handleCreateSubFolder = (values) => {
+    try {
+      const projectData = {
+        name: values.projectName,
+        project_id: selectedNode.project_id,
+        parent_id: selectedNode.id,
+      };
+      createFolder(projectData).then((res) => {
+        if (res.status === 201) {
+          refetch();
+          toast.success("New Sub Folder Added Successfully.");
+          // setIsNewProject(false);
+          setSelectedNode(null);
+          handleToggleModal();
+        }
+      });
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
+        error
+      );
+    }
+  };
+
+  const handleEditFolderModal = (node) => {
+    setSelectedNode(node);
+    setSelectedItem(node);
+    handleToggleModal();
+    setIsEdit(true);
+  };
+
+  const handleEditProjectModal = (node) => {
+    setSelectedNode(node);
+    setSelectedItem(node);
+    handleToggleModal();
+    setIsEditProject(true);
+    setIsProjects(false);
+  };
+
+  const handleEditProject = (values) => {
+    try {
+      const projectData = {
+        name: values.projectName,
+        description: values.description,
+        // parent_id: selectedNode.id,
+      };
+      editProject(projectData, selectedNode.id).then((res) => {
+        console.log("🚀 ~ file: index.js:252 ~ editProject ~ res:", res);
+        if (res.status === 200) {
+          refetch();
+          toast.success("Project Edited Successfully.");
+          setSelectedItem(null);
+          handleToggleModal();
+          setIsEditProject(false);
+        }
+      });
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
+        error
+      );
+    }
+  };
+
+  const handleEditFolder = (values) => {
+    try {
+      const projectData = {
+        name: values.projectName,
+        project_id: selectedNode.project_id,
+        // parent_id: selectedNode.id,
+      };
+      editFolder(projectData, selectedNode.id).then((res) => {
+        if (res.status === 201) {
+          refetch();
+          toast.success("Folder Edited Successfully.");
+          setSelectedItem(null);
+          handleToggleModal();
+        }
+      });
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
+        error
+      );
+    }
+  };
+
   const handleCreateProject = (values) => {
-    console.log(
-      "🚀 ~ file: Sidebar.js:87 ~ handleCreateProject ~ values:",
-      values
-    );
-    setShow(false);
-    return null;
+    try {
+      const projectData = {
+        name: values.projectName,
+        description: values.description,
+        user_id: 1,
+      };
+      createProjects(projectData).then((res) => {
+        if (res.status === 201) {
+          refetch();
+          toast.success("New Project Added Successfully.");
+          setIsNewProject(false);
+          handleToggleModal();
+        }
+      });
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
+        error
+      );
+    }
   };
 
   const handleViewAll = () => {
     setIsViewAll((prevState) => !prevState);
   };
 
-  const foldersData = isViewAll ? credentialsData : credentialsData.slice(0, 3);
+  const foldersData = isViewAll ? folders : folders?.slice(0, 3);
 
   const onHandleCredentials = () => {
     const params = {
@@ -154,7 +306,7 @@ const WorkFlows = () => {
     navigate("/apps/credentials", { state: params });
   };
 
-  const onHandleDelete = async (data) => {
+  const onHandleDeleteProject = async (data) => {
     return MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -167,14 +319,40 @@ const WorkFlows = () => {
       },
       buttonsStyling: false,
       preConfirm: () => {
-        const deletedItem = credentialsData.filter(
-          (item) => item.id !== data.id
-        );
-        setCredentialsData(deletedItem);
+        deleteProject(data);
       },
     }).then(function (result) {
-      console.log("🚀 ~ file: index.js:70 ~ onHandleDelete ~ result:", result);
       if (result.value) {
+        refetch();
+        MySwal.fire({
+          icon: "success",
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          customClass: {
+            confirmButton: "btn btn-success",
+          },
+        });
+      }
+    });
+  };
+  const onHandleDeleteFolder = async (data) => {
+    return MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      customClass: {
+        confirmButton: "btn btn-primary",
+        cancelButton: "btn btn-outline-danger ms-1",
+      },
+      buttonsStyling: false,
+      preConfirm: () => {
+        deleteFolder(data);
+      },
+    }).then(function (result) {
+      if (result.value) {
+        refetch();
         MySwal.fire({
           icon: "success",
           title: "Deleted!",
@@ -199,37 +377,6 @@ const WorkFlows = () => {
     setShow(true);
   };
 
-  // const selectedData = ()=>{
-  //   if(isActiveMainFolder){
-  //     return(
-
-  //     )
-  //   }else if(isActiveSubFolder){
-  //     return(
-
-  //     )
-  //   }else{
-  //     projects?.map((item) => {
-  //       return (
-  //         <Fragment key={item.id}>
-  //           <CustomCard
-  //             name={item.name}
-  //             // image={item.image}
-  //             data={item}
-  //             isIcon
-  //             colNumber={4}
-  //             titleClass="custom-card-title"
-  //             onHandleEdit={onHandleEdit}
-  //             onHandleView={onHandleView}
-  //             onHandleDelete={onHandleDelete}
-  //           />
-  //         </Fragment>
-  //       );
-  //     })
-  //   }
-  //   // {}
-  // }
-
   if (isError) {
     return (
       <div className="container-xxl d-flex justify-content-center align-items-center">
@@ -244,11 +391,20 @@ const WorkFlows = () => {
         handleActiveTab={handleActiveTab}
         handleActiveTabSubFolders={handleActiveTabSubFolders}
         handleActiveTabFolders={handleActiveTabFolders}
+        handleCreateProject={handleToggleCreateProjectModal}
+        handleToggleCreateFolderModal={handleToggleCreateFolderModal}
+        handleToggleCreateSubFolderModal={handleToggleCreateSubFolderModal}
+        handleCreateSubFolder={handleCreateSubFolder}
+        handleDeleteFolder={onHandleDeleteFolder}
+        handleDeleteProject={onHandleDeleteProject}
+        handleEditFolderModal={handleEditFolderModal}
+        handleEditProjectModal={handleEditProjectModal}
         selectedTab={selectedTab}
         projects={projects}
         folders={folders}
         isLoading={isLoading}
         setIsProjects={setIsProjects}
+        setIsActiveMainFolder={setIsActiveMainFolder}
       />
       <div className="content-right overflow-auto h-100">
         <div className="content-body">
@@ -268,7 +424,7 @@ const WorkFlows = () => {
             <Row>
               <Col md={9} sm={6} className="content-header-left mb-2">
                 <h2 className="content-header-title float-start mb-0">
-                  Workflows
+                  {isProjects ? "Projects" : "Workflows"}
                 </h2>
               </Col>
               <Col
@@ -277,7 +433,11 @@ const WorkFlows = () => {
                 className="content-header-right text-md-end d-md-block"
               >
                 {isProjects ? (
-                  <Button color="primary" onClick={handleToggleModal} block>
+                  <Button
+                    color="primary"
+                    onClick={handleToggleCreateProjectModal}
+                    block
+                  >
                     Create
                     <Plus size={20} className="ms-1" color="#fff" />
                   </Button>
@@ -345,7 +505,7 @@ const WorkFlows = () => {
                         titleClass="custom-card-title"
                         onHandleEdit={onHandleEdit}
                         onHandleView={onHandleView}
-                        onHandleDelete={onHandleDelete}
+                        onHandleDelete={onHandleDeleteFolder}
                       />
                     </Fragment>
                   );
@@ -363,7 +523,7 @@ const WorkFlows = () => {
                         titleClass="custom-card-title"
                         onHandleEdit={onHandleEdit}
                         onHandleView={onHandleView}
-                        onHandleDelete={onHandleDelete}
+                        onHandleDelete={onHandleDeleteFolder}
                       />
                     </Fragment>
                   );
@@ -382,7 +542,17 @@ const WorkFlows = () => {
         <div className="p-1">
           <CreateNewProject
             onCancel={onClickDiscardModal}
-            onSubmit={handleCreateProject}
+            onSubmit={
+              isEditProject
+                ? handleEditProject
+                : isEdit
+                ? handleEditFolder
+                : isActiveSubFolder
+                ? handleCreateSubFolder
+                : isProjects
+                ? handleCreateProject
+                : handleCreateFolder
+            }
             isEdit={isEdit}
             data={selectedItem}
             title={headerTitle}
