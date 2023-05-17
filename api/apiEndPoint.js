@@ -7,3 +7,4 @@ export const API_URL = axios.create({
     Accept: "application/json",
   },
 });
+

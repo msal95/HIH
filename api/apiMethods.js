@@ -1,4 +1,6 @@
 import { API_URL } from "./apiEndPoint";
+import { API_URL_LOCAL } from "./localEndPoint";
+// import { API_URL_LOCAL } from "./apiEndPoint";
 
 // Credentials API's
 export const getCredentialsList = async () =>
@@ -47,7 +49,7 @@ export const editFolder = async (fData, fId) => {
 // Form builder json
 export const formJsonEditor = async (data) => {
   try {
-    const response = await API_URL.post("/api/folder/", data);
+    const response = await API_URL_LOCAL.post("/api/form-builder/editor", data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -56,7 +58,7 @@ export const formJsonEditor = async (data) => {
 };
 export const formValueSave = async (data) => {
   try {
-    const response = await API_URL.post("/api/folder/", data);
+    const response = await API_URL_LOCAL.post("/api/folder/", data);
     return response.data;
   } catch (error) {
     console.error(error);
