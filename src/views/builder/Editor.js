@@ -33,6 +33,7 @@ export default function Editor() {
           const data = {
             data: formJsonData,
             name: "name builder",
+            user_id: 1,
           };
           const response = await formJsonEditor(data);
           console.log('Response:', response);

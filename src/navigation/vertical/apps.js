@@ -29,6 +29,12 @@ export default [
     icon: <FileText size={20} />,
     children: [
       {
+        id: "Formlisting",
+        title: "Listing",
+        icon: <Circle size={12} />,
+        navLink: "/apps/form/listing",
+      },
+      {
         id: "Editor",
         title: "Editor",
         icon: <Circle size={12} />,
