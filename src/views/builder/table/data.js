@@ -16,16 +16,17 @@ const status = {
   5: { title: 'Applied', color: 'light-info' }
 }
 export let data
+export let dataResponse
 // ** Get initial Data
 API_URL_LOCAL.get(`/api/form-builder/get-editor-all-form`).then(response => {
-  data = response?.data?.data
-  console.log('✅ data    ', data)
+  dataResponse = response?.data?.data
+  console.log('✅ dataResponse    ', dataResponse, typeof (dataResponse))
 })
-// axios.get('/api/datatables/initial-data').then(response => {
-//     data = response.data
-//     console.log('✅ data    ', data)
+axios.get('/api/datatables/initial-data').then(response => {
+    data = response.data
+    console.log('✅ data alsdkfjklasdjflaskjf', data, typeof (data))
 
-//   })
+  })
 // data = getEditorAllForm()
 // ** Expandable table component
 const ExpandableTable = ({ data }) => {
@@ -49,21 +50,22 @@ export const multiLingColumns = [
     name: 'Name',
     sortable: true,
     minWidth: '200px',
-    selector: row => row.full_name
+    selector: row => row.id
   },
-  {
-    name: 'Status',
-    sortable: true,
-    minWidth: '150px',
-    selector: row => row.status,
-    cell: row => {
-      return (
-        <Badge color={status[row.status].color} pill>
-          {status[row.status].title}
-        </Badge>
-      )
-    }
-  },
+//   {
+//     name: 'Status',
+//     sortable: true,
+//     minWidth: '150px',
+//     selector: row => row.status,
+//     cell: row => {
+//         console.log('row', row)
+//       return (
+//         <Badge color={status[row.status].color} pill>
+//           {status[row.status].title}
+//         </Badge>
+//       )
+//     }
+//   },
   {
     name: 'Actions',
     allowOverflow: true,

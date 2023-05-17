@@ -56,6 +56,15 @@ export const formJsonEditor = async (data) => {
     throw error;
   }
 };
+export const formJsonEditorDelete = async (id) => {
+  try {
+    const response = await API_URL_LOCAL.delete(`/api/form-builder/editor/delete/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 export const getEditorJsonById = async (form_json_editor_id) => {
     try {
       const response = await API_URL_LOCAL.get(`/api/form-builder/get-editor-json/${form_json_editor_id}`);
