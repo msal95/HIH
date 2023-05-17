@@ -39,8 +39,8 @@ export default function CreateNewProject(props) {
       </h3>
       <Formik
         initialValues={{
-          projectName: isEdit ? data?.name : "",
-          description: isEdit ? "Description" : "",
+          projectName: data?.name ?? "",
+          description: data?.description ?? "",
           location: "",
         }}
         validationSchema={SendGridCreateProjectValidationSchema}
