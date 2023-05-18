@@ -22,6 +22,7 @@ import {
 // Local Imports
 import polygon from "@src/assets/images/icons/polygon.png";
 import "../../style/views/Login/authentication.scss";
+import MoreVerticalDropdown from "../../components/MoreVerticalDropdown/MoreVerticalDropdown";
 
 const Sidebar = (props) => {
   // ** Props
@@ -59,15 +60,17 @@ const Sidebar = (props) => {
       return (
         <div
           key={node.id}
-          className={`mt-1 ${
-            selectedTab === node.name && "bg-primary text-light"
-          } `}
+          className={`mt-1`}
           style={{ paddingTop: 5, paddingBottom: 5 }}
         >
           {node.is_project ? (
-            <div className="container__option-selector px-1">
+            <div
+              className={`container__option-selector px-1 ${
+                selectedTab?.name === node?.name && "bg-primary text-light"
+              }`}
+            >
               <div
-                onClick={() => handleActiveTabFolders(node.name)}
+                onClick={() => handleActiveTabFolders(node)}
                 className="cursor-pointer"
               >
                 <img
@@ -78,7 +81,11 @@ const Sidebar = (props) => {
                   height="7px"
                 />
                 <Layers size={16} className="me-1" color="#131313" />
-                <span className="container__option-heading">
+                <span
+                  className={`container__option-heading ${
+                    selectedTab?.name === node?.name && "text-light"
+                  }`}
+                >
                   {node.name?.length > 7
                     ? `${node.name.substr(0, 7)}...`
                     : node.name}
@@ -93,7 +100,12 @@ const Sidebar = (props) => {
                     handleToggleCreateFolderModal(node);
                   }}
                 />
-                <UncontrolledDropdown
+                <MoreVerticalDropdown
+                  handleEdit={() => handleEditProjectModal(node)}
+                  handleDelete={() => handleDeleteProject(node.id)}
+                  isView
+                />
+                {/* <UncontrolledDropdown
                   className="chart-dropdown"
                   style={{ paddingBottom: 5, transition: "ease" }}
                 >
@@ -119,15 +131,17 @@ const Sidebar = (props) => {
                       Delete
                     </DropdownItem>
                   </DropdownMenu>
-                </UncontrolledDropdown>
+                </UncontrolledDropdown> */}
               </div>
             </div>
           ) : (
             <div
-              className={`d-flex justify-content-between container__folders-list`}
+              className={`d-flex justify-content-between container__folders-list ${
+                selectedTab?.name === node?.name && "bg-primary text-light"
+              }`}
               onMouseEnter={() => handleOnMouseEnter(node)}
               onMouseLeave={handleOnMouseLeave}
-              onClick={() => handleActiveTabSubFolders(node.name)}
+              onClick={() => handleActiveTabSubFolders(node)}
               // style={setSelectedTab === node.name && { background: "red" }}
             >
               <div style={{ marginLeft: indent }}>
@@ -151,7 +165,12 @@ const Sidebar = (props) => {
                     className="cursor-pointer me-1"
                     onClick={() => handleToggleCreateSubFolderModal(node)}
                   />
-                  <UncontrolledDropdown
+                  <MoreVerticalDropdown
+                    isView
+                    handleEdit={() => handleEditFolderModal(node)}
+                    handleDelete={() => handleDeleteFolder(hoverItem.id)}
+                  />
+                  {/* <UncontrolledDropdown
                     className="chart-dropdown"
                     style={{ paddingBottom: 5, transition: "ease" }}
                   >
@@ -177,7 +196,7 @@ const Sidebar = (props) => {
                         Delete
                       </DropdownItem>
                     </DropdownMenu>
-                  </UncontrolledDropdown>
+                  </UncontrolledDropdown> */}
                 </div>
               )}
             </div>
@@ -199,14 +218,16 @@ const Sidebar = (props) => {
           <div className="sidebar-content email-app-sidebar">
             <div className="email-app-menu">
               <div
-                className={`d-flex justify-content-between px-1 py-1 ${
-                  selectedTab === "projects" && "bg-primary text-light"
+                className={`d-flex justify-content-between align-items-center px-1  pt-1 ${
+                  selectedTab === null && "bg-primary text-light"
                 }`}
               >
                 <h3
-                  className={`cursor-pointer`}
+                  className={`cursor-pointer ${
+                    selectedTab === null && "text-light"
+                  }`}
                   onClick={() => {
-                    handleActiveTab("projects");
+                    handleActiveTab(null);
                     setIsProjects(true);
                   }}
                 >

@@ -41,38 +41,42 @@ export default function InputField(props) {
     errorType,
     handleOnCreateNewProject,
   } = props;
+  console.log("🚀 ~ file: InputField.js:44 ~ InputField ~ name:", name);
+  console.log("🚀 ~ file: InputField.js:44 ~ InputField ~ value:", value);
+
   const [inputVisibility, setInputVisibility] = useState(false);
 
   const OptionComponent = ({ data, ...props }) => {
-    if (data.type === "button") {
-      return (
-        <div className="container__option-selector px-1">
-          <img
-            src={polygon}
-            alt="Polygon icon"
-            className="me-1"
-            width="10px"
-            height="7px"
-          />
-          <Layers size={16} className="me-1" color="#131313" />
-          <span className="container__option-heading">NEMT Automat</span>
-          <MoreHorizontal size={16} className="me-1" color="#131313" />
-          <Plus
-            className="font-medium-1 me-50 container__add-project-button-icon"
-            onClick={handleOnCreateNewProject}
-          />
+    // console.log("🚀 ~ file: InputField.js:47 ~ OptionComponent ~ data:", data);
+    // if (data?.type === "button") {
+    //   return (
+    //     <div className="container__option-selector px-1">
+    //       <img
+    //         src={polygon}
+    //         alt="Polygon icon"
+    //         className="me-1"
+    //         width="10px"
+    //         height="7px"
+    //       />
+    //       <Layers size={16} className="me-1" color="#131313" />
+    //       <span className="container__option-heading">NEMT Automat</span>
+    //       <MoreHorizontal size={16} className="me-1" color="#131313" />
+    //       <Plus
+    //         className="font-medium-1 me-50 container__add-project-button-icon"
+    //         onClick={handleOnCreateNewProject}
+    //       />
+    //     </div>
+    //   );
+    // } else {
+    return (
+      <components.Option {...props}>
+        <div className="d-flex ms-2">
+          <Folder size={16} className="me-1" color="#131313" />
+          {data.name}
         </div>
-      );
-    } else {
-      return (
-        <components.Option {...props}>
-          <div className="d-flex ms-2">
-            <Folder size={16} className="me-1" color="#131313" />
-            {data.label}
-          </div>
-        </components.Option>
-      );
-    }
+      </components.Option>
+    );
+    // }
   };
 
   // ** Renders Icon Based On Visibility

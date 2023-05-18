@@ -9,6 +9,7 @@ import {
   DropdownMenu,
   DropdownToggle,
   Row,
+  Spinner,
   UncontrolledDropdown,
 } from "reactstrap";
 import Swal from "sweetalert2";
@@ -40,6 +41,7 @@ import {
 } from "../../../api/apiMethods";
 import { useQuery } from "react-query";
 import { toast } from "react-hot-toast";
+import NoRecordFound from "../../components/NoRecordFound/NoRecordFound";
 
 const dummyData = [
   { id: 1, name: "SendGrid", image: sendGrid },
@@ -49,19 +51,29 @@ const dummyData = [
   { id: 5, name: "Untitled Credential", image: atTheRate },
 ];
 
+const sortOptions = [
+  {
+    id: 1,
+    title: "ASC",
+  },
+  {
+    id: 2,
+    title: "DESC",
+  },
+];
+
 const MySwal = withReactContent(Swal);
 
 const WorkFlows = () => {
   // ** States
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [credentialsData, setCredentialsData] = useState(dummyData);
   const [isViewAll, setIsViewAll] = useState(false);
   const [show, setShow] = useState(false);
   const [isNewProject, setIsNewProject] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
 
   const [selectedNode, setSelectedNode] = useState(null);
-  const [selectedTab, setSelectedTab] = useState("projects");
+  const [selectedTab, setSelectedTab] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isEditProject, setIsEditProject] = useState(false);
   const [isWorkFLow, setIsWorkFLow] = useState(false);
@@ -69,12 +81,18 @@ const WorkFlows = () => {
   const [projects, setProjects] = useState([]);
   const [folders, setFolders] = useState([]);
   const [isActiveMainFolder, setIsActiveMainFolder] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchedFromProjects, setSearchedFromProjects] = useState();
+  const [searchedFromFolders, setSearchedFromFolders] = useState([]);
   const [isActiveSubFolder, setIsActiveSubFolder] = useState(false);
+  const [selectedOption, setSelectedOption] = useState();
 
   let headerTitle;
 
   if (isEdit) {
     headerTitle = "Edit Folder";
+  } else if (isEditProject) {
+    headerTitle = "Edit Project";
   } else if (isWorkFLow) {
     headerTitle = "Create Workflows";
   } else if (isProjects) {
@@ -96,12 +114,25 @@ const WorkFlows = () => {
     () => getProjectLists()
   );
 
-  useEffect(() => {
-    // if (data?.data?.data?.folders?.length) {
+  let searchedFrom;
 
+  if (isProjects) {
+    searchedFrom = projects;
+  } else if (isActiveMainFolder) {
+    searchedFrom = folders;
+  }
+
+  useEffect(() => {
     setProjects(data?.data?.data);
-    setFolders(data?.data?.data[0]?.tree);
-    // }
+    setSearchedFromProjects(data?.data?.data);
+    if (!!selectedTab?.is_project) {
+      const selectedProjectIndex = data?.data?.data.findIndex(
+        (item) => item.id === selectedTab?.id
+      );
+
+      setFolders(data?.data?.data[selectedProjectIndex]?.tree);
+      setSearchedFromFolders(data?.data?.data[selectedProjectIndex]?.tree);
+    }
   }, [isFetching]);
 
   const navigate = useNavigate();
@@ -117,6 +148,13 @@ const WorkFlows = () => {
     setIsActiveMainFolder(true);
     setIsProjects(false);
     setIsActiveSubFolder(false);
+    if (!!node?.is_project) {
+      const selectedProjectIndex = projects.findIndex(
+        (item) => item.id === node?.id
+      );
+      setFolders(projects[selectedProjectIndex]?.tree);
+      setSearchedFromFolders(projects[selectedProjectIndex]?.tree);
+    }
   };
 
   const handleActiveTabSubFolders = (node) => {
@@ -165,7 +203,7 @@ const WorkFlows = () => {
     try {
       const projectData = {
         name: values.projectName,
-        project_id: selectedNode.id,
+        project_id: values?.location?.id ?? selectedNode.id,
       };
       createFolder(projectData).then((res) => {
         if (res.status === 201) {
@@ -219,7 +257,7 @@ const WorkFlows = () => {
     setSelectedItem(node);
     handleToggleModal();
     setIsEditProject(true);
-    setIsProjects(false);
+    setIsProjects(true);
   };
 
   const handleEditProject = (values) => {
@@ -260,6 +298,7 @@ const WorkFlows = () => {
           toast.success("Folder Edited Successfully.");
           setSelectedItem(null);
           handleToggleModal();
+          setIsEdit(false);
         }
       });
     } catch (error) {
@@ -297,7 +336,9 @@ const WorkFlows = () => {
     setIsViewAll((prevState) => !prevState);
   };
 
-  const foldersData = isViewAll ? folders : folders?.slice(0, 3);
+  const foldersData = isViewAll
+    ? searchedFromFolders
+    : searchedFromFolders?.slice(0, 3);
 
   const onHandleCredentials = () => {
     const params = {
@@ -318,8 +359,8 @@ const WorkFlows = () => {
         cancelButton: "btn btn-outline-danger ms-1",
       },
       buttonsStyling: false,
-      preConfirm: () => {
-        deleteProject(data);
+      preConfirm: async () => {
+        await deleteProject(data);
       },
     }).then(function (result) {
       if (result.value) {
@@ -347,8 +388,8 @@ const WorkFlows = () => {
         cancelButton: "btn btn-outline-danger ms-1",
       },
       buttonsStyling: false,
-      preConfirm: () => {
-        deleteFolder(data);
+      preConfirm: async () => {
+        await deleteFolder(data);
       },
     }).then(function (result) {
       if (result.value) {
@@ -375,6 +416,56 @@ const WorkFlows = () => {
     setSelectedItem(item);
     setIsEdit(true);
     setShow(true);
+  };
+
+  const handleSearchTerm = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  useEffect(() => {
+    if (searchTerm?.length) {
+      const searchedData = searchedFrom.filter((post) => {
+        return post.name.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+      if (isProjects) {
+        setSearchedFromProjects(searchedData);
+      } else if (isActiveMainFolder) {
+        // setFolders(searchedData);
+        setSearchedFromFolders(searchedData);
+      }
+    } else {
+      setSearchedFromProjects(data?.data?.data);
+      // setFolders(searchedFromFolders);
+      setSearchedFromFolders(searchedFrom);
+    }
+  }, [searchTerm]);
+
+  const handleOnSelectSort = (value) => {
+    setSelectedOption(value);
+    if (value === "ASC") {
+      const sortedList = [...searchedFrom].sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+      // setList(sortedList);
+      if (isProjects) {
+        setSearchedFromProjects(sortedList);
+      } else if (isActiveMainFolder) {
+        setSearchedFromFolders(sortedList);
+      }
+    } else if (value === "DESC") {
+      const sortedList = [...searchedFrom].sort((a, b) =>
+        b.name.localeCompare(a.name)
+      );
+
+      if (isProjects) {
+        setSearchedFromProjects(sortedList);
+      } else if (isActiveMainFolder) {
+        setSearchedFromFolders(sortedList);
+      }
+    } else {
+      setSearchedFromProjects(data?.data?.data);
+      setSearchedFromFolders(searchedFrom);
+    }
   };
 
   if (isError) {
@@ -415,12 +506,6 @@ const WorkFlows = () => {
             onClick={() => setSidebarOpen(false)}
           ></div>
           <Col className="container-xxl col-12">
-            <CredentialsFilter
-              searchClass="col-md-6"
-              // searchTerm={searchTerm}
-              // setSearchTerm={setSearchTerm}
-              // handleSearchTerm={handleSearchTerm}
-            />
             <Row>
               <Col md={9} sm={6} className="content-header-left mb-2">
                 <h2 className="content-header-title float-start mb-0">
@@ -471,7 +556,7 @@ const WorkFlows = () => {
                       </DropdownItem>
                       <DropdownItem
                         className="w-100"
-                        onClick={handleToggleModal}
+                        onClick={handleToggleCreateFolderModal}
                       >
                         Folder
                       </DropdownItem>
@@ -482,18 +567,35 @@ const WorkFlows = () => {
             </Row>
 
             <Divider />
-
+            <CredentialsFilter
+              searchClass="col-md-6"
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              handleSearchTerm={handleSearchTerm}
+              sortOptions={sortOptions}
+              handleOnSelectSort={handleOnSelectSort}
+              selectedOption={selectedOption}
+            />
             <div className="row">
               <div className="d-flex justify-content-between">
                 <p className="folder-class">{flowsLabel}</p>
-                {!isProjects && isActiveMainFolder && (
+                {!isProjects && isActiveMainFolder && folders?.length > 3 && (
                   <p className="view-all-class" onClick={handleViewAll}>
                     {isViewAll ? "View Less" : "View All"}
                   </p>
                 )}
               </div>
+              {!searchedFromProjects?.length && !!searchTerm?.length && (
+                <NoRecordFound searchTerm={searchTerm} />
+              )}
+
+              {isLoading && (
+                <div className="d-flex justify-content-center align-items-center">
+                  <Spinner type="grow" color="primary" />
+                </div>
+              )}
               {isProjects &&
-                projects?.map((item) => {
+                searchedFromProjects?.map((item) => {
                   return (
                     <Fragment key={item.id}>
                       <CustomCard
@@ -503,31 +605,45 @@ const WorkFlows = () => {
                         isIcon
                         colNumber={4}
                         titleClass="custom-card-title"
-                        onHandleEdit={onHandleEdit}
-                        onHandleView={onHandleView}
-                        onHandleDelete={onHandleDeleteFolder}
+                        onHandleEdit={handleEditProjectModal}
+                        onHandleView={handleEditProjectModal}
+                        onHandleDelete={onHandleDeleteProject}
+                        isProjects={isProjects}
                       />
                     </Fragment>
                   );
                 })}
-              {isActiveMainFolder &&
-                foldersData.map((item) => {
-                  return (
-                    <Fragment key={item.id}>
-                      <CustomCard
-                        name={item.name}
-                        // image={item.image}
-                        data={item}
-                        isIcon
-                        colNumber={4}
-                        titleClass="custom-card-title"
-                        onHandleEdit={onHandleEdit}
-                        onHandleView={onHandleView}
-                        onHandleDelete={onHandleDeleteFolder}
-                      />
-                    </Fragment>
-                  );
-                })}
+
+              {isActiveMainFolder && (
+                <>
+                  {!searchedFromFolders?.length && !!searchTerm?.length && (
+                    <NoRecordFound searchTerm={searchTerm} />
+                  )}
+                  {!folders?.length ? (
+                    <h3 className="d-flex align-items-center justify-content-center p-2">
+                      No Folders Found in this Project
+                    </h3>
+                  ) : (
+                    foldersData.map((item) => {
+                      return (
+                        <Fragment key={item.id}>
+                          <CustomCard
+                            name={item.name}
+                            // image={item.image}
+                            data={item}
+                            isIcon
+                            colNumber={4}
+                            titleClass="custom-card-title"
+                            onHandleEdit={handleEditFolderModal}
+                            onHandleView={onHandleView}
+                            onHandleDelete={onHandleDeleteFolder}
+                          />
+                        </Fragment>
+                      );
+                    })
+                  )}
+                </>
+              )}
             </div>
             {(isActiveMainFolder || isActiveSubFolder) && <WorkFlowsCard />}
           </Col>
@@ -555,8 +671,9 @@ const WorkFlows = () => {
             }
             isEdit={isEdit}
             data={selectedItem}
+            projects={projects}
             title={headerTitle}
-            isWorkFLow={isWorkFLow}
+            isWorkFLow={isActiveMainFolder}
           />
         </div>
       </CustomModal>

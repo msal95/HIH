@@ -1,9 +1,13 @@
 // ** Icons Imports
-import { Search } from "react-feather";
+import { Calendar, Search } from "react-feather";
 
 // ** Reactstrap Imports
 import { Form, Input, InputGroup, InputGroupText, Row } from "reactstrap";
 import DropDown from "../../components/DropDown/DropDown";
+
+import "react-datepicker/dist/react-datepicker.css";
+import { useState, useRef } from "react";
+import Flatpickr from "react-flatpickr";
 
 const CredentialsFilter = (props) => {
   const options = [
@@ -13,7 +17,25 @@ const CredentialsFilter = (props) => {
     { id: 4, title: "Option 4" },
   ];
 
-  const { searchTerm, handleSearchTerm, searchClass = "col-md-4" } = props;
+  const {
+    searchTerm,
+    handleSearchTerm,
+    searchClass = "col-md-4",
+    sortOptions = options,
+    handleOnSelectSort,
+    selectedOption,
+  } = props;
+
+  const [showPicker, setShowPicker] = useState(false);
+  const [picker, setPicker] = useState(new Date());
+
+  const flatpickrRef = useRef(null);
+
+  const handleOpenCalender = () => {
+    if (flatpickrRef.current && flatpickrRef.current.flatpickr) {
+      flatpickrRef.current.flatpickr.open();
+    }
+  };
 
   return (
     <div id="faq-search-filter">
@@ -50,7 +72,26 @@ const CredentialsFilter = (props) => {
         </div>
 
         <div className="content-header-right text-md-end col-md-3 col-12 d-md-block d-none">
-          <DropDown title="Sort" options={options} />
+          <Calendar size={22} className="me-1" onClick={handleOpenCalender} />
+          {/* {showPicker && ( */}
+          {/* <Flatpickr
+            ref={flatpickrRef}
+            value={picker}
+            // id="range-picker"
+            // className="form-control"
+            onChange={(date) => setPicker(date)}
+            options={{
+              mode: "range",
+              inline: false,
+              // defaultDate: ["2020-02-01", "2020-02-15"],
+            }}
+          /> */}
+          {/* )} */}
+          <DropDown
+            title={selectedOption ?? "Sort"}
+            options={sortOptions}
+            handleOnSelectSort={handleOnSelectSort}
+          />
         </div>
       </div>
     </div>
