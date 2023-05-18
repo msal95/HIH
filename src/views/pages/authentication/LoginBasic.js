@@ -29,6 +29,7 @@ import { handleLogin } from "@store/authentication";
 // ** Context
 import { AbilityContext } from "@src/utility/context/Can";
 import { toast } from "react-hot-toast";
+import { AuthLogin } from "../../../../api/ApiMethods/AuthApiEndPoint";
 
 const ToastContent = ({ t, name, role }) => {
   return (
@@ -62,38 +63,39 @@ const defaultValues = {
 
 const LoginBasic = () => {
   // ** Hooks
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const ability = useContext(AbilityContext);
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
+//   const ability = useContext(AbilityContext);
 
   const onSubmit = (data) => {
     console.log("🚀 ~ file: LoginBasic.js:68 ~ onSubmit ~ data:", data);
-    if (Object.values(data).every((field) => field.length > 0)) {
-      useJwt
-        .login({ email: data.loginEmail, password: data.password })
-        .then((res) => {
-          const data = {
-            ...res.data.userData,
-            accessToken: res.data.accessToken,
-            refreshToken: res.data.refreshToken,
-          };
+    // if (Object.values(data).every((field) => field.length > 0)) {
+    //   useJwt
+    //     .login({ email: data.loginEmail, password: data.password })
+    //     .then((res) => {
+    //       const data = {
+    //         ...res.data.userData,
+    //         accessToken: res.data.accessToken,
+    //         refreshToken: res.data.refreshToken,
+    //       };
 
-          console.log("🚀 ~ file: LoginBasic.js:75 ~ .then ~ data:", data);
-          dispatch(handleLogin(data));
-          ability.update(res.data.userData.ability);
-          navigate(getHomeRouteForLoggedInUser(data.role));
-          toast((t) => (
-            <ToastContent
-              t={t}
-              role={data.role || "admin"}
-              name={data.fullName || data.username || "John Doe"}
-            />
-          ));
-        })
-        .catch((err) =>
-          console.log("🚀 ~ file: LoginBasic.js:110 ~ onSubmit ~ err:", err)
-        );
-    }
+    //       console.log("🚀 ~ file: LoginBasic.js:75 ~ .then ~ data:", data);
+    //       dispatch(handleLogin(data));
+    //       ability.update(res.data.userData.ability);
+    //       navigate(getHomeRouteForLoggedInUser(data.role));
+    //       toast((t) => (
+    //         <ToastContent
+    //           t={t}
+    //           role={data.role || "admin"}
+    //           name={data.fullName || data.username || "John Doe"}
+    //         />
+    //       ));
+    //     })
+    //     .catch((err) =>
+    //       console.log("🚀 ~ file: LoginBasic.js:110 ~ onSubmit ~ err:", err)
+    //     );
+    // }
+     AuthLogin(data);
   };
 
   return (
