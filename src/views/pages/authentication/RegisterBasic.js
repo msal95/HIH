@@ -26,24 +26,26 @@ import { Formik } from "formik";
 import InputField from "../../../components/InputField/InputField";
 import { SignupValidationSchema } from "../../../utility/validationSchemas/AuthenticationSchemas";
 import ErrorMessage from "../../../utility/Utils";
+import { AuthSignUp } from "../../../../api/ApiMethods/AuthApiEndPoint";
 
 const RegisterBasic = () => {
-  const navigate = useNavigate();
+//   const navigate = useNavigate();
   const onHandleSubmit = (values) => {
     console.log(
       "🚀 ~ file: RegisterBasic.js:33 ~ onHandleSubmit ~ values:",
       values
     );
     // event.preventDefault();
-    navigate(
-      "/pages/two-steps-basic"
-      // {
-      //   meta: {
-      //     publicRoute: true,
-      //     restricted: true,
-      //   },
-      // }
-    );
+    // navigate(
+    //   "/pages/two-steps-basic"
+    //   // {
+    //   //   meta: {
+    //   //     publicRoute: true,
+    //   //     restricted: true,
+    //   //   },
+    //   // }
+    // );
+    AuthSignUp(values)
   };
   return (
     <div className="auth-wrapper auth-basic px-2">
