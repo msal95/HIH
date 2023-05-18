@@ -2,7 +2,7 @@
 import { Fragment, useState } from 'react'
 
 // ** Table Columns
-import { data, multiLingColumns } from './table/data'
+import { dataResponse, multiLingColumns } from './table/data'
 
 // ** Third Party Components
 import ReactPaginate from 'react-paginate'
@@ -14,6 +14,8 @@ import DataTable from 'react-data-table-component'
 import { Card, CardHeader, CardTitle, CardFooter, CardText, Input, Label, Row, Col } from 'reactstrap'
 
 const TestDataTable = () => {
+
+    console.log('dataResponse', dataResponse?.length)
   // ** State
   const [currentPage, setCurrentPage] = useState(0)
   const [searchValue, setSearchValue] = useState('')
@@ -134,6 +136,7 @@ const TestDataTable = () => {
           />
         </Col>
       </Row>
+      {dataResponse?.length &&
       <div className='react-dataTable'>
         <DataTable
           noHeader
@@ -145,9 +148,10 @@ const TestDataTable = () => {
           sortIcon={<ChevronDown size={10} />}
           paginationDefaultPage={currentPage + 1}
           paginationComponent={CustomPagination}
-          data={searchValue.length ? filteredData : data}
+          data={searchValue.length ? filteredData : dataResponse}
         />
       </div>
+}
       <CardFooter>
         <CardText className='mb-0'>
           <span className='fw-bold'>Note:</span> <span>Use Intl Dropdown in Navbar to change table language</span>
