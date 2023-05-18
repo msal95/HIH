@@ -69,10 +69,13 @@ const WorkFlows = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isViewAll, setIsViewAll] = useState(false);
   const [show, setShow] = useState(false);
-  const [isNewProject, setIsNewProject] = useState(false);
+  // const [isNewProject, setIsNewProject] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
-
   const [selectedNode, setSelectedNode] = useState(null);
+  console.log(
+    "🚀 ~ file: index.js:75 ~ WorkFlows ~ selectedNode:",
+    selectedNode
+  );
   const [selectedTab, setSelectedTab] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isEditProject, setIsEditProject] = useState(false);
@@ -141,6 +144,7 @@ const WorkFlows = () => {
     setSelectedTab(node);
     setIsActiveSubFolder(false);
     setIsActiveMainFolder(false);
+    setSelectedOption("Sort");
   };
 
   const handleActiveTabFolders = (node) => {
@@ -148,6 +152,7 @@ const WorkFlows = () => {
     setIsActiveMainFolder(true);
     setIsProjects(false);
     setIsActiveSubFolder(false);
+    setSelectedOption("Sort");
     if (!!node?.is_project) {
       const selectedProjectIndex = projects.findIndex(
         (item) => item.id === node?.id
@@ -159,6 +164,7 @@ const WorkFlows = () => {
 
   const handleActiveTabSubFolders = (node) => {
     setSelectedTab(node);
+    setSelectedNode(node);
     setIsActiveSubFolder(true);
     setIsProjects(false);
     setIsActiveMainFolder(false);
@@ -166,6 +172,8 @@ const WorkFlows = () => {
 
   const onClickDiscardModal = () => {
     setShow(false);
+    setIsWorkFLow(false);
+    setSelectedItem(null);
   };
 
   const onHandleCreateWorkFLows = () => {
@@ -179,35 +187,36 @@ const WorkFlows = () => {
 
   const handleToggleCreateProjectModal = () => {
     handleToggleModal();
-    setIsNewProject(true);
+    // setSelectedTab(null);
+    // setIsNewProject(true);
+    setSelectedNode(null);
+    setSelectedItem(null);
+    setIsProjects(true);
+    setIsActiveMainFolder(false);
+    setIsActiveSubFolder(false);
   };
 
   const handleToggleCreateFolderModal = (node) => {
     handleToggleModal();
     setSelectedNode(node);
-    setSelectedTab(node.name);
+    setSelectedItem(null);
+    setSelectedTab(node);
     setIsProjects(false);
     setIsActiveMainFolder(true);
+    setIsEditProject(false);
+    setIsEdit(false);
   };
 
-  const handleToggleCreateSubFolderModal = (node) => {
-    handleToggleModal();
-    setSelectedNode(node);
-    setSelectedTab(node.name);
-    setIsProjects(false);
-    setIsActiveMainFolder(false);
-    setIsActiveSubFolder(true);
-  };
-
-  const handleCreateFolder = (values) => {
+  const handleCreateFolder = async (values) => {
     try {
       const projectData = {
         name: values.projectName,
-        project_id: values?.location?.id ?? selectedNode.id,
+        project_id: values?.location ?? selectedNode.id,
       };
-      createFolder(projectData).then((res) => {
+      await createFolder(projectData).then((res) => {
+        console.log("🚀 ~ file: index.js:209 ~ createFolder ~ res:", res);
         if (res.status === 201) {
-          setSelectedNode(null);
+          // setSelectedNode(null);
           handleToggleModal();
           refetch();
           toast.success("New Folder Added Successfully.");
@@ -218,22 +227,41 @@ const WorkFlows = () => {
         "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
         error
       );
+      toast.error(error?.response?.data?.message);
     }
   };
 
-  const handleCreateSubFolder = (values) => {
+  const handleToggleCreateSubFolderModal = (node) => {
+    handleToggleModal();
+    setSelectedNode(node);
+    setSelectedTab(node);
+    // setSelectedItem(null);
+    setIsProjects(false);
+    setIsActiveMainFolder(false);
+    setIsActiveSubFolder(true);
+    setIsEditProject(false);
+    setIsEdit(false);
+    setIsWorkFLow(false);
+  };
+
+  const handleCreateSubFolder = async (values) => {
+    console.log(
+      "🚀 ~ file: index.js:243 ~ handleCreateSubFolder ~ values:",
+      values
+    );
     try {
       const projectData = {
         name: values.projectName,
         project_id: selectedNode.project_id,
         parent_id: selectedNode.id,
       };
-      createFolder(projectData).then((res) => {
+      await createFolder(projectData).then((res) => {
+        console.log("🚀 ~ file: index.js:259 ~ awaitcreateFolder ~ res:", res);
         if (res.status === 201) {
           refetch();
           toast.success("New Sub Folder Added Successfully.");
           // setIsNewProject(false);
-          setSelectedNode(null);
+          // setSelectedNode(null);
           handleToggleModal();
         }
       });
@@ -242,6 +270,7 @@ const WorkFlows = () => {
         "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
         error
       );
+      toast.error(error?.response?.data?.message);
     }
   };
 
@@ -250,6 +279,19 @@ const WorkFlows = () => {
     setSelectedItem(node);
     handleToggleModal();
     setIsEdit(true);
+    setIsEditProject(false);
+    setIsProjects(false);
+  };
+
+  const handleViewSelectedProject = (node) => {
+    setSelectedNode(node);
+    setSelectedItem(node);
+    handleActiveTabFolders(node);
+    // handleToggleModal();
+    setIsEditProject(false);
+    setIsProjects(false);
+    setIsEdit(false);
+    setIsActiveMainFolder(true);
   };
 
   const handleEditProjectModal = (node) => {
@@ -257,18 +299,18 @@ const WorkFlows = () => {
     setSelectedItem(node);
     handleToggleModal();
     setIsEditProject(true);
-    setIsProjects(true);
+    setIsProjects(false);
+    setIsEdit(false);
   };
 
-  const handleEditProject = (values) => {
+  const handleEditProject = async (values) => {
     try {
       const projectData = {
         name: values.projectName,
         description: values.description,
         // parent_id: selectedNode.id,
       };
-      editProject(projectData, selectedNode.id).then((res) => {
-        console.log("🚀 ~ file: index.js:252 ~ editProject ~ res:", res);
+      await editProject(projectData, selectedNode.id).then((res) => {
         if (res.status === 200) {
           refetch();
           toast.success("Project Edited Successfully.");
@@ -282,17 +324,28 @@ const WorkFlows = () => {
         "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
         error
       );
+      toast.error(error?.response?.data?.message);
     }
   };
 
-  const handleEditFolder = (values) => {
+  const onHandleViewFolder = (node) => {
+    setSelectedNode(node);
+    setSelectedItem(node);
+    handleActiveTabSubFolders(node);
+    // handleToggleModal();
+    setIsEdit(false);
+    setIsEditProject(false);
+    setIsProjects(false);
+  };
+
+  const handleEditFolder = async (values) => {
     try {
       const projectData = {
         name: values.projectName,
         project_id: selectedNode.project_id,
         // parent_id: selectedNode.id,
       };
-      editFolder(projectData, selectedNode.id).then((res) => {
+      await editFolder(projectData, selectedNode.id).then((res) => {
         if (res.status === 201) {
           refetch();
           toast.success("Folder Edited Successfully.");
@@ -306,29 +359,36 @@ const WorkFlows = () => {
         "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
         error
       );
+
+      toast.error(error?.response?.data?.message);
     }
   };
 
-  const handleCreateProject = (values) => {
+  const handleCreateProject = async (values) => {
     try {
       const projectData = {
         name: values.projectName,
         description: values.description,
         user_id: 1,
       };
-      createProjects(projectData).then((res) => {
+      await createProjects(projectData).then((res) => {
+        console.log("🚀 ~ file: index.js:320 ~ createProjects ~ res:", res);
         if (res.status === 201) {
           refetch();
           toast.success("New Project Added Successfully.");
-          setIsNewProject(false);
+          // setIsNewProject(false);
           handleToggleModal();
+        } else {
+          toast.error(res.data.message);
+          // handleToggleModal();
         }
       });
     } catch (error) {
       console.log(
-        "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
+        "🚀 ~ file: index.js:342 ~ handleCreateProject ~ error:",
         error
       );
+      toast.error(error?.response?.data?.message);
     }
   };
 
@@ -350,7 +410,7 @@ const WorkFlows = () => {
   const onHandleDeleteProject = async (data) => {
     return MySwal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "Folders and Workflows will be deleted.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
@@ -368,7 +428,7 @@ const WorkFlows = () => {
         MySwal.fire({
           icon: "success",
           title: "Deleted!",
-          text: "Your file has been deleted.",
+          text: "Your Project has been deleted.",
           customClass: {
             confirmButton: "btn btn-success",
           },
@@ -379,7 +439,7 @@ const WorkFlows = () => {
   const onHandleDeleteFolder = async (data) => {
     return MySwal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "Sub folders and workflows will be deleted.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
@@ -397,7 +457,7 @@ const WorkFlows = () => {
         MySwal.fire({
           icon: "success",
           title: "Deleted!",
-          text: "Your file has been deleted.",
+          text: "Your Folder has been deleted.",
           customClass: {
             confirmButton: "btn btn-success",
           },
@@ -406,17 +466,11 @@ const WorkFlows = () => {
     });
   };
 
-  const onHandleView = (item) => {
-    setSelectedItem(item);
-    setIsEdit(true);
-    setShow(true);
-  };
-
-  const onHandleEdit = (item) => {
-    setSelectedItem(item);
-    setIsEdit(true);
-    setShow(true);
-  };
+  // const onHandleEdit = (item) => {
+  //   setSelectedItem(item);
+  //   setIsEdit(true);
+  //   setShow(true);
+  // };
 
   const handleSearchTerm = (event) => {
     setSearchTerm(event.target.value);
@@ -556,7 +610,9 @@ const WorkFlows = () => {
                       </DropdownItem>
                       <DropdownItem
                         className="w-100"
-                        onClick={handleToggleCreateFolderModal}
+                        onClick={() =>
+                          handleToggleCreateFolderModal(selectedNode)
+                        }
                       >
                         Folder
                       </DropdownItem>
@@ -567,15 +623,17 @@ const WorkFlows = () => {
             </Row>
 
             <Divider />
-            <CredentialsFilter
-              searchClass="col-md-6"
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              handleSearchTerm={handleSearchTerm}
-              sortOptions={sortOptions}
-              handleOnSelectSort={handleOnSelectSort}
-              selectedOption={selectedOption}
-            />
+            {!isActiveSubFolder && (
+              <CredentialsFilter
+                searchClass="col-md-6"
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                handleSearchTerm={handleSearchTerm}
+                sortOptions={sortOptions}
+                handleOnSelectSort={handleOnSelectSort}
+                selectedOption={selectedOption}
+              />
+            )}
             <div className="row">
               <div className="d-flex justify-content-between">
                 <p className="folder-class">{flowsLabel}</p>
@@ -606,7 +664,7 @@ const WorkFlows = () => {
                         colNumber={4}
                         titleClass="custom-card-title"
                         onHandleEdit={handleEditProjectModal}
-                        onHandleView={handleEditProjectModal}
+                        onHandleView={handleViewSelectedProject}
                         onHandleDelete={onHandleDeleteProject}
                         isProjects={isProjects}
                       />
@@ -635,7 +693,7 @@ const WorkFlows = () => {
                             colNumber={4}
                             titleClass="custom-card-title"
                             onHandleEdit={handleEditFolderModal}
-                            onHandleView={onHandleView}
+                            onHandleView={onHandleViewFolder}
                             onHandleDelete={onHandleDeleteFolder}
                           />
                         </Fragment>
@@ -674,6 +732,7 @@ const WorkFlows = () => {
             projects={projects}
             title={headerTitle}
             isWorkFLow={isActiveMainFolder}
+            selectedTab={selectedTab}
           />
         </div>
       </CustomModal>

@@ -35,6 +35,7 @@ export const deleteFolder = async (fId) => {
 };
 
 export const createFolder = async (fData) => {
+  console.log("🚀 ~ file: apiMethods.js:38 ~ createFolder ~ fData:", fData);
   return await API_URL.post("/api/folder", fData);
 };
 
@@ -58,7 +59,9 @@ export const formJsonEditor = async (data) => {
 };
 export const formJsonEditorDelete = async (id) => {
   try {
-    const response = await API_URL_LOCAL.delete(`/api/form-builder/editor/delete/${id}`);
+    const response = await API_URL_LOCAL.delete(
+      `/api/form-builder/editor/delete/${id}`
+    );
     return response.data;
   } catch (error) {
     console.error(error);
@@ -66,29 +69,36 @@ export const formJsonEditorDelete = async (id) => {
   }
 };
 export const getEditorJsonById = async (form_json_editor_id) => {
-    try {
-      const response = await API_URL_LOCAL.get(`/api/form-builder/get-editor-json/${form_json_editor_id}`);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+  try {
+    const response = await API_URL_LOCAL.get(
+      `/api/form-builder/get-editor-json/${form_json_editor_id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 export const getEditorAllForm = async () => {
-    try {
-      const response = await API_URL_LOCAL.get(`/api/form-builder/get-editor-all-form`);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+  try {
+    const response = await API_URL_LOCAL.get(
+      `/api/form-builder/get-editor-all-form`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 export const formValueSave = async (data) => {
-    try {
-      const response = await API_URL_LOCAL.post('/api/form-builder/form-value-save/', data);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+  try {
+    const response = await API_URL_LOCAL.post(
+      "/api/form-builder/form-value-save/",
+      data
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };

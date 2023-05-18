@@ -1,13 +1,11 @@
 // ** Icons Imports
 import { Calendar, Search } from "react-feather";
-
-// ** Reactstrap Imports
 import { Form, Input, InputGroup, InputGroupText, Row } from "reactstrap";
-import DropDown from "../../components/DropDown/DropDown";
-
-import "react-datepicker/dist/react-datepicker.css";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Flatpickr from "react-flatpickr";
+
+import DropDown from "../../components/DropDown/DropDown";
+import "../../style/components/credentialsFilter.scss";
 
 const CredentialsFilter = (props) => {
   const options = [
@@ -26,15 +24,24 @@ const CredentialsFilter = (props) => {
     selectedOption,
   } = props;
 
-  const [showPicker, setShowPicker] = useState(false);
   const [picker, setPicker] = useState(new Date());
 
   const flatpickrRef = useRef(null);
+  const iconRef = useRef(null);
+
+  useEffect(() => {
+    const icon = iconRef.current;
+    const input = flatpickrRef.current.flatpickr.input;
+
+    // Append the icon to the Flatpickr element
+    input.parentNode.insertBefore(icon, input.nextSibling);
+  }, []);
 
   const handleOpenCalender = () => {
     if (flatpickrRef.current && flatpickrRef.current.flatpickr) {
-      flatpickrRef.current.flatpickr.open();
+      flatpickrRef.current.flatpickr.toggle();
     }
+    // setShowPicker((prevState) => !prevState);
   };
 
   return (
@@ -72,20 +79,27 @@ const CredentialsFilter = (props) => {
         </div>
 
         <div className="content-header-right text-md-end col-md-3 col-12 d-md-block d-none">
-          <Calendar size={22} className="me-1" onClick={handleOpenCalender} />
+          {/* {!showPicker && ( */}
+          <Calendar
+            size={22}
+            className="me-1"
+            onClick={handleOpenCalender}
+            ref={iconRef}
+          />
+          {/* )} */}
           {/* {showPicker && ( */}
-          {/* <Flatpickr
+          <Flatpickr
             ref={flatpickrRef}
             value={picker}
-            // id="range-picker"
-            // className="form-control"
+            id="range-picker"
+            className="flatpickr-input"
             onChange={(date) => setPicker(date)}
             options={{
               mode: "range",
               inline: false,
               // defaultDate: ["2020-02-01", "2020-02-15"],
             }}
-          /> */}
+          />
           {/* )} */}
           <DropDown
             title={selectedOption ?? "Sort"}
