@@ -14,7 +14,12 @@
   &__input-field {
     font-size: 12px !important;
     color: #b9b9c3 !important;
+
+    :focus-visible {
+      padding: 0px !important;
+    }
   }
+
   &__form-label {
     font-family: "Montserrat";
     font-style: normal;
@@ -47,3 +52,12 @@
     margin-left: 18px;
   }
 }
+.container__input-group:focus-within {
+  // padding: 0px !important;
+  background-color: #f9f9f900 !important;
+  box-shadow: none !important;
+  margin-left: 10px !important;
+  padding-left: 0px !important;
+  padding-right: 2px !important;
+}
+// }

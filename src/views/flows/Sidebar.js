@@ -105,33 +105,6 @@ const Sidebar = (props) => {
                   handleDelete={() => handleDeleteProject(node.id)}
                   isView
                 />
-                {/* <UncontrolledDropdown
-                  className="chart-dropdown"
-                  style={{ paddingBottom: 5, transition: "ease" }}
-                >
-                  <DropdownToggle
-                    color=""
-                    className="bg-transparent btn-sm border-0 p-0"
-                  >
-                    <MoreVertical size={18} className="cursor-pointer" />
-                  </DropdownToggle>
-                  <DropdownMenu end>
-                    <DropdownItem
-                      className="w-100"
-                      onClick={() => handleEditProjectModal(node)}
-                    >
-                      <Edit3 size={17} className="me-1" />
-                      Edit
-                    </DropdownItem>
-                    <DropdownItem
-                      className="w-100"
-                      onClick={() => handleDeleteProject(node.id)}
-                    >
-                      <Trash2 size={17} className="me-1" />
-                      Delete
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown> */}
               </div>
             </div>
           ) : (
@@ -142,15 +115,15 @@ const Sidebar = (props) => {
               onMouseEnter={() => handleOnMouseEnter(node)}
               onMouseLeave={handleOnMouseLeave}
               onClick={() => handleActiveTabSubFolders(node)}
-              // style={setSelectedTab === node.name && { background: "red" }}
             >
-              <div style={{ marginLeft: indent }}>
+              <div className="d-flex" style={{ marginLeft: indent }}>
                 <Folder size={18} className="me-1" />
                 <span
-                  className="align-middle cursor-pointer"
+                  className="align-middle cursor-pointer d-flex flex-nowrap"
                   data-bs-toggle="tooltip"
                   data-bs-placement="top"
                   title={node.name}
+                  style={{ minWidth: 100 }}
                 >
                   {node?.name?.length > 7
                     ? `${node?.name.substr(0, 7)}...`
@@ -170,38 +143,11 @@ const Sidebar = (props) => {
                     handleEdit={() => handleEditFolderModal(node)}
                     handleDelete={() => handleDeleteFolder(hoverItem.id)}
                   />
-                  {/* <UncontrolledDropdown
-                    className="chart-dropdown"
-                    style={{ paddingBottom: 5, transition: "ease" }}
-                  >
-                    <DropdownToggle
-                      color=""
-                      className="bg-transparent btn-sm border-0 p-0"
-                    >
-                      <MoreVertical size={18} className="cursor-pointer" />
-                    </DropdownToggle>
-                    <DropdownMenu end>
-                      <DropdownItem
-                        className="w-100"
-                        onClick={() => handleEditFolderModal(node)}
-                      >
-                        <Edit3 size={17} className="me-1" />
-                        Edit
-                      </DropdownItem>
-                      <DropdownItem
-                        className="w-100"
-                        onClick={() => handleDeleteFolder(hoverItem.id)}
-                      >
-                        <Trash2 size={17} className="me-1" />
-                        Delete
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown> */}
                 </div>
               )}
             </div>
           )}
-          {node?.tree?.length > 0 && renderTree(node.tree, level + 2)}
+          {node?.tree?.length > 0 && renderTree(node.tree, level + 3)}
         </div>
       );
     });
@@ -214,8 +160,14 @@ const Sidebar = (props) => {
           show: sidebarOpen,
         })}
       >
-        <div className="sidebar ">
-          <div className="sidebar-content email-app-sidebar">
+        <div className="sidebar overflow-auto" style={{ width: "100%" }}>
+          <div
+            className="sidebar-content email-app-sidebar"
+            style={{
+              height: "auto",
+              // width: "auto",
+            }}
+          >
             <div className="email-app-menu">
               <div
                 className={`d-flex justify-content-between align-items-center px-1  pt-1 ${
@@ -239,22 +191,20 @@ const Sidebar = (props) => {
                   className="cursor-pointer"
                 />
               </div>
-              <PerfectScrollbar
+              {/* <PerfectScrollbar
                 className="sidebar-menu-list"
-                options={{ wheelPropagation: false }}
-              >
-                <ListGroup tag="div" className="list-group-messages">
-                  {isLoading ? (
-                    <div className="d-flex justify-content-center align-items-center">
-                      <Spinner type="grow" color="primary" />
-                    </div>
-                  ) : (
-                    renderTree(projects)
-                  )}
-
-                  <div></div>
-                </ListGroup>
-              </PerfectScrollbar>
+                options={{ wheelPropagation: true }}
+              > */}
+              <ListGroup tag="div" className="list-group-messages">
+                {isLoading ? (
+                  <div className="d-flex justify-content-center align-items-center">
+                    <Spinner type="grow" color="primary" />
+                  </div>
+                ) : (
+                  renderTree(projects)
+                )}
+              </ListGroup>
+              {/* </PerfectScrollbar> */}
             </div>
           </div>
         </div>

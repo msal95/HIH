@@ -30,7 +30,6 @@ export const editProject = async (pData, pId) => {
 
 // Folders API's
 export const deleteFolder = async (fId) => {
-  console.log("🚀 ~ file: apiMethods.js:18 ~ deleteFolder ~ fId:", fId);
   return await API_URL.delete(`/api/folder/${fId}`);
 };
 
@@ -46,6 +45,24 @@ export const editFolder = async (fData, fId) => {
   return await API_URL.post(`/api/folder/${fId}`, fData);
 };
 
+// Workflow API's
+export const getWorkflowLists = async () => {
+  return await API_URL.get(`/api/workflowManagement`);
+};
+
+export const deleteWorkflow = async (wId) => {
+  return await API_URL.delete(`/api/workflowManagement/${wId}`);
+};
+
+export const editWorkflow = async (wData, wId) => {
+  console.log(
+    "🚀 ~ file: apiMethods.js:58 ~ editWorkflow ~ wData:",
+    wData,
+    wId
+  );
+  return await API_URL.post(`/api/workflowManagement/${wId}`, wData);
+};
+
 // Form builder json
 export const formJsonEditor = async (data) => {
   try {
@@ -58,7 +75,9 @@ export const formJsonEditor = async (data) => {
 };
 export const formJsonEditorDelete = async (id) => {
   try {
-    const response = await API_URL_LOCAL.delete(`/api/form-builder/editor/delete/${id}`);
+    const response = await API_URL_LOCAL.delete(
+      `/api/form-builder/editor/delete/${id}`
+    );
     return response.data;
   } catch (error) {
     console.error(error);
@@ -66,29 +85,36 @@ export const formJsonEditorDelete = async (id) => {
   }
 };
 export const getEditorJsonById = async (form_json_editor_id) => {
-    try {
-      const response = await API_URL_LOCAL.get(`/api/form-builder/get-editor-json/${form_json_editor_id}`);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+  try {
+    const response = await API_URL_LOCAL.get(
+      `/api/form-builder/get-editor-json/${form_json_editor_id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 export const getEditorAllForm = async () => {
-    try {
-      const response = await API_URL_LOCAL.get(`/api/form-builder/get-editor-all-form`);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+  try {
+    const response = await API_URL_LOCAL.get(
+      `/api/form-builder/get-editor-all-form`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 export const formValueSave = async (data) => {
-    try {
-      const response = await API_URL_LOCAL.post('/api/form-builder/form-value-save/', data);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
+  try {
+    const response = await API_URL_LOCAL.post(
+      "/api/form-builder/form-value-save/",
+      data
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };

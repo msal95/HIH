@@ -21,6 +21,7 @@ import {
   InputGroup,
   InputGroupText,
   Row,
+  Spinner,
   UncontrolledDropdown,
 } from "reactstrap";
 import axios from "axios";
@@ -33,6 +34,14 @@ import sendGrid from "@src/assets/images/icons/social/sendgrid.png";
 import "../../style/views/workFlows.scss";
 import DropDown from "../DropDown/DropDown";
 import NoRecordFound from "../NoRecordFound/NoRecordFound";
+import MoreVerticalDropdown from "../MoreVerticalDropdown/MoreVerticalDropdown";
+import {
+  deleteWorkflow,
+  editWorkflow,
+  getWorkflowLists,
+} from "../../../api/apiMethods";
+import { toast } from "react-hot-toast";
+import { useQuery } from "react-query";
 
 // ** Bootstrap Checkbox Component
 
@@ -65,11 +74,29 @@ axios.get("/api/datatables/initial-data").then((response) => {
   newData = response.data;
 });
 
-const WorkFlowsCard = () => {
+const WorkFlowsCard = (props) => {
+  const {} = props;
+
+  const { isLoading, data, error, refetch, isError, isFetching } = useQuery(
+    "workFLowsLists",
+    async () => await getWorkflowLists()
+  );
+
+  console.log("🚀 ~ file: WorkFlowsCard.js:81 ~ WorkFlowsCard ~ data:", data);
   const [selectedRows, setSelectedRows] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
+  const [statusList, setStatusList] = useState({});
+  const [workflowsList, setWorkFlowsList] = useState(data?.data);
+  console.log(
+    "🚀 ~ file: WorkFlowsCard.js:78 ~ WorkFlowsCard ~ workflowsList:",
+    workflowsList
+  );
   const [flowsData, setFlowsData] = useState(newData);
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    setWorkFlowsList(data?.data);
+  }, [isFetching]);
 
   useEffect(() => {
     const searchedData = newData.filter((post) => {
@@ -82,9 +109,35 @@ const WorkFlowsCard = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleCheckboxChange = (e) => {
-    setIsChecked(e.target.checked);
-    // handleStatusChange(e.target.checked);
+  const handleCheckboxChange = async (item, itemId) => {
+    console.log(
+      "🚀 ~ file: WorkFlowsCard.js:98 ~ handleCheckboxChange ~ itemId:",
+      itemId,
+      item.status
+    );
+    setStatusList((prevStatusList) => ({
+      ...prevStatusList,
+
+      [itemId]: !prevStatusList[itemId],
+    }));
+
+    try {
+      const projectData = {
+        is_active: !item.status,
+      };
+      await editWorkflow(projectData, itemId).then((res) => {
+        if (res.status === 200) {
+          refetch();
+          toast.success("Status Updated Successfully.");
+        }
+      });
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.js:342 ~ handleCreateProject ~ error:",
+        error
+      );
+      toast.error(error?.response?.data?.message);
+    }
   };
 
   const onHandleDelete = async (data) => {
@@ -99,16 +152,18 @@ const WorkFlowsCard = () => {
         cancelButton: "btn btn-outline-danger ms-1",
       },
       buttonsStyling: false,
-      preConfirm: () => {
-        const deletedItem = flowsData.filter((item) => item.id !== data.id);
-        setFlowsData(deletedItem);
+      preConfirm: async () => {
+        await deleteWorkflow(data.id);
+        // const deletedItem = flowsData.filter((item) => item.id !== data.id);
+        // setFlowsData(deletedItem);
       },
     }).then(function (result) {
       if (result.value) {
+        refetch();
         MySwal.fire({
           icon: "success",
           title: "Deleted!",
-          text: "Your file has been deleted.",
+          text: "Your Workflow has been deleted.",
           customClass: {
             confirmButton: "btn btn-success",
           },
@@ -138,6 +193,22 @@ const WorkFlowsCard = () => {
   };
 
   const allSelected = selectedRows.length === newData.length;
+
+  if (!workflowsList?.length) {
+    return (
+      <h3 className="d-flex align-items-center justify-content-center p-2">
+        No Workflows Found in this Project
+      </h3>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        <Spinner type="grow" color="primary" />
+      </div>
+    );
+  }
 
   return (
     <Fragment>
@@ -193,7 +264,7 @@ const WorkFlowsCard = () => {
           </Col>
         </Row>
         {!flowsData.length && <NoRecordFound searchTerm={searchTerm} />}
-        {flowsData.map((item) => {
+        {workflowsList.map((item) => {
           return (
             <div
               key={item.id}
@@ -215,7 +286,7 @@ const WorkFlowsCard = () => {
                       />
                     </div>
                     <div>
-                      <p className="workflow-title">{item.full_name}</p>
+                      <p className="workflow-title">{item.name}</p>
                       <div className="d-flex align-items-center">
                         {nodesData?.map((item, index) => {
                           return (
@@ -249,7 +320,9 @@ const WorkFlowsCard = () => {
                     </div>
                   </Col>
                   <Col md={4} sm={12}>
-                    <p className="workflow-sub-title">{item.post}</p>
+                    <p className="workflow-sub-title">
+                      {!!item.folder ? item.folder.name : item.project.name}
+                    </p>
                     <p className="workflow-edited-time m-0">
                       Edited 1 minute ago
                     </p>
@@ -261,14 +334,19 @@ const WorkFlowsCard = () => {
                       </p>
                       <FormGroup switch className="me-1">
                         <Input
-                          className="primary"
+                          className="primary cursor-pointer"
                           type="switch"
                           role="switch"
-                          checked={isChecked}
-                          onChange={handleCheckboxChange}
+                          checked={!!item.status || statusList[item.id]}
+                          onChange={() => handleCheckboxChange(item, item.id)}
                         />
                       </FormGroup>
-                      <UncontrolledDropdown
+                      <MoreVerticalDropdown
+                        handleView={() => {}}
+                        handleEdit={() => handleEditFolderModal(item)}
+                        handleDelete={() => onHandleDelete(item)}
+                      />
+                      {/* <UncontrolledDropdown
                         className="chart-dropdown"
                         style={{
                           marginLeft: 2,
@@ -303,7 +381,7 @@ const WorkFlowsCard = () => {
                             Delete
                           </DropdownItem>
                         </DropdownMenu>
-                      </UncontrolledDropdown>
+                      </UncontrolledDropdown> */}
                     </div>
                     <p className="workflow-no-warning">No warning</p>
                   </Col>
