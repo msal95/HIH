@@ -160,8 +160,14 @@ const Sidebar = (props) => {
           show: sidebarOpen,
         })}
       >
-        <div className="sidebar overflow-scroll" style={{ width: "100%" }}>
-          <div className="sidebar-content email-app-sidebar">
+        <div className="sidebar overflow-auto" style={{ width: "100%" }}>
+          <div
+            className="sidebar-content email-app-sidebar"
+            style={{
+              height: "auto",
+              // width: "auto",
+            }}
+          >
             <div className="email-app-menu">
               <div
                 className={`d-flex justify-content-between align-items-center px-1  pt-1 ${

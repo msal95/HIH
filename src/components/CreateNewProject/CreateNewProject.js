@@ -22,6 +22,7 @@ export default function CreateNewProject(props) {
     isWorkFLow = false,
     projects,
     selectedTab,
+    isEditDetail,
   } = props;
   console.log(
     "🚀 ~ file: CreateNewProject.js:25 ~ CreateNewProject ~ selectedTab:",
@@ -36,8 +37,8 @@ export default function CreateNewProject(props) {
       </h3>
       <Formik
         initialValues={{
-          projectName: data?.name ?? "",
-          description: data?.description ?? "",
+          projectName: isEditDetail ? data?.name : "",
+          description: isEditDetail ? data?.description : "",
           location: selectedTab?.name ?? "",
         }}
         validationSchema={SendGridCreateProjectValidationSchema}
@@ -53,8 +54,8 @@ export default function CreateNewProject(props) {
           setFieldValue,
         }) => {
           console.log(
-            "🚀 ~ file: CreateNewProject.js:54 ~ CreateNewProject ~ values:",
-            values
+            "🚀 ~ file: CreateNewProject.js:56 ~ CreateNewProject ~ values:",
+            values.location
           );
           return (
             <Form className="auth-login-form mt-2" onSubmit={handleSubmit}>
@@ -75,11 +76,6 @@ export default function CreateNewProject(props) {
                   label="Location"
                   name="location"
                   onChange={(selectedOption) => {
-                    console.log(
-                      "🚀 ~ file: CreateNewProject.js:101 ~ CreateNewProject ~ selectedOption:",
-                      selectedOption
-                    );
-
                     setFieldValue("location", selectedOption.id);
                   }}
                   onBlur={handleBlur}

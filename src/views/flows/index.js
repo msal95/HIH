@@ -38,6 +38,7 @@ import {
   editFolder,
   editProject,
   getProjectLists,
+  getWorkflowLists,
 } from "../../../api/apiMethods";
 import { useQuery } from "react-query";
 import { toast } from "react-hot-toast";
@@ -72,10 +73,6 @@ const WorkFlows = () => {
   // const [isNewProject, setIsNewProject] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
   const [selectedNode, setSelectedNode] = useState(null);
-  console.log(
-    "🚀 ~ file: index.js:75 ~ WorkFlows ~ selectedNode:",
-    selectedNode
-  );
   const [selectedTab, setSelectedTab] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isEditProject, setIsEditProject] = useState(false);
@@ -89,6 +86,7 @@ const WorkFlows = () => {
   const [searchedFromFolders, setSearchedFromFolders] = useState([]);
   const [isActiveSubFolder, setIsActiveSubFolder] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
+  const [isEditDetail, setIsEditDetail] = useState(false);
 
   let headerTitle;
 
@@ -116,6 +114,14 @@ const WorkFlows = () => {
     "projectsList",
     () => getProjectLists()
   );
+
+  const {
+    isLoading: isWorkflowLoader,
+    data: workflowData,
+    error: workflowError,
+    refetch: workflowRefetch,
+    isError: isWorkflowError,
+  } = useQuery("workFLowsLists", async () => await getWorkflowLists());
 
   let searchedFrom;
 
@@ -145,13 +151,16 @@ const WorkFlows = () => {
     setIsActiveSubFolder(false);
     setIsActiveMainFolder(false);
     setSelectedOption("Sort");
+    setIsEditDetail(false);
   };
 
   const handleActiveTabFolders = (node) => {
     setSelectedTab(node);
+    setSelectedNode(node);
     setIsActiveMainFolder(true);
     setIsProjects(false);
     setIsActiveSubFolder(false);
+    setIsEditDetail(false);
     setSelectedOption("Sort");
     if (!!node?.is_project) {
       const selectedProjectIndex = projects.findIndex(
@@ -168,17 +177,22 @@ const WorkFlows = () => {
     setIsActiveSubFolder(true);
     setIsProjects(false);
     setIsActiveMainFolder(false);
+    setIsEditDetail(true);
   };
 
   const onClickDiscardModal = () => {
     setShow(false);
     setIsWorkFLow(false);
     setSelectedItem(null);
+    setIsEditDetail(false);
+    // setIsActiveMainFolder(false);
+    // setIsActiveSubFolder(false);
   };
 
   const onHandleCreateWorkFLows = () => {
     setIsWorkFLow((prevState) => !prevState);
     setShow(true);
+    setIsEditDetail(false);
   };
 
   const handleToggleModal = () => {
@@ -194,17 +208,19 @@ const WorkFlows = () => {
     setIsProjects(true);
     setIsActiveMainFolder(false);
     setIsActiveSubFolder(false);
+    setIsEditDetail(false);
   };
 
   const handleToggleCreateFolderModal = (node) => {
     handleToggleModal();
     setSelectedNode(node);
-    setSelectedItem(null);
+    setSelectedItem(node);
     setSelectedTab(node);
     setIsProjects(false);
     setIsActiveMainFolder(true);
     setIsEditProject(false);
     setIsEdit(false);
+    setIsEditDetail(false);
   };
 
   const handleCreateFolder = async (values) => {
@@ -242,13 +258,10 @@ const WorkFlows = () => {
     setIsEditProject(false);
     setIsEdit(false);
     setIsWorkFLow(false);
+    setIsEditDetail(false);
   };
 
   const handleCreateSubFolder = async (values) => {
-    console.log(
-      "🚀 ~ file: index.js:243 ~ handleCreateSubFolder ~ values:",
-      values
-    );
     try {
       const projectData = {
         name: values.projectName,
@@ -256,7 +269,6 @@ const WorkFlows = () => {
         parent_id: selectedNode.id,
       };
       await createFolder(projectData).then((res) => {
-        console.log("🚀 ~ file: index.js:259 ~ awaitcreateFolder ~ res:", res);
         if (res.status === 201) {
           refetch();
           toast.success("New Sub Folder Added Successfully.");
@@ -281,6 +293,7 @@ const WorkFlows = () => {
     setIsEdit(true);
     setIsEditProject(false);
     setIsProjects(false);
+    setIsEditDetail(true);
   };
 
   const handleViewSelectedProject = (node) => {
@@ -292,6 +305,7 @@ const WorkFlows = () => {
     setIsProjects(false);
     setIsEdit(false);
     setIsActiveMainFolder(true);
+    setIsEditDetail(false);
   };
 
   const handleEditProjectModal = (node) => {
@@ -301,6 +315,7 @@ const WorkFlows = () => {
     setIsEditProject(true);
     setIsProjects(false);
     setIsEdit(false);
+    setIsEditDetail(true);
   };
 
   const handleEditProject = async (values) => {
@@ -372,7 +387,6 @@ const WorkFlows = () => {
         user_id: 1,
       };
       await createProjects(projectData).then((res) => {
-        console.log("🚀 ~ file: index.js:320 ~ createProjects ~ res:", res);
         if (res.status === 201) {
           refetch();
           toast.success("New Project Added Successfully.");
@@ -522,10 +536,10 @@ const WorkFlows = () => {
     }
   };
 
-  if (isError) {
+  if (isError || isWorkflowError) {
     return (
       <div className="container-xxl d-flex justify-content-center align-items-center">
-        <h3>{error.message}</h3>
+        <h3>{error.message || workflowError.message}</h3>
       </div>
     );
   }
@@ -610,9 +624,11 @@ const WorkFlows = () => {
                       </DropdownItem>
                       <DropdownItem
                         className="w-100"
-                        onClick={() =>
-                          handleToggleCreateFolderModal(selectedNode)
-                        }
+                        onClick={() => {
+                          setIsActiveMainFolder(true);
+                          setIsActiveSubFolder(false);
+                          handleToggleCreateFolderModal(selectedNode);
+                        }}
                       >
                         Folder
                       </DropdownItem>
@@ -703,7 +719,13 @@ const WorkFlows = () => {
                 </>
               )}
             </div>
-            {(isActiveMainFolder || isActiveSubFolder) && <WorkFlowsCard />}
+            {(isActiveMainFolder || isActiveSubFolder) && (
+              <WorkFlowsCard
+                data={workflowData?.data}
+                loader={isWorkflowLoader}
+                refetch={workflowRefetch}
+              />
+            )}
           </Col>
         </div>
       </div>
@@ -733,6 +755,7 @@ const WorkFlows = () => {
             title={headerTitle}
             isWorkFLow={isActiveMainFolder}
             selectedTab={selectedTab}
+            isEditDetail={isEditDetail}
           />
         </div>
       </CustomModal>

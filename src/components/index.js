@@ -13,6 +13,7 @@ import WorkFlowsCard from "./WorkFlowsCard/WorkFlowsCard";
 import CreateNewProject from "./CreateNewProject/CreateNewProject";
 import MoreVerticalDropdown from "./MoreVerticalDropdown/MoreVerticalDropdown";
 import NoRecordFound from "./NoRecordFound/NoRecordFound";
+// import VirtualizedListing from "./VirtualizedListing/VirtualizedListing";
 
 export default {
   InputField,
@@ -30,4 +31,5 @@ export default {
   CreateNewProject,
   MoreVerticalDropdown,
   NoRecordFound,
+  // VirtualizedListing,
 };

@@ -30,12 +30,10 @@ export const editProject = async (pData, pId) => {
 
 // Folders API's
 export const deleteFolder = async (fId) => {
-  console.log("🚀 ~ file: apiMethods.js:18 ~ deleteFolder ~ fId:", fId);
   return await API_URL.delete(`/api/folder/${fId}`);
 };
 
 export const createFolder = async (fData) => {
-  console.log("🚀 ~ file: apiMethods.js:38 ~ createFolder ~ fData:", fData);
   return await API_URL.post("/api/folder", fData);
 };
 
@@ -45,6 +43,24 @@ export const createSubFolder = async (fData) => {
 
 export const editFolder = async (fData, fId) => {
   return await API_URL.post(`/api/folder/${fId}`, fData);
+};
+
+// Workflow API's
+export const getWorkflowLists = async () => {
+  return await API_URL.get(`/api/workflowManagement`);
+};
+
+export const deleteWorkflow = async (wId) => {
+  return await API_URL.delete(`/api/workflowManagement/${wId}`);
+};
+
+export const editWorkflow = async (wData, wId) => {
+  console.log(
+    "🚀 ~ file: apiMethods.js:58 ~ editWorkflow ~ wData:",
+    wData,
+    wId
+  );
+  return await API_URL.post(`/api/workflowManagement/${wId}`, wData);
 };
 
 // Form builder json

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Input,
@@ -42,108 +42,113 @@ export default function InputField(props) {
     handleOnCreateNewProject,
     isRequired,
   } = props;
+  console.log("🚀 ~ file: InputField.js:45 ~ InputField ~ name:", name);
+  console.log("🚀 ~ file: InputField.js:45 ~ InputField ~ value:", value);
 
   const [inputVisibility, setInputVisibility] = useState(false);
 
-  function renderTree(nodes, level = 0) {
-    const indent = level * 10;
-    return nodes?.map((node) => {
-      return (
-        <div
-          key={node.id}
-          className={`mt-1`}
-          style={{ paddingTop: 5, paddingBottom: 5 }}
-        >
-          {node.is_project ? (
-            <div
-              className={`container__option-selector px-1 ${
-                selectedTab?.name === node?.name && "bg-primary text-light"
-              }`}
-            >
+  useEffect(() => {
+    console.log("🚀 ~ file: InputField.js:57 ~ useEffect ~ first:");
+  }, [value]);
+
+  const OptionComponent = ({ data, ...props }) => {
+    function renderTree(nodes, level = 0) {
+      const indent = level * 10;
+      return nodes?.map((node) => {
+        return (
+          <div
+            key={node.id}
+            className={`mt-1`}
+            style={{ paddingTop: 5, paddingBottom: 5 }}
+          >
+            {node.is_project ? (
               <div
-                onClick={() => handleActiveTabFolders(node)}
-                className="cursor-pointer"
+                className={`container__option-selector px-1 ${
+                  selectedTab?.name === node?.name && "bg-primary text-light"
+                }`}
               >
-                <img
-                  src={polygon}
-                  alt="Polygon icon"
-                  className="me-1"
-                  width="10px"
-                  height="7px"
-                />
-                <Layers size={16} className="me-1" color="#131313" />
-                <span
-                  className={`container__option-heading ${
-                    selectedTab?.name === node?.name && "text-light"
-                  }`}
+                <div
+                  onClick={() => handleActiveTabFolders(node)}
+                  className="cursor-pointer"
                 >
-                  {node.name?.length > 7
-                    ? `${node.name.substr(0, 7)}...`
-                    : node.name}
-                </span>
-              </div>
-              <div className="d-flex align-items-center">
-                <Plus
-                  size={16}
-                  color="#131313"
-                  className="me-50 container__add-project-button-icon"
-                  onClick={() => {
-                    handleToggleCreateFolderModal(node);
-                  }}
-                />
-                <MoreVerticalDropdown
-                  handleEdit={() => handleEditProjectModal(node)}
-                  handleDelete={() => handleDeleteProject(node.id)}
-                  isView
-                />
-              </div>
-            </div>
-          ) : (
-            <div
-              className={`d-flex justify-content-between container__folders-list ${
-                selectedTab?.name === node?.name && "bg-primary text-light"
-              }`}
-              onMouseEnter={() => handleOnMouseEnter(node)}
-              onMouseLeave={handleOnMouseLeave}
-              onClick={() => handleActiveTabSubFolders(node)}
-            >
-              <div style={{ marginLeft: indent }}>
-                <Folder size={18} className="me-1" />
-                <span
-                  className="align-middle cursor-pointer"
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="top"
-                  title={node.name}
-                >
-                  {node?.name?.length > 7
-                    ? `${node?.name.substr(0, 7)}...`
-                    : node?.name}
-                </span>
-              </div>
-              {hoverItem && hoverItem.uuid === node.uuid && (
-                <div className="d-flex pe-1 align-items-center">
+                  <img
+                    src={polygon}
+                    alt="Polygon icon"
+                    className="me-1"
+                    width="10px"
+                    height="7px"
+                  />
+                  <Layers size={16} className="me-1" color="#131313" />
+                  <span
+                    className={`container__option-heading ${
+                      selectedTab?.name === node?.name && "text-light"
+                    }`}
+                  >
+                    {node.name?.length > 7
+                      ? `${node.name.substr(0, 7)}...`
+                      : node.name}
+                  </span>
+                </div>
+                <div className="d-flex align-items-center">
                   <Plus
                     size={16}
                     color="#131313"
-                    className="cursor-pointer me-1"
-                    onClick={() => handleToggleCreateSubFolderModal(node)}
+                    className="me-50 container__add-project-button-icon"
+                    onClick={() => {
+                      handleToggleCreateFolderModal(node);
+                    }}
                   />
                   <MoreVerticalDropdown
+                    handleEdit={() => handleEditProjectModal(node)}
+                    handleDelete={() => handleDeleteProject(node.id)}
                     isView
-                    handleEdit={() => handleEditFolderModal(node)}
-                    handleDelete={() => handleDeleteFolder(hoverItem.id)}
                   />
                 </div>
-              )}
-            </div>
-          )}
-          {node?.tree?.length > 0 && renderTree(node.tree, level + 2)}
-        </div>
-      );
-    });
-  }
-
-  const OptionComponent = ({ data, ...props }) => {
+              </div>
+            ) : (
+              <div
+                className={`d-flex justify-content-between container__folders-list ${
+                  selectedTab?.name === node?.name && "bg-primary text-light"
+                }`}
+                onMouseEnter={() => handleOnMouseEnter(node)}
+                onMouseLeave={handleOnMouseLeave}
+                onClick={() => handleActiveTabSubFolders(node)}
+              >
+                <div style={{ marginLeft: indent }}>
+                  <Folder size={18} className="me-1" />
+                  <span
+                    className="align-middle cursor-pointer"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    title={node.name}
+                  >
+                    {node?.name?.length > 7
+                      ? `${node?.name.substr(0, 7)}...`
+                      : node?.name}
+                  </span>
+                </div>
+                {hoverItem && hoverItem.uuid === node.uuid && (
+                  <div className="d-flex pe-1 align-items-center">
+                    <Plus
+                      size={16}
+                      color="#131313"
+                      className="cursor-pointer me-1"
+                      onClick={() => handleToggleCreateSubFolderModal(node)}
+                    />
+                    <MoreVerticalDropdown
+                      isView
+                      handleEdit={() => handleEditFolderModal(node)}
+                      handleDelete={() => handleDeleteFolder(hoverItem.id)}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+            {node?.tree?.length > 0 && renderTree(node.tree, level + 2)}
+          </div>
+        );
+      });
+    }
     // console.log("🚀 ~ file: InputField.js:47 ~ OptionComponent ~ data:", data);
     // if (data?.type === "button") {
     //   return (
@@ -198,9 +203,10 @@ export default function InputField(props) {
 
       {!isOption ? (
         <InputGroup
-          className={classnames({
-            [className]: className,
-          })}
+          // className={classnames({
+          //   [className]: className,
+          // })}
+          className="container__input-group"
         >
           <Input
             type={!inputVisibility && type === "password" ? "password" : type}
@@ -241,6 +247,7 @@ export default function InputField(props) {
           getOptionValue={(option) => option.id}
           getOptionLabel={(option) => option.name}
           name={name}
+          // isOptionSelected={value}
           onChange={onChange}
           onBlur={onBlur}
           components={{
