@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import Editor from "../../views/builder/Editor";
 import ViewFormRender from "../../views/builder/ViewFormRender";
 import FormListing from "../../views/builder/FormListing";
+import Engine from "../../views/workflowBuilder/Engine";
 
 const Chat = lazy(() => import("../../views/apps/chat"));
 const Todo = lazy(() => import("../../views/apps/todo"));
@@ -44,6 +45,14 @@ const AppRoutes = [
       appLayout: true,
       className: "email-application",
     },
+  },
+  {
+    element: <Engine />,
+    path: "/apps/engine",
+    meta: {
+        menuHidden: true,
+        layout:"horizontal"
+      }
   },
   {
     element: <ViewFormRender />,
