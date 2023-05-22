@@ -22,6 +22,7 @@ function laravelApi() {
         },
         integration: {
             get: `${baseUrl}/integration/get`,
+            delete: `${baseUrl}/integration/event/with/form`,
         }
     };
 }
