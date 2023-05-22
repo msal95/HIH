@@ -51,16 +51,18 @@ export const getWorkflowLists = async () => {
 };
 
 export const deleteWorkflow = async (wId) => {
-  return await API_URL.delete(`/api/workflowManagement/${wId}`);
+  console.log("🚀 ~ file: apiMethods.js:54 ~ deleteWorkflow ~ wId:", wId);
+  return await API_URL.delete(`/api/workflowManagement/delete`, wId);
 };
 
-export const editWorkflow = async (wData, wId) => {
-  console.log(
-    "🚀 ~ file: apiMethods.js:58 ~ editWorkflow ~ wData:",
-    wData,
-    wId
-  );
-  return await API_URL.post(`/api/workflowManagement/${wId}`, wData);
+export const createWorkflow = async (wData) => {
+  console.log("🚀 ~ file: apiMethods.js:58 ~ editWorkflow ~ wData:", wData);
+  return await API_URL.post(`/api/workflowManagement`, wData);
+};
+
+export const editWorkflow = async (wData) => {
+  console.log("🚀 ~ file: apiMethods.js:58 ~ editWorkflow ~ wData:", wData);
+  return await API_URL.post(`/api/workflowManagement/update`, wData);
 };
 
 // Form builder json

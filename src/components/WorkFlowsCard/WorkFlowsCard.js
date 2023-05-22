@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, forwardRef, useEffect, useState } from "react";
+import { Fragment, forwardRef, useCallback, useEffect, useState } from "react";
 import {
   ChevronDown,
   Edit3,
@@ -16,6 +16,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
+  Form,
   FormGroup,
   Input,
   InputGroup,
@@ -61,60 +62,111 @@ const options = [
 
 const MySwal = withReactContent(Swal);
 
-const BootstrapCheckbox = forwardRef((props, ref) => (
-  <div className="form-check">
-    <Input type="checkbox" ref={ref} {...props} />
-  </div>
-));
-
-let newData;
-
-// ** Get initial Data
-axios.get("/api/datatables/initial-data").then((response) => {
-  newData = response.data;
-});
+const filtersOptions = [
+  {
+    id: 1,
+    title: "A to Z",
+  },
+  {
+    id: 2,
+    title: "Z to A",
+  },
+  {
+    id: 3,
+    title: "Active",
+  },
+  {
+    id: 4,
+    title: "InActive",
+  },
+];
 
 const WorkFlowsCard = (props) => {
-  const {} = props;
-
-  const { isLoading, data, error, refetch, isError, isFetching } = useQuery(
-    "workFLowsLists",
-    async () => await getWorkflowLists()
-  );
-
-  console.log("🚀 ~ file: WorkFlowsCard.js:81 ~ WorkFlowsCard ~ data:", data);
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [isChecked, setIsChecked] = useState(false);
-  const [statusList, setStatusList] = useState({});
-  const [workflowsList, setWorkFlowsList] = useState(data?.data);
+  const {
+    selectedTab,
+    isActiveMainFolder,
+    isActiveSubFolder,
+    isLoading,
+    data,
+    error,
+    refetch,
+    isFetching,
+    isError,
+  } = props;
   console.log(
-    "🚀 ~ file: WorkFlowsCard.js:78 ~ WorkFlowsCard ~ workflowsList:",
-    workflowsList
+    "🚀 ~ file: WorkFlowsCard.js:96 ~ WorkFlowsCard ~ selectedTab:",
+    selectedTab
   );
-  const [flowsData, setFlowsData] = useState(newData);
+
+  // const { isLoading, data, error, refetch, isError, isFetching } = useQuery(
+  //   "workFLowsLists",
+  //   async () => await getWorkflowLists()
+  // );
+
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [isEdit, setIsEdit] = useState(false);
+  const [statusList, setStatusList] = useState({});
+  const [workflowsList, setWorkFlowsList] = useState();
+  const [flowsData, setFlowsData] = useState(data);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedItem, setSelectedItem] = useState();
+  console.log(
+    "🚀 ~ file: WorkFlowsCard.js:113 ~ WorkFlowsCard ~ selectedItem:",
+    selectedItem
+  );
+  const [workflowName, setWorkflowName] = useState(selectedItem?.name || "");
+  const [count, setCount] = useState(1);
+  const [selectedOption, setSelectedOption] = useState();
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    setWorkFlowsList(data?.data);
+    if (!!data?.length) {
+      setFlowsData(data);
+      if (isActiveMainFolder) {
+        const filteredProjectsWorkflows = data?.filter(
+          (item) => item.project_id === selectedTab.id
+        );
+        setWorkFlowsList(filteredProjectsWorkflows);
+        setFlowsData(filteredProjectsWorkflows);
+        setCount(2);
+      } else if (isActiveSubFolder) {
+        const filteredProjectsWorkflows = data?.filter(
+          (item) => item.folder_id === selectedTab.id
+        );
+        setWorkFlowsList(filteredProjectsWorkflows);
+        setFlowsData(filteredProjectsWorkflows);
+        setCount(2);
+      }
+    }
+  }, [selectedTab]);
+
+  useEffect(() => {
+    // setWorkFlowsList(data?.data?.data);
+    setFlowsData(data);
   }, [isFetching]);
 
   useEffect(() => {
-    const searchedData = newData.filter((post) => {
-      return post.full_name.toLowerCase().includes(searchTerm.toLowerCase());
-    });
-    setFlowsData(searchedData);
+    if (count > 1) {
+      console.log(
+        "🚀 ~ file: WorkFlowsCard.js:134 ~ useEffect ~ searchTerm?.length:",
+        searchTerm?.length
+      );
+      const searchedData = flowsData?.filter((post) => {
+        return post?.name.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+      setWorkFlowsList(searchedData);
+    }
   }, [searchTerm]);
 
   const handleSearchTerm = (event) => {
     setSearchTerm(event.target.value);
   };
 
+  const handleWorkFLowName = (event) => {
+    setWorkflowName(event.target.value);
+  };
+
   const handleCheckboxChange = async (item, itemId) => {
-    console.log(
-      "🚀 ~ file: WorkFlowsCard.js:98 ~ handleCheckboxChange ~ itemId:",
-      itemId,
-      item.status
-    );
     setStatusList((prevStatusList) => ({
       ...prevStatusList,
 
@@ -123,9 +175,11 @@ const WorkFlowsCard = (props) => {
 
     try {
       const projectData = {
-        is_active: !item.status,
+        is_active: !!selectedRows?.length ? false : !item.status,
+        workflow_ids: !!selectedRows?.length ? selectedRows : [item.id],
+        project_id: selectedTab.id,
       };
-      await editWorkflow(projectData, itemId).then((res) => {
+      await editWorkflow(projectData).then((res) => {
         if (res.status === 200) {
           refetch();
           toast.success("Status Updated Successfully.");
@@ -153,7 +207,10 @@ const WorkFlowsCard = (props) => {
       },
       buttonsStyling: false,
       preConfirm: async () => {
-        await deleteWorkflow(data.id);
+        const selectedIds = {
+          workflow_ids: !!selectedRows?.length ? selectedRows : [data.id],
+        };
+        await deleteWorkflow(selectedIds);
         // const deletedItem = flowsData.filter((item) => item.id !== data.id);
         // setFlowsData(deletedItem);
       },
@@ -172,32 +229,123 @@ const WorkFlowsCard = (props) => {
     });
   };
 
+  const onPressEditWorkflowName = (item) => {
+    setSelectedItem(item);
+    setWorkflowName(item?.name);
+    setIsEdit(true);
+  };
+
+  const handleEditWorkflow = async (e) => {
+    e.preventDefault();
+    try {
+      const projectData = {
+        name: workflowName,
+        workflow_ids: [selectedItem.id],
+        project_id: selectedItem.project_id,
+        // parent_id: selectedNode.id,
+      };
+      await editWorkflow(projectData).then((res) => {
+        if (res.status === 200) {
+          refetch();
+          toast.success("Workflow name updated Successfully.");
+          setSelectedItem(null);
+          setIsEdit(false);
+        }
+      });
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
+        error
+      );
+
+      toast.error(error?.response?.data?.message);
+    }
+  };
+
   const handleSelectAllRows = (event) => {
     if (event.target.checked) {
-      const allRows = newData.map((row) => row.id);
+      const allRows = workflowsList.map((row) => row.id);
       setSelectedRows(allRows);
     } else {
       setSelectedRows([]);
     }
   };
 
+  const handleOnSelectSort = (value) => {
+    console.log(
+      "🚀 ~ file: WorkFlowsCard.js:264 ~ handleOnSelectSort ~ value:",
+      value
+    );
+    setSelectedOption(value);
+    if (value === "A to Z") {
+      const sortedList = [...workflowsList].sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+      setWorkFlowsList(sortedList);
+      // setList(sortedList);
+      // if (isProjects) {
+      //   setSearchedFromProjects(sortedList);
+      // } else if (isActiveMainFolder) {
+      //   setSearchedFromFolders(sortedList);
+      // }
+    } else if (value === "Z to A") {
+      const sortedList = [...workflowsList].sort((a, b) =>
+        b.name.localeCompare(a.name)
+      );
+      setWorkFlowsList(sortedList);
+      // if (isProjects) {
+      //   setSearchedFromProjects(sortedList);
+      // } else if (isActiveMainFolder) {
+      //   setSearchedFromFolders(sortedList);
+      // }
+    } else if (value === "Active") {
+      // if()
+      const sortedList = [...workflowsList].sort((a, b) => b.status - a.status);
+
+      setWorkFlowsList(sortedList);
+    } else if (value === "InActive") {
+      const sortedList = [...workflowsList].sort((a, b) => a.status - b.status);
+      setWorkFlowsList(sortedList);
+    }
+    // else {
+    //   setSearchedFromProjects(data?.data?.data);
+    //   setSearchedFromFolders(searchedFrom);
+    // }
+  };
+
   const handleItemSelection = (id) => {
     const existingItem = selectedRows.filter((item) => item === id);
 
-    if (!!existingItem.length) {
-      setSelectedRows(selectedRows.filter((item) => item !== id));
+    if (!!existingItem?.length) {
+      setSelectedRows(selectedRows?.filter((item) => item !== id));
     } else {
       // selectedRows.push([id]);
       setSelectedRows([...selectedRows, id]);
     }
   };
 
-  const allSelected = selectedRows.length === newData.length;
+  const allSelected = selectedRows?.length === workflowsList?.length;
 
-  if (!workflowsList?.length) {
+  if (isError) {
+    return (
+      <h3 className="d-flex align-items-center justify-content-center p-2">
+        {error?.message}
+      </h3>
+    );
+  }
+
+  if (!workflowsList?.length && isActiveMainFolder && !searchTerm?.length) {
     return (
       <h3 className="d-flex align-items-center justify-content-center p-2">
         No Workflows Found in this Project
+      </h3>
+    );
+  }
+
+  if (!workflowsList?.length && !searchTerm?.length) {
+    return (
+      <h3 className="d-flex align-items-center justify-content-center p-2">
+        No Workflows Found in "{selectedTab?.name}"
       </h3>
     );
   }
@@ -235,9 +383,27 @@ const WorkFlowsCard = (props) => {
                     />
                   </DropdownToggle>
                   <DropdownMenu end>
-                    <DropdownItem className="w-100">Last 28 Days</DropdownItem>
-                    <DropdownItem className="w-100">Last Month</DropdownItem>
-                    <DropdownItem className="w-100">Last Year</DropdownItem>
+                    <DropdownItem className="w-100">
+                      Delete Selected
+                    </DropdownItem>
+                    <DropdownItem
+                      className="w-100"
+                      onClick={() => {
+                        handleCheckboxChange();
+                        setIsActive(true);
+                      }}
+                    >
+                      Active Selected
+                    </DropdownItem>
+                    <DropdownItem
+                      className="w-100"
+                      onClick={() => {
+                        handleCheckboxChange();
+                        setIsActive(false);
+                      }}
+                    >
+                      InActive Selected
+                    </DropdownItem>
                   </DropdownMenu>
                 </UncontrolledDropdown>
               </div>
@@ -260,11 +426,17 @@ const WorkFlowsCard = (props) => {
               />
             </InputGroup>
 
-            <DropDown title="Filters" options={options} />
+            <DropDown
+              title={selectedOption ?? "Filters"}
+              options={filtersOptions}
+              handleOnSelectSort={handleOnSelectSort}
+            />
           </Col>
         </Row>
-        {!flowsData.length && <NoRecordFound searchTerm={searchTerm} />}
-        {workflowsList.map((item) => {
+        {!workflowsList?.length && !!searchTerm?.length && (
+          <NoRecordFound searchTerm={searchTerm} />
+        )}
+        {workflowsList?.map((item) => {
           return (
             <div
               key={item.id}
@@ -286,7 +458,21 @@ const WorkFlowsCard = (props) => {
                       />
                     </div>
                     <div>
-                      <p className="workflow-title">{item.name}</p>
+                      {selectedItem?.id === item.id && isEdit ? (
+                        <Form onSubmit={handleEditWorkflow}>
+                          <Input
+                            type="text"
+                            name="name"
+                            value={workflowName}
+                            placeholder="Workflows Name"
+                            onChange={handleWorkFLowName}
+                            required
+                            style={{ padding: 5, marginBottom: 10 }}
+                          />
+                        </Form>
+                      ) : (
+                        <p className="workflow-title">{item?.name}</p>
+                      )}
                       <div className="d-flex align-items-center">
                         {nodesData?.map((item, index) => {
                           return (
@@ -321,7 +507,7 @@ const WorkFlowsCard = (props) => {
                   </Col>
                   <Col md={4} sm={12}>
                     <p className="workflow-sub-title">
-                      {!!item.folder ? item.folder.name : item.project.name}
+                      {!!item.folder ? item?.folder?.name : item.project?.name}
                     </p>
                     <p className="workflow-edited-time m-0">
                       Edited 1 minute ago
@@ -330,7 +516,7 @@ const WorkFlowsCard = (props) => {
                   <Col md={4} sm={12} className="activity-container">
                     <div className="d-flex align-items-center">
                       <p className="workflow-activity p-0 m-0 me-1 ">
-                        {isChecked ? "Active" : "InActive"}
+                        {!!item.status ? "Active" : "InActive"}
                       </p>
                       <FormGroup switch className="me-1">
                         <Input
@@ -343,45 +529,9 @@ const WorkFlowsCard = (props) => {
                       </FormGroup>
                       <MoreVerticalDropdown
                         handleView={() => {}}
-                        handleEdit={() => handleEditFolderModal(item)}
+                        handleEdit={() => onPressEditWorkflowName(item)}
                         handleDelete={() => onHandleDelete(item)}
                       />
-                      {/* <UncontrolledDropdown
-                        className="chart-dropdown"
-                        style={{
-                          marginLeft: 2,
-                        }}
-                      >
-                        <DropdownToggle
-                          color=""
-                          className="bg-transparent btn-sm border-0 p-0"
-                        >
-                          <MoreVertical size={18} className="cursor-pointer" />
-                        </DropdownToggle>
-                        <DropdownMenu end>
-                          <DropdownItem
-                            className="w-100"
-                            // onClick={() => onHandleView(data)}
-                          >
-                            <Eye size={17} className="me-1" />
-                            View
-                          </DropdownItem>
-                          <DropdownItem
-                            className="w-100"
-                            // onClick={() => onHandleEdit(data)}
-                          >
-                            <Edit3 size={17} className="me-1" />
-                            Edit
-                          </DropdownItem>
-                          <DropdownItem
-                            className="w-100"
-                            onClick={() => onHandleDelete(item)}
-                          >
-                            <Trash2 size={17} className="me-1" />
-                            Delete
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </UncontrolledDropdown> */}
                     </div>
                     <p className="workflow-no-warning">No warning</p>
                   </Col>

@@ -33,6 +33,7 @@ import CredentialsFilter from "../credentials/CredentialsFilter";
 import {
   createFolder,
   createProjects,
+  createWorkflow,
   deleteFolder,
   deleteProject,
   editFolder,
@@ -43,14 +44,6 @@ import {
 import { useQuery } from "react-query";
 import { toast } from "react-hot-toast";
 import NoRecordFound from "../../components/NoRecordFound/NoRecordFound";
-
-const dummyData = [
-  { id: 1, name: "SendGrid", image: sendGrid },
-  { id: 2, name: "Gmail", image: gmail },
-  { id: 3, name: "Microsoft", image: microsoft },
-  { id: 4, name: "Untitled Credential", image: atTheRate },
-  { id: 5, name: "Untitled Credential", image: atTheRate },
-];
 
 const sortOptions = [
   {
@@ -121,6 +114,7 @@ const WorkFlows = () => {
     error: workflowError,
     refetch: workflowRefetch,
     isError: isWorkflowError,
+    isFetching: isWorkflowFetching,
   } = useQuery("workFLowsLists", async () => await getWorkflowLists());
 
   let searchedFrom;
@@ -130,6 +124,11 @@ const WorkFlows = () => {
   } else if (isActiveMainFolder) {
     searchedFrom = folders;
   }
+
+  // useEffect(() => {
+  //   // setWorkFlowsList(data?.data?.data);
+  //   setFlowsData(data);
+  // }, [isWorkflowFetching]);
 
   useEffect(() => {
     setProjects(data?.data?.data);
@@ -189,14 +188,36 @@ const WorkFlows = () => {
     // setIsActiveSubFolder(false);
   };
 
+  const handleToggleModal = () => {
+    setShow((prevState) => !prevState);
+  };
+
   const onHandleCreateWorkFLows = () => {
     setIsWorkFLow((prevState) => !prevState);
     setShow(true);
     setIsEditDetail(false);
   };
 
-  const handleToggleModal = () => {
-    setShow((prevState) => !prevState);
+  const handleCreateWorkflow = async (values) => {
+    try {
+      const projectData = {
+        name: values.projectName,
+        project_id: values?.location ?? selectedNode.id,
+      };
+      await createWorkflow(projectData).then((res) => {
+        if (res.data.code === 201) {
+          workflowRefetch();
+          handleToggleModal();
+          toast.success("Workflow Added Successfully.");
+        }
+      });
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.js:207 ~ handleCreateWorkflow ~ error:",
+        error
+      );
+      toast.error(error?.response?.data?.message);
+    }
   };
 
   const handleToggleCreateProjectModal = () => {
@@ -536,10 +557,10 @@ const WorkFlows = () => {
     }
   };
 
-  if (isError || isWorkflowError) {
+  if (isError) {
     return (
       <div className="container-xxl d-flex justify-content-center align-items-center">
-        <h3>{error.message || workflowError.message}</h3>
+        <h3>{error.message}</h3>
       </div>
     );
   }
@@ -668,7 +689,12 @@ const WorkFlows = () => {
                   <Spinner type="grow" color="primary" />
                 </div>
               )}
-              {isProjects &&
+              {!searchedFromProjects?.length ? (
+                <h3 className="d-flex align-items-center justify-content-center p-2">
+                  No Project Found in Database
+                </h3>
+              ) : (
+                isProjects &&
                 searchedFromProjects?.map((item) => {
                   return (
                     <Fragment key={item.id}>
@@ -686,7 +712,8 @@ const WorkFlows = () => {
                       />
                     </Fragment>
                   );
-                })}
+                })
+              )}
 
               {isActiveMainFolder && (
                 <>
@@ -721,9 +748,15 @@ const WorkFlows = () => {
             </div>
             {(isActiveMainFolder || isActiveSubFolder) && (
               <WorkFlowsCard
-                data={workflowData?.data}
-                loader={isWorkflowLoader}
+                selectedTab={selectedTab}
+                isActiveMainFolder={isActiveMainFolder}
+                isActiveSubFolder={isActiveSubFolder}
+                isLoading={isWorkflowLoader}
+                data={workflowData?.data?.data}
+                error={workflowError}
                 refetch={workflowRefetch}
+                isError={isWorkflowError}
+                isFetching={isWorkflowFetching}
               />
             )}
           </Col>
@@ -739,7 +772,9 @@ const WorkFlows = () => {
           <CreateNewProject
             onCancel={onClickDiscardModal}
             onSubmit={
-              isEditProject
+              isWorkFLow
+                ? handleCreateWorkflow
+                : isEditProject
                 ? handleEditProject
                 : isEdit
                 ? handleEditFolder
