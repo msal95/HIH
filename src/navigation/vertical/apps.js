@@ -24,6 +24,12 @@ export default [
     navLink: "/apps/credentials",
   },
   {
+    id: "integration",
+    title: "Integrations",
+    icon: <Table size={20} />,
+    navLink: "/apps/integration",
+  },
+  {
     id: "builderApp",
     title: "Builder",
     icon: <FileText size={20} />,

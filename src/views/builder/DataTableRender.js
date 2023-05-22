@@ -83,6 +83,9 @@ const DataTableRender = ({data, TABLE_HEAD, ActiveApi, onSort, onSearch, onPageC
                 <MoreVertical size={15} />
               </DropdownToggle>
               <DropdownMenu>
+                <DropdownItem href="/" onClick={(e) => { e.preventDefault(); handleRowAction('create', row); }}>
+                  <Edit className="me-50" size={15} /> <span className="align-middle">Create New</span>
+                </DropdownItem>
                 <DropdownItem href="/" onClick={(e) => { e.preventDefault(); handleRowAction('edit', row); }}>
                   <Edit className="me-50" size={15} /> <span className="align-middle">Edit</span>
                 </DropdownItem>
