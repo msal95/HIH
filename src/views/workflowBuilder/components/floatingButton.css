@@ -1,0 +1,44 @@
+.toggle-switch-container {
+    position: absolute;
+    left: 0 !important;
+    right: 0 !important;
+    top: 0;
+    bottom: 0;
+    margin: 0 35%;
+    margin-top: 1.5rem;
+  }
+
+  .canvas-tool-icons {
+    height: 2em !important;
+    width: 1.5em;
+  }
+  .header-navbar {
+    box-shadow: none;
+  }
+  .nav-pills .nav-link.active,
+  .nav-pills .show > .nav-link {
+    color: #7367f0;
+    background-color: rgb(255, 255, 255);
+    box-shadow: none;
+    font-weight: 500;
+    border-color: rgb(255, 255, 255);
+  }
+
+  .nav-tabs .nav-link.disabled {
+    color: rgb(185, 185, 195);
+  }
+
+  .sliding-toggle-switch-btn-container {
+  }
+
+  .sliding-toggle-switch-btn-group {
+    background-color: rgb(239, 239, 239);
+    padding: 0.3rem;
+    margin: 0;
+    display: inline-flex;
+    border-radius: 0.3rem;
+  }
+
+  .sliding-toggle-switch-btn {
+    font-weight: 500;
+  }

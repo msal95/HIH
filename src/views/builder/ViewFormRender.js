@@ -88,7 +88,7 @@ export default function ViewFormRender() {
           };
     }, [formJson]);
   return (
-    <div className='container-xxl overflow-auto'>
+    <div className='container-xxl overflow-auto mt-4'>
     <Row>
       <Col sm='12'>
           <Card title='Striped'>

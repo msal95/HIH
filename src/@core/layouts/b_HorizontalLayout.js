@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 // ** Store & Actions
 import { useSelector, useDispatch } from "react-redux";
 import { handleMenuHidden, handleContentWidth } from "@store/layout";
-import HIHLogo from "@src/assets/images/logo/hih_Logo.png";
 
 // ** Third Party Components
 import classnames from "classnames";
@@ -35,7 +34,6 @@ import { useNavbarColor } from "@hooks/useNavbarColor";
 
 // ** Styles
 import "@styles/base/core/menu/menu-types/horizontal-menu.scss";
-import AuthHeader from "../../components/AuthHeader/AuthHeader";
 
 const HorizontalLayout = (props) => {
   // ** Props
@@ -138,14 +136,9 @@ const HorizontalLayout = (props) => {
               <NavItem>
                 <Link to="/" className="navbar-brand">
                   <span className="brand-logo">
-                    {/* <img src={themeConfig.app.appLogoImage} alt="logo" /> */}
-                    <img src={HIHLogo} width="90px" height="30px" alt="HIH Logo" />
-                    {/* <AuthHeader
-                    title="Welcome to HIH"
-                    subTitle="Please Create an account"
-                    /> */}
+                    <img src={themeConfig.app.appLogoImage} alt="logo" />
                   </span>
-                  {/* <h2 className="brand-text mb-0">{themeConfig.app.appName}</h2> */}
+                  <h2 className="brand-text mb-0">{themeConfig.app.appName}</h2>
                 </Link>
               </NavItem>
             </ul>
