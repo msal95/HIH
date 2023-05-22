@@ -125,10 +125,7 @@ const LoginBasic = () => {
         }
       });
     } catch (error) {
-      console.log(
-        "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
-        error
-      );
+      console.log("🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:", error);
     }
       console.log("🚀 ~ file: LoginBasic.js:68 ~ onSubmit ~ data:", data);
   };

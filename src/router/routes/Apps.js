@@ -5,6 +5,8 @@ import Editor from "../../views/builder/Editor";
 import ViewFormRender from "../../views/builder/ViewFormRender";
 import FormListing from "../../views/builder/FormListing";
 import Engine from "../../views/workflowBuilder/Engine";
+import Integration from "../../views/integrations/Integration";
+import EventAndResources from "../../views/integrations/EventAndResources";
 
 const Chat = lazy(() => import("../../views/apps/chat"));
 const Todo = lazy(() => import("../../views/apps/todo"));
@@ -57,6 +59,22 @@ const AppRoutes = [
   {
     element: <ViewFormRender />,
     path: "/apps/view",
+    meta: {
+      appLayout: true,
+      className: "email-application",
+    },
+  },
+  {
+    element: <Integration />,
+    path: "/apps/integration",
+    meta: {
+      appLayout: true,
+      className: "email-application",
+    },
+  },
+  {
+    element: <EventAndResources />,
+    path: "/apps/resources/event",
     meta: {
       appLayout: true,
       className: "email-application",

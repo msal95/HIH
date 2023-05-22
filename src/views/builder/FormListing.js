@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 // ** Reactstrap Imports
 import { Row, Col, Card, CardText, CardBody } from 'reactstrap'
 
+import { toast } from "react-hot-toast";
 // ** Styles
 import '@styles/react/apps/app-users.scss'
 import DataTableRender from './DataTableRender'
@@ -17,9 +18,7 @@ export default function FormListing() {
     { id: 'Actions', label: 'Actions', alignRight: false, orderable: false },
     ];
     const [formJson, setFormJson] = useState([]);
-
     const navigate = useNavigate();
-
     useEffect(() => {
         const fetchFormJson = async () => {
           const formQuery = await getEditorAllForm(1);
@@ -31,9 +30,25 @@ export default function FormListing() {
       }, []);
     const ActiveApi = (action, row) => {
         if (action === 'delete') {
-            formJsonEditorDelete(row?.id);
-            const updatedData = formJson.filter((item) => item.id !== row?.id);
-            setFormJson(updatedData);
+            try {
+                formJsonEditorDelete(row?.id).then((res) => {
+                  const message = res?.message;
+                  const validationErrors = res?.validation_errors;
+                  const response = res?.response;
+                  if (response === 200) {
+                      toast.success(message);
+                      const updatedData = formJson.filter((item) => item.id !== row?.id);
+                      setFormJson(updatedData);
+                  } else {
+                    console.log('✅ element    ', message, validationErrors, response);
+                    Object.keys(validationErrors).forEach(key => {
+                      toast.error(validationErrors[key]);
+                    });
+                  }
+                });
+              } catch (error) {
+                console.log("🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:", error);
+              }
         }
         if (action === 'view') {
             console.log('✅ row    ', row)
@@ -43,9 +58,11 @@ export default function FormListing() {
             console.log('✅ row    ', row)
             navigate("/apps/editor", { state: row });
         }
+        if (action === 'create') {
+            console.log('✅ row    ', row)
+            navigate("/apps/editor");
+        }
     };
-
-
   return (
     <div className='container-xxl overflow-auto'>
     <Row>
