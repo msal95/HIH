@@ -8,7 +8,7 @@ import useJwt from "@src/auth/jwt/useJwt";
 import { Facebook, Twitter, Mail, GitHub, Coffee, X } from "react-feather";
 
 // ** Reactstrap Imports
-import { Card, CardBody, Form, Label, Input, Button, Row } from "reactstrap";
+import { Card, CardBody, Form, Label, Input, Button, Row, Toast } from "reactstrap";
 
 // ** Styles
 import "@styles/react/pages/page-authentication.scss";
@@ -63,39 +63,71 @@ const defaultValues = {
 
 const LoginBasic = () => {
   // ** Hooks
-//   const dispatch = useDispatch();
-//   const navigate = useNavigate();
-//   const ability = useContext(AbilityContext);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const ability = useContext(AbilityContext);
+
+//   const onSubmit = data => {
+//     if (Object.values(data).every(field => field.length > 0)) {
+//       useJwt
+//         .login({ email: data.loginEmail, password: data.password })
+//         .then(res => {
+//           const data = { ...res.data.userData, accessToken: res.data.accessToken, refreshToken: res.data.refreshToken }
+//           console.log('✅ data    ', data)
+
+//           dispatch(handleLogin(data))
+//           ability.update(res.data.userData.ability)
+//           navigate(getHomeRouteForLoggedInUser(data.role))
+//           toast(t => (
+//             <ToastContent t={t} role={data.role || 'admin'} name={data.fullName || data.username || 'John Doe'} />
+//           ))
+//         })
+//         .catch(err => setError('loginEmail', {
+//             type: 'manual',
+//             message: err.response.data.error
+//           })
+//         )
+//     } else {
+//       for (const key in data) {
+//         if (data[key].length === 0) {
+//           setError(key, {
+//             type: 'manual'
+//           })
+//         }
+//       }
+//     }
+//   }
 
   const onSubmit = (data) => {
-    console.log("🚀 ~ file: LoginBasic.js:68 ~ onSubmit ~ data:", data);
-    // if (Object.values(data).every((field) => field.length > 0)) {
-    //   useJwt
-    //     .login({ email: data.loginEmail, password: data.password })
-    //     .then((res) => {
-    //       const data = {
-    //         ...res.data.userData,
-    //         accessToken: res.data.accessToken,
-    //         refreshToken: res.data.refreshToken,
-    //       };
-
-    //       console.log("🚀 ~ file: LoginBasic.js:75 ~ .then ~ data:", data);
-    //       dispatch(handleLogin(data));
-    //       ability.update(res.data.userData.ability);
-    //       navigate(getHomeRouteForLoggedInUser(data.role));
-    //       toast((t) => (
-    //         <ToastContent
-    //           t={t}
-    //           role={data.role || "admin"}
-    //           name={data.fullName || data.username || "John Doe"}
-    //         />
-    //       ));
-    //     })
-    //     .catch((err) =>
-    //       console.log("🚀 ~ file: LoginBasic.js:110 ~ onSubmit ~ err:", err)
-    //     );
-    // }
-     AuthLogin(data);
+    try {
+      AuthLogin(data).then((res) => {
+        const message = res?.message;
+        const validationErrors = res?.validation_errors;
+        const response = res?.response;
+        if (response === 200) {
+            toast.success(message);
+            const data = {
+                ...res.data.userData,
+                accessToken: res.data.accessToken,
+                refreshToken: res.data.refreshToken,
+            };
+            console.log("🚀 ~ file: LoginBasic.js:75 ~ .then ~ data:", data);
+            dispatch(handleLogin(data));
+            ability.update(res.data.userData.ability);
+            navigate(getHomeRouteForLoggedInUser(data.role));
+        } else {
+          console.log('✅ element    ', message,
+          validationErrors,
+          response);
+          Object.keys(validationErrors).forEach(key => {
+            toast.error(validationErrors[key]);
+          });
+        }
+      });
+    } catch (error) {
+      console.log("🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:", error);
+    }
+      console.log("🚀 ~ file: LoginBasic.js:68 ~ onSubmit ~ data:", data);
   };
 
   return (
