@@ -272,34 +272,18 @@ const WorkFlowsCard = (props) => {
   };
 
   const handleOnSelectSort = (value) => {
-    console.log(
-      "🚀 ~ file: WorkFlowsCard.js:264 ~ handleOnSelectSort ~ value:",
-      value
-    );
     setSelectedOption(value);
     if (value === "A to Z") {
       const sortedList = [...workflowsList].sort((a, b) =>
         a.name.localeCompare(b.name)
       );
       setWorkFlowsList(sortedList);
-      // setList(sortedList);
-      // if (isProjects) {
-      //   setSearchedFromProjects(sortedList);
-      // } else if (isActiveMainFolder) {
-      //   setSearchedFromFolders(sortedList);
-      // }
     } else if (value === "Z to A") {
       const sortedList = [...workflowsList].sort((a, b) =>
         b.name.localeCompare(a.name)
       );
       setWorkFlowsList(sortedList);
-      // if (isProjects) {
-      //   setSearchedFromProjects(sortedList);
-      // } else if (isActiveMainFolder) {
-      //   setSearchedFromFolders(sortedList);
-      // }
     } else if (value === "Active") {
-      // if()
       const sortedList = [...workflowsList].sort((a, b) => b.status - a.status);
 
       setWorkFlowsList(sortedList);
@@ -307,10 +291,6 @@ const WorkFlowsCard = (props) => {
       const sortedList = [...workflowsList].sort((a, b) => a.status - b.status);
       setWorkFlowsList(sortedList);
     }
-    // else {
-    //   setSearchedFromProjects(data?.data?.data);
-    //   setSearchedFromFolders(searchedFrom);
-    // }
   };
 
   const handleItemSelection = (id) => {
@@ -383,7 +363,7 @@ const WorkFlowsCard = (props) => {
                     />
                   </DropdownToggle>
                   <DropdownMenu end>
-                    <DropdownItem className="w-100">
+                    <DropdownItem className="w-100" onClick={onHandleDelete}>
                       Delete Selected
                     </DropdownItem>
                     <DropdownItem

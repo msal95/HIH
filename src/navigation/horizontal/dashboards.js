@@ -1,24 +1,24 @@
 // ** Icons Import
-import { Home, Activity, ShoppingCart } from 'react-feather'
+import { Home, Activity, ShoppingCart } from "react-feather";
 
 export default [
   {
-    id: 'dashboards',
-    title: 'Dashboards',
+    id: "dashboards",
+    title: "Dashboards",
     icon: <Home />,
     children: [
       {
-        id: 'analyticsDash',
-        title: 'Analytics',
+        id: "analyticsDash",
+        title: "Analytics",
         icon: <Activity />,
-        navLink: '/dashboard/analytics'
+        navLink: "/dashboard/analytics",
       },
       {
-        id: 'eCommerceDash',
-        title: 'eCommerce',
+        id: "eCommerceDash",
+        title: "eCommerce",
         icon: <ShoppingCart />,
-        navLink: '/dashboard/ecommerce'
-      }
-    ]
-  }
-]
+        navLink: "/dashboard/ecommerce",
+      },
+    ],
+  },
+];
