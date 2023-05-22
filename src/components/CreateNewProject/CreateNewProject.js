@@ -5,12 +5,6 @@ import { SendGridCreateProjectValidationSchema } from "../../utility/validationS
 import { Button, Form } from "reactstrap";
 import InputField from "../InputField/InputField";
 const colourOptions = [
-  // {
-  //   value: "add-new",
-  //   label: "Add New Customer",
-  //   type: "button",
-  //   color: "flat-success",
-  // },
   { value: "ocean", label: "Ocean" },
   { value: "blue", label: "Blue" },
   { value: "purple", label: "Purple" },
@@ -27,7 +21,13 @@ export default function CreateNewProject(props) {
     data,
     isWorkFLow = false,
     projects,
+    selectedTab,
+    isEditDetail,
   } = props;
+  console.log(
+    "🚀 ~ file: CreateNewProject.js:25 ~ CreateNewProject ~ selectedTab:",
+    selectedTab
+  );
 
   return (
     <>
@@ -37,9 +37,9 @@ export default function CreateNewProject(props) {
       </h3>
       <Formik
         initialValues={{
-          projectName: data?.name ?? "",
-          description: data?.description ?? "",
-          location: "",
+          projectName: isEditDetail ? data?.name : "",
+          description: isEditDetail ? data?.description : "",
+          location: selectedTab?.name ?? "",
         }}
         validationSchema={SendGridCreateProjectValidationSchema}
         onSubmit={onSubmit}
@@ -51,15 +51,16 @@ export default function CreateNewProject(props) {
           handleChange,
           handleBlur,
           handleSubmit,
+          setFieldValue,
         }) => {
           console.log(
-            "🚀 ~ file: CreateNewProject.js:57 ~ CreateNewProject ~ values:",
+            "🚀 ~ file: CreateNewProject.js:56 ~ CreateNewProject ~ values:",
             values.location
           );
           return (
             <Form className="auth-login-form mt-2" onSubmit={handleSubmit}>
               <InputField
-                label="Name*"
+                label="Name"
                 type="text"
                 name="projectName"
                 onChange={handleChange}
@@ -68,13 +69,14 @@ export default function CreateNewProject(props) {
                 placeholder="New Project"
                 errorType={errors.projectName && touched.projectName}
                 errorMessage={errors.projectName}
+                isRequired
               />
               {isWorkFLow ? (
                 <InputField
                   label="Location"
                   name="location"
                   onChange={(selectedOption) => {
-                    handleChange("location")(selectedOption.id);
+                    setFieldValue("location", selectedOption.id);
                   }}
                   onBlur={handleBlur}
                   value={values.location}
@@ -82,6 +84,7 @@ export default function CreateNewProject(props) {
                   isOption
                   errorType={errors.location && touched.location}
                   errorMessage={errors.location}
+                  isRequired
                 />
               ) : (
                 <InputField

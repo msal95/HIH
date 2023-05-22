@@ -104,7 +104,7 @@ export default function CustomCard(props) {
         </CardHeader>
         <CardBody>
           <CardTitle
-            className={`${titleClass} p-0 m-0`}
+            className={`${titleClass} p-0 m-0 cursor-pointer`}
             tag="h4"
             data-bs-toggle="tooltip"
             data-bs-placement="top"
