@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useQuery} from 'react-query';
+import { useQuery, useQueryClient, useMutation} from 'react-query';
 import laravelApi from './laravelApi';
 import { integrationKey } from './queryKeys';
 
@@ -13,4 +13,14 @@ export function useGetIntegration(filters) {
     }
 
     return useQuery([integrationKey.integration, filters], getData, { staleTime: Infinity });
+}
+
+export function useDeleteEventWithForm() {
+    const queryClient = useQueryClient();
+    return useMutation((id) => axios.delete(`${laravelApi?.integration?.delete}/${id}`, {}).then((result) => result.data), {
+        onSuccess: () => {
+            // Invalidate and refetch
+            queryClient.invalidateQueries(integrationKey?.integration);
+        },
+    });
 }
