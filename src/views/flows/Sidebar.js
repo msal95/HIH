@@ -164,7 +164,8 @@ const Sidebar = (props) => {
           <div
             className="sidebar-content email-app-sidebar"
             style={{
-              height: "auto",
+              maxHeight: "auto",
+              minHeight: "100vh",
               // width: "auto",
             }}
           >
@@ -195,15 +196,21 @@ const Sidebar = (props) => {
                 className="sidebar-menu-list"
                 options={{ wheelPropagation: true }}
               > */}
-              <ListGroup tag="div" className="list-group-messages">
-                {isLoading ? (
-                  <div className="d-flex justify-content-center align-items-center">
-                    <Spinner type="grow" color="primary" />
-                  </div>
-                ) : (
-                  renderTree(projects)
-                )}
-              </ListGroup>
+              {!projects?.length ? (
+                <h3 className="d-flex align-items-center justify-content-center p-2">
+                  No Projects and folders exist
+                </h3>
+              ) : (
+                <ListGroup tag="div" className="list-group-messages">
+                  {isLoading ? (
+                    <div className="d-flex justify-content-center align-items-center">
+                      <Spinner type="grow" color="primary" />
+                    </div>
+                  ) : (
+                    renderTree(projects)
+                  )}
+                </ListGroup>
+              )}
               {/* </PerfectScrollbar> */}
             </div>
           </div>
