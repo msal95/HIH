@@ -93,12 +93,13 @@ export default function Integration() {
                 <Col lg='3' sm='6'>
                     <Card onClick={(e) => { e.preventDefault(); handleRowAction('create', item); }}>
                         <CardBody className="fw-bolder mb-75">
+
+                            <div>
+                                <img src={item.image} class="img-rounded" alt="Cinque Terre" width="100" height="100"/>
+                            </div>
                             <div className='d-flex justify-content-between align-items-center'>
                             <div>
                                 <h2>{item?.name}</h2>
-                            </div>
-                            <div className="avatar avatar-stats p-50 m-0 bg-light-primary">
-                                <div className='avatar-content'>{<UserX size={20}/>}</div>
                             </div>
                             </div>
                         </CardBody>

@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 // ** Icons Imports
 import { Facebook, Twitter, Mail, GitHub } from "react-feather";
 
+import { toast } from "react-hot-toast";
+
 // ** Custom Components
 import InputPasswordToggle from "@components/input-password-toggle";
 
@@ -29,7 +31,7 @@ import ErrorMessage from "../../../utility/Utils";
 import { AuthSignUp } from "../../../../api/ApiMethods/AuthApiEndPoint";
 
 const RegisterBasic = () => {
-//   const navigate = useNavigate();
+  const navigate = useNavigate();
   const onHandleSubmit = (values) => {
     console.log(
       "🚀 ~ file: RegisterBasic.js:33 ~ onHandleSubmit ~ values:",
@@ -45,7 +47,28 @@ const RegisterBasic = () => {
     //   //   },
     //   // }
     // );
-    AuthSignUp(values)
+
+    try {
+        AuthSignUp(values).then((res) => {
+          const message = res?.message;
+          const validationErrors = res?.validation_errors;
+          const response = res?.response;
+          if (response === 200) {
+              toast.success(message);
+              navigate("/login");
+          } else {
+            console.log('✅ element    ', message,
+            validationErrors,
+            response);
+            Object.keys(validationErrors).forEach(key => {
+              toast.error(validationErrors[key]);
+            });
+          }
+        });
+      } catch (error) {
+        console.log("🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:", error);
+      }
+    // AuthSignUp(values)
   };
   return (
     <div className="auth-wrapper auth-basic px-2">
