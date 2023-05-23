@@ -5,11 +5,13 @@ import { User, UserPlus, MoreVertical, UserX, FileText, Edit, Trash  } from 'rea
 import { useDeleteEventWithForm } from '../../../api/config/integrationQueries';
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
+import Faq from './faq';
 
 export default function EventAndResources() {
     const location = useLocation();
     const eventFormDelete = useDeleteEventWithForm();
     const [resource] = useState(location?.state?.resources);
+    const [integrationFull] = useState(location?.state);
     const [image] = useState(location?.state?.image);
     const [events, setEvents] = useState(location?.state?.events);
     const [eventsFull] = useState(location?.state?.events);
@@ -86,7 +88,7 @@ export default function EventAndResources() {
 
   return (
     <div className='container-xxl overflow-auto mt-5'>
-        <Row>
+        {/* <Row>
             <Col sm='12'>
                 <Card title='Striped' className='p-3'>
                     <CardBody>
@@ -173,9 +175,6 @@ export default function EventAndResources() {
                                                                 <h6 className='text-danger' >{item?.form?.length}</h6>
                                                                 <h6 className={(item?.form?.id > 0) ? 'text-success' : 'text-danger'} ><FileText /> </h6>
                                                             </div>
-                                                            {/* <div className="avatar avatar-stats p-50 m-0 bg-light-primary">
-                                                                <div className='avatar-content'>{<UserX size={20}/>}</div>
-                                                            </div> */}
                                                         </div>
                                                     </CardBody>
                                                 </Card>
@@ -186,7 +185,8 @@ export default function EventAndResources() {
                         </Row>
                 </Card>
             </Col>
-        </Row>
+        </Row> */}
+        <Faq integrationFull={integrationFull}/>
     </div>
   )
 }
