@@ -7,9 +7,15 @@ import {
 } from "reactstrap";
 
 export default function DropDown(props) {
-  const { title, options, color = "secondary", handleOnSelectSort } = props;
+  const {
+    title,
+    options,
+    color = "secondary",
+    handleOnSelectSort,
+    className = "",
+  } = props;
   return (
-    <UncontrolledButtonDropdown>
+    <UncontrolledButtonDropdown className={className}>
       <DropdownToggle outline color={color} caret>
         {title}
       </DropdownToggle>

@@ -4,30 +4,18 @@ import { Layers } from "react-feather";
 import { SendGridCreateProjectValidationSchema } from "../../utility/validationSchemas/CredentialsValidationSchema";
 import { Button, Form } from "reactstrap";
 import InputField from "../InputField/InputField";
-const colourOptions = [
-  { value: "ocean", label: "Ocean" },
-  { value: "blue", label: "Blue" },
-  { value: "purple", label: "Purple" },
-  { value: "red", label: "Red" },
-  { value: "orange", label: "Orange" },
-];
 
 export default function CreateNewProject(props) {
   const {
     onSubmit,
     onCancel,
     title = "Create Project",
-    isEdit = false,
     data,
     isWorkFLow = false,
     projects,
     selectedTab,
     isEditDetail,
   } = props;
-  console.log(
-    "🚀 ~ file: CreateNewProject.js:25 ~ CreateNewProject ~ selectedTab:",
-    selectedTab
-  );
 
   return (
     <>
@@ -53,10 +41,6 @@ export default function CreateNewProject(props) {
           handleSubmit,
           setFieldValue,
         }) => {
-          console.log(
-            "🚀 ~ file: CreateNewProject.js:56 ~ CreateNewProject ~ values:",
-            values.location
-          );
           return (
             <Form className="auth-login-form mt-2" onSubmit={handleSubmit}>
               <InputField

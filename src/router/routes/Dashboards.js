@@ -1,17 +1,26 @@
-import { lazy } from 'react'
+import { lazy } from "react";
 
-const DashboardAnalytics = lazy(() => import('../../views/dashboard/analytics'))
-const DashboardEcommerce = lazy(() => import('../../views/dashboard/ecommerce'))
+const DashboardAnalytics = lazy(() =>
+  import("../../views/dashboard/analytics")
+);
+const DashboardEcommerce = lazy(() =>
+  import("../../views/dashboard/ecommerce")
+);
+const Dashboard = lazy(() => import("../../views/dashboard/dashboard"));
 
 const DashboardRoutes = [
+  // {
+  //   path: '/dashboard/analytics',
+  //   element: <DashboardAnalytics />
+  // },
+  // {
+  //   path: '/dashboard/ecommerce',
+  //   element: <DashboardEcommerce />
+  // }
   {
-    path: '/dashboard/analytics',
-    element: <DashboardAnalytics />
+    path: "/dashboard",
+    element: <Dashboard />,
   },
-  {
-    path: '/dashboard/ecommerce',
-    element: <DashboardEcommerce />
-  }
-]
+];
 
-export default DashboardRoutes
+export default DashboardRoutes;
