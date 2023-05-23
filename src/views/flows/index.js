@@ -80,6 +80,11 @@ const WorkFlows = () => {
   const [isActiveSubFolder, setIsActiveSubFolder] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
   const [isEditDetail, setIsEditDetail] = useState(false);
+  console.log(
+    "🚀 ~ file: index.js:83 ~ WorkFlows ~ isEditDetail:",
+    isEditDetail
+  );
+  const [flowsData, setFlowsData] = useState();
 
   let headerTitle;
 
@@ -115,6 +120,7 @@ const WorkFlows = () => {
     refetch: workflowRefetch,
     isError: isWorkflowError,
     isFetching: isWorkflowFetching,
+    isRefetching,
   } = useQuery("workFLowsLists", async () => await getWorkflowLists());
 
   let searchedFrom;
@@ -125,10 +131,10 @@ const WorkFlows = () => {
     searchedFrom = folders;
   }
 
-  // useEffect(() => {
-  //   // setWorkFlowsList(data?.data?.data);
-  //   setFlowsData(data);
-  // }, [isWorkflowFetching]);
+  useEffect(() => {
+    // setWorkFlowsList(data?.data?.data);
+    setFlowsData(workflowData?.data?.data);
+  }, [isWorkflowFetching]);
 
   useEffect(() => {
     setProjects(data?.data?.data);
@@ -171,12 +177,16 @@ const WorkFlows = () => {
   };
 
   const handleActiveTabSubFolders = (node) => {
+    console.log(
+      "🚀 ~ file: index.js:180 ~ handleActiveTabSubFolders ~ node:",
+      node
+    );
     setSelectedTab(node);
     setSelectedNode(node);
     setIsActiveSubFolder(true);
     setIsProjects(false);
     setIsActiveMainFolder(false);
-    setIsEditDetail(true);
+    // setIsEditDetail(false);
   };
 
   const onClickDiscardModal = () => {
@@ -196,6 +206,8 @@ const WorkFlows = () => {
     setIsWorkFLow((prevState) => !prevState);
     setShow(true);
     setIsEditDetail(false);
+    setIsActiveSubFolder(false);
+    setIsActiveMainFolder(true);
   };
 
   const handleCreateWorkflow = async (values) => {
@@ -308,6 +320,10 @@ const WorkFlows = () => {
   };
 
   const handleEditFolderModal = (node) => {
+    console.log(
+      "🚀 ~ file: index.js:319 ~ handleEditFolderModal ~ isEditDetail:",
+      isEditDetail
+    );
     setSelectedNode(node);
     setSelectedItem(node);
     handleToggleModal();
@@ -565,6 +581,11 @@ const WorkFlows = () => {
     );
   }
 
+  // let mainTitle
+  // if(isActiveMainFolder){
+  //   tit
+  // }
+
   return (
     <div className="content-area-wrapper">
       <Sidebar
@@ -598,7 +619,11 @@ const WorkFlows = () => {
             <Row>
               <Col md={9} sm={6} className="content-header-left mb-2">
                 <h2 className="content-header-title float-start mb-0">
-                  {isProjects ? "Projects" : "Workflows"}
+                  {isProjects
+                    ? "Projects"
+                    : isActiveMainFolder
+                    ? `Project: ${selectedTab?.name}`
+                    : `Folder: ${selectedTab?.name}`}
                 </h2>
               </Col>
               <Col
@@ -757,6 +782,9 @@ const WorkFlows = () => {
                 refetch={workflowRefetch}
                 isError={isWorkflowError}
                 isFetching={isWorkflowFetching}
+                isRefetching={isRefetching}
+                setFlowsData={setFlowsData}
+                flowsData={flowsData}
               />
             )}
           </Col>

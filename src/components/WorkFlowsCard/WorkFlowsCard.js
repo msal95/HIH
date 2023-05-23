@@ -1,5 +1,12 @@
 // ** React Imports
-import { Fragment, forwardRef, useCallback, useEffect, useState } from "react";
+import {
+  Fragment,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   ChevronDown,
   Edit3,
@@ -90,13 +97,11 @@ const WorkFlowsCard = (props) => {
     data,
     error,
     refetch,
-    isFetching,
     isError,
+    isRefetching,
+    setFlowsData,
+    flowsData,
   } = props;
-  console.log(
-    "🚀 ~ file: WorkFlowsCard.js:96 ~ WorkFlowsCard ~ selectedTab:",
-    selectedTab
-  );
 
   // const { isLoading, data, error, refetch, isError, isFetching } = useQuery(
   //   "workFLowsLists",
@@ -107,21 +112,40 @@ const WorkFlowsCard = (props) => {
   const [isEdit, setIsEdit] = useState(false);
   const [statusList, setStatusList] = useState({});
   const [workflowsList, setWorkFlowsList] = useState();
-  const [flowsData, setFlowsData] = useState(data);
+  const [isLoader, setIsLoader] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedItem, setSelectedItem] = useState();
-  console.log(
-    "🚀 ~ file: WorkFlowsCard.js:113 ~ WorkFlowsCard ~ selectedItem:",
-    selectedItem
-  );
   const [workflowName, setWorkflowName] = useState(selectedItem?.name || "");
   const [count, setCount] = useState(1);
   const [selectedOption, setSelectedOption] = useState();
-  const [isActive, setIsActive] = useState(false);
+
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setIsEdit(false);
+      }
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsEdit(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   useEffect(() => {
     if (!!data?.length) {
-      setFlowsData(data);
+      // setFlowsData(data);
       if (isActiveMainFolder) {
         const filteredProjectsWorkflows = data?.filter(
           (item) => item.project_id === selectedTab.id
@@ -138,19 +162,15 @@ const WorkFlowsCard = (props) => {
         setCount(2);
       }
     }
-  }, [selectedTab]);
+  }, [selectedTab, isRefetching]);
 
-  useEffect(() => {
-    // setWorkFlowsList(data?.data?.data);
-    setFlowsData(data);
-  }, [isFetching]);
+  // useEffect(() => {
+  //   console.log("🚀 ~ file: WorkFlowsCard.js:140 ~ useEffect ~ data:", data);
+  //   setFlowsData(data);
+  // }, [isFetching]);
 
   useEffect(() => {
     if (count > 1) {
-      console.log(
-        "🚀 ~ file: WorkFlowsCard.js:134 ~ useEffect ~ searchTerm?.length:",
-        searchTerm?.length
-      );
       const searchedData = flowsData?.filter((post) => {
         return post?.name.toLowerCase().includes(searchTerm.toLowerCase());
       });
@@ -175,13 +195,16 @@ const WorkFlowsCard = (props) => {
 
     try {
       const projectData = {
-        is_active: !!selectedRows?.length ? false : !item.status,
+        is_active: !!selectedRows?.length ? item : !item.status,
         workflow_ids: !!selectedRows?.length ? selectedRows : [item.id],
         project_id: selectedTab.id,
       };
       await editWorkflow(projectData).then((res) => {
+        setIsLoader(true);
         if (res.status === 200) {
           refetch();
+          setSelectedRows([]);
+          setIsLoader(false);
           toast.success("Status Updated Successfully.");
         }
       });
@@ -215,8 +238,11 @@ const WorkFlowsCard = (props) => {
         // setFlowsData(deletedItem);
       },
     }).then(function (result) {
+      setIsLoader(true);
       if (result.value) {
         refetch();
+        setIsLoader(false);
+        setSelectedRows([]);
         MySwal.fire({
           icon: "success",
           title: "Deleted!",
@@ -225,6 +251,10 @@ const WorkFlowsCard = (props) => {
             confirmButton: "btn btn-success",
           },
         });
+      } else {
+        console.log(
+          "🚀 ~ file: WorkFlowsCard.js:230 ~ onHandleDelete ~ error:"
+        );
       }
     });
   };
@@ -245,8 +275,10 @@ const WorkFlowsCard = (props) => {
         // parent_id: selectedNode.id,
       };
       await editWorkflow(projectData).then((res) => {
+        setIsLoader(true);
         if (res.status === 200) {
           refetch();
+          setIsLoader(false);
           toast.success("Workflow name updated Successfully.");
           setSelectedItem(null);
           setIsEdit(false);
@@ -330,7 +362,7 @@ const WorkFlowsCard = (props) => {
     );
   }
 
-  if (isLoading) {
+  if (isLoading || isLoader) {
     return (
       <div className="d-flex justify-content-center align-items-center">
         <Spinner type="grow" color="primary" />
@@ -369,8 +401,7 @@ const WorkFlowsCard = (props) => {
                     <DropdownItem
                       className="w-100"
                       onClick={() => {
-                        handleCheckboxChange();
-                        setIsActive(true);
+                        handleCheckboxChange(true);
                       }}
                     >
                       Active Selected
@@ -378,8 +409,7 @@ const WorkFlowsCard = (props) => {
                     <DropdownItem
                       className="w-100"
                       onClick={() => {
-                        handleCheckboxChange();
-                        setIsActive(false);
+                        handleCheckboxChange(false);
                       }}
                     >
                       InActive Selected
@@ -503,7 +533,7 @@ const WorkFlowsCard = (props) => {
                           className="primary cursor-pointer"
                           type="switch"
                           role="switch"
-                          checked={!!item.status || statusList[item.id]}
+                          checked={!!item.status}
                           onChange={() => handleCheckboxChange(item, item.id)}
                         />
                       </FormGroup>

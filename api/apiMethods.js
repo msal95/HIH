@@ -10,6 +10,10 @@ export const deleteCredential = async (cId) => {
   return await API_URL.delete(`/api/credential/${cId}`);
 };
 
+// Integrations APIs
+export const getIntegrationsList = async () =>
+  await API_URL.get("/api/integration");
+
 // Project API's
 export const getProjectLists = async () => {
   return await API_URL.get(`/api/project`);
@@ -50,18 +54,43 @@ export const getWorkflowLists = async () => {
   return await API_URL.get(`/api/workflowManagement`);
 };
 
+// export const deleteWorkflow = async (wId) => {
+//   console.log(
+//     "🚀 ~ file: apiMethods.js:54 ~ deleteWorkflow ~ wId:",
+//     wId,
+//     typeof wId
+//   );
+//   const { workflow_ids } = wId;
+//   console.log(
+//     "🚀 ~ file: apiMethods.js:60 ~ deleteWorkflow ~ workflow_ids:",
+//     workflow_ids
+//   );
+//   return await API_URL.delete(`/api/workflowManagement/delete`, {
+//     ids: [1, 2, 3],
+//   });
+// };
+
 export const deleteWorkflow = async (wId) => {
-  console.log("🚀 ~ file: apiMethods.js:54 ~ deleteWorkflow ~ wId:", wId);
-  return await API_URL.delete(`/api/workflowManagement/delete`, wId);
+  try {
+    const { workflow_ids } = wId;
+    const response = await API_URL.delete(`/api/workflowManagement/delete`, {
+      data: {
+        workflow_ids, // Pass the workflow_ids obtained from the parameter
+      },
+    });
+    return response.data;
+  } catch (error) {
+    // Handle errors
+    console.error(error);
+    throw error;
+  }
 };
 
 export const createWorkflow = async (wData) => {
-  console.log("🚀 ~ file: apiMethods.js:58 ~ editWorkflow ~ wData:", wData);
   return await API_URL.post(`/api/workflowManagement`, wData);
 };
 
 export const editWorkflow = async (wData) => {
-  console.log("🚀 ~ file: apiMethods.js:58 ~ editWorkflow ~ wData:", wData);
   return await API_URL.post(`/api/workflowManagement/update`, wData);
 };
 
