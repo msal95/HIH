@@ -1,7 +1,7 @@
 function laravelApi() {
   // const baseUrl = 'http://localhost/machinan-backend/public/api';
-  const baseUrl = 'http://127.0.0.1:8000/api';
-  // const baseUrl = "https://stage-hub.hybriditservices.com/api";
+//   const baseUrl = 'http://127.0.0.1:8000/api';
+  const baseUrl = "https://stage-hub.hybriditservices.com/api";
 
   const home = `${baseUrl}`;
 
