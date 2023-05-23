@@ -27,7 +27,11 @@ import Divider from "../../components/Divider/Divider";
 import SendGrid from "../../components/SendGrid/SendGrid";
 import "../../style/base/base.scss";
 import CredentialsFilter from "./CredentialsFilter";
-import { deleteCredential, getCredentialsList } from "../../../api/apiMethods";
+import {
+  deleteCredential,
+  getCredentialsList,
+  getIntegrationsList,
+} from "../../../api/apiMethods";
 import NoRecordFound from "../../components/NoRecordFound/NoRecordFound";
 
 const dummyData = [
@@ -66,20 +70,34 @@ const Credentials = () => {
   const [allCredentialsData, setAllCredentialsData] = useState();
   const [credentialsData, setCredentialsData] = useState();
   const [searchedList, setSearchedList] = useState("");
-  const [addCredentialsList, setAddCredentialsList] = useState(dummyData);
+  const [addCredentialsList, setAddCredentialsList] = useState();
   const [selectedItem, setSelectedItem] = useState();
-  console.log(
-    "🚀 ~ file: index.js:71 ~ Credentials ~ selectedItem:",
-    selectedItem
-  );
   const [isEdit, setIsEdit] = useState(false);
   const [isNewProject, setIsNewProject] = useState(false);
   const [optionsData, setOptionsData] = useState(colourOptions);
+  const [integrationList, setIntegrationsList] = useState();
+  console.log(
+    "🚀 ~ file: index.js:79 ~ Credentials ~ integrationList:",
+    integrationList
+  );
 
   // API Call
   const { isLoading, data, error, refetch, isFetching, isError } = useQuery(
     "credentialsList",
     () => getCredentialsList()
+  );
+
+  const {
+    isLoading: integrationLoader,
+    data: integrationData,
+    error: integrationError,
+    refetch: integrationRefetch,
+    isFetching: integrationIsFetching,
+    isError: integrationIsError,
+  } = useQuery("integrationsList", () => getIntegrationsList());
+  console.log(
+    "🚀 ~ file: index.js:94 ~ Credentials ~ integrationData:",
+    integrationData?.data?.integration
   );
 
   useEffect(() => {
@@ -89,6 +107,12 @@ const Credentials = () => {
       setAddCredentialsList(data?.data?.data?.data);
     }
   }, [isFetching]);
+
+  useEffect(() => {
+    if (!!integrationData?.data?.integration?.length) {
+      setIntegrationsList(integrationData?.data?.integration);
+    }
+  }, [integrationIsFetching]);
 
   useEffect(() => {
     if (searchTerm?.length) {
@@ -103,12 +127,14 @@ const Credentials = () => {
 
   useEffect(() => {
     if (searchedList.length) {
-      const searchedData = allCredentialsData.filter((post) => {
-        return post.name.toLowerCase().includes(searchedList.toLowerCase());
-      });
-      setAddCredentialsList(searchedData);
+      const searchedData = integrationData?.data?.integration?.filter(
+        (post) => {
+          return post.name.toLowerCase().includes(searchedList.toLowerCase());
+        }
+      );
+      setIntegrationsList(searchedData);
     } else {
-      setAddCredentialsList(allCredentialsData);
+      setIntegrationsList(integrationData?.data?.integration);
     }
   }, [searchedList]);
 
@@ -270,19 +296,23 @@ const Credentials = () => {
           </InputGroup>
 
           <div className="row">
-            {!addCredentialsList?.length && !!searchedList?.length && (
+            {!integrationList?.length && !!searchedList?.length && (
               <NoRecordFound searchTerm={searchedList} />
             )}
-            {addCredentialsList?.map((item) => {
+
+            {!integrationList?.length && (
+              <h3 className="d-flex align-items-center justify-content-center p-2">
+                No Integrations Available
+              </h3>
+            )}
+            {integrationList?.map((item) => {
               return (
                 <div
                   className="col-md-2 d-flex flex-column align-items-center mt-2 ps-0"
                   key={item.id}
                 >
                   <img
-                    src={
-                      import.meta.env.VITE_API_URL + item?.integration?.image
-                    }
+                    src={import.meta.env.VITE_API_URL + item?.image}
                     alt="Google Icon"
                     width="56px"
                     height="56px"
@@ -328,6 +358,14 @@ const Credentials = () => {
     );
   }
 
+  // if (!credentialsData?.length) {
+  //   return (
+  //     <h3 className="d-flex align-items-center justify-content-center p-2">
+  //       No Credentials Available
+  //     </h3>
+  //   );
+  // }
+
   return (
     <>
       <div className="row container-xxl overflow-auto">
@@ -357,6 +395,11 @@ const Credentials = () => {
           <div className="row">
             {!credentialsData?.length && !!searchTerm?.length && (
               <NoRecordFound searchTerm={searchTerm} />
+            )}
+            {!credentialsData?.length && (
+              <h3 className="d-flex align-items-center justify-content-center p-2">
+                No Credentials Available
+              </h3>
             )}
             {credentialsData?.map((item) => {
               return (

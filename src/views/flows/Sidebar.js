@@ -23,6 +23,7 @@ import {
 import polygon from "@src/assets/images/icons/polygon.png";
 import "../../style/views/Login/authentication.scss";
 import MoreVerticalDropdown from "../../components/MoreVerticalDropdown/MoreVerticalDropdown";
+import TreeView from "./TreeView";
 
 const Sidebar = (props) => {
   // ** Props
@@ -130,21 +131,19 @@ const Sidebar = (props) => {
                     : node?.name}
                 </span>
               </div>
-              {hoverItem && hoverItem.uuid === node.uuid && (
-                <div className="d-flex pe-1 align-items-center">
-                  <Plus
-                    size={16}
-                    color="#131313"
-                    className="cursor-pointer me-1"
-                    onClick={() => handleToggleCreateSubFolderModal(node)}
-                  />
-                  <MoreVerticalDropdown
-                    isView
-                    handleEdit={() => handleEditFolderModal(node)}
-                    handleDelete={() => handleDeleteFolder(hoverItem.id)}
-                  />
-                </div>
-              )}
+              <div className="d-flex pe-1 align-items-center">
+                <Plus
+                  size={16}
+                  color="#131313"
+                  className="cursor-pointer me-1"
+                  onClick={() => handleToggleCreateSubFolderModal(node)}
+                />
+                <MoreVerticalDropdown
+                  isView
+                  handleEdit={() => handleEditFolderModal(node)}
+                  handleDelete={() => handleDeleteFolder(hoverItem.id)}
+                />
+              </div>
             </div>
           )}
           {node?.tree?.length > 0 && renderTree(node.tree, level + 3)}
@@ -196,20 +195,39 @@ const Sidebar = (props) => {
                 className="sidebar-menu-list"
                 options={{ wheelPropagation: true }}
               > */}
-              {!projects?.length ? (
+              {isLoading ? (
+                <div className="d-flex justify-content-center align-items-center">
+                  <Spinner type="grow" color="primary" />
+                </div>
+              ) : // )}
+              !projects?.length ? (
                 <h3 className="d-flex align-items-center justify-content-center p-2">
                   No Projects and folders exist
                 </h3>
               ) : (
-                <ListGroup tag="div" className="list-group-messages">
-                  {isLoading ? (
-                    <div className="d-flex justify-content-center align-items-center">
-                      <Spinner type="grow" color="primary" />
-                    </div>
-                  ) : (
-                    renderTree(projects)
-                  )}
-                </ListGroup>
+                <>
+                  <ListGroup tag="div" className="list-group-messages">
+                    {renderTree(projects)}
+                  </ListGroup>
+                  {/* <TreeView
+                    data={projects}
+                    handleActiveTab={handleActiveTabFolders}
+                    selectedTab={selectedTab}
+                    handleToggleCreateFolderModal={
+                      handleToggleCreateFolderModal
+                    }
+                    handleEditProjectModal={handleEditProjectModal}
+                    handleDeleteProject={handleDeleteProject}
+                    handleActiveTabSubFolders={handleActiveTabSubFolders}
+                    handleOnMouseEnter={handleOnMouseEnter}
+                    handleOnMouseLeave={handleOnMouseLeave}
+                    handleToggleCreateSubFolderModal={
+                      handleToggleCreateSubFolderModal
+                    }
+                    handleEditFolderModal={handleEditFolderModal}
+                    handleDeleteFolder={handleDeleteFolder}
+                  /> */}
+                </>
               )}
               {/* </PerfectScrollbar> */}
             </div>

@@ -79,43 +79,42 @@ const ApexAreaCharts = ({ direction }) => {
   // ** Chart Series
   const series = [
     {
-      name: "Visits",
+      name: "Recipes",
       data: [100, 120, 90, 170, 130, 160, 140, 240, 220, 180, 270, 280, 375],
     },
     {
-      name: "Clicks",
+      name: "Successful Jobs",
       data: [60, 80, 70, 110, 80, 100, 90, 180, 160, 140, 200, 220, 275],
     },
     {
-      name: "Sales",
+      name: "Failed Jobs",
+      data: [20, 40, 30, 70, 40, 60, 50, 140, 120, 100, 140, 180, 220],
+    },
+    {
+      name: "Task Used",
       data: [20, 40, 30, 70, 40, 60, 50, 140, 120, 100, 140, 180, 220],
     },
   ];
   return (
     <Card>
       <CardHeader className="d-flex flex-md-row flex-column justify-content-md-between justify-content-start align-items-md-center align-items-start">
-        <div>
-          <CardTitle className="mb-75" tag="h4">
+        {/* <div>
+          <CardTitle className='mb-75' tag='h4'>
             Line Chart
           </CardTitle>
-          <CardSubtitle className="text-muted">
-            Commercial networks
-          </CardSubtitle>
-        </div>
-        <div className="d-flex align-items-center mt-md-0 mt-1">
+          <CardSubtitle className='text-muted'>Commercial networks</CardSubtitle>
+        </div> */}
+        {/* <div className='d-flex align-items-center mt-md-0 mt-1'>
           <Calendar size={17} />
           <Flatpickr
-            className="form-control flat-picker bg-transparent border-0 shadow-none"
+            className='form-control flat-picker bg-transparent border-0 shadow-none'
             options={{
-              mode: "range",
+              mode: 'range',
               // eslint-disable-next-line no-mixed-operators
-              defaultDate: [
-                new Date(),
-                new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000),
-              ],
+              defaultDate: [new Date(), new Date(new Date().getTime() + 5 * 24 * 60 * 60 * 1000)]
             }}
           />
-        </div>
+        </div> */}
       </CardHeader>
       <CardBody>
         <Chart options={options} series={series} type="area" height={400} />
