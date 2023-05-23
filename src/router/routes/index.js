@@ -25,6 +25,7 @@ import PrivateRoute from "@components/routes/PrivateRoute";
 
 // ** Utils
 import { isObjEmpty } from "@utils";
+import axios from "axios";
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -61,6 +62,16 @@ const getRouteMeta = (route) => {
     }
   }
 };
+
+// const token = localStorage.getItem("accessToken");
+
+// axios.defaults.headers.common = {
+//   Authorization: `Bearer ${token}`,
+
+//   Accept: "application/json",
+
+//   "Access-Control-Allow-Origin": "*",
+// };
 
 // ** Return Filtered Array of Routes & Paths
 const MergeLayoutRoutes = (layout, defaultLayout) => {
