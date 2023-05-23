@@ -5,14 +5,18 @@ import { User, UserPlus, MoreVertical, UserX, FileText, Edit, Trash  } from 'rea
 import { useDeleteEventWithForm } from '../../../api/config/integrationQueries';
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
+import Faq from './faq';
 
 export default function EventAndResources() {
     const location = useLocation();
     const eventFormDelete = useDeleteEventWithForm();
     const [resource] = useState(location?.state?.resources);
+    const [integrationFull] = useState(location?.state);
+    const [image] = useState(location?.state?.image);
     const [events, setEvents] = useState(location?.state?.events);
     const [eventsFull] = useState(location?.state?.events);
     const [searchTerm, setSearchTerm] = useState("");
+    console.log(location?.state, "location?.state");
 
     const handleRowAction = (action, row) => {
         const updatedData = eventsFull.filter((item) => item.resource_id === row?.id);
@@ -20,17 +24,19 @@ export default function EventAndResources() {
     };
     const handleMenuAction = (action, row) => {
         console.log('action, row', action, row);
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              eventFormDelete.mutate(row?.id);
-            }
-          });
+        if (action === "delete") {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  eventFormDelete.mutate(row?.id);
+                }
+              });
+        }
     };
     useEffect(() => {
       const searchedData = eventsFull?.filter((event) => {
@@ -60,11 +66,15 @@ export default function EventAndResources() {
 
       useEffect(() => {
         const data = eventFormDelete?.data;
+        console.log(data, data);
         if (eventFormDelete.isSuccess) {
           const message = data?.message;
           const response = data?.response;
           if (response === 200) {
+            const updatedData = eventsFull.filter((item) => item.id !== data?.data?.id);
+            setEvents(updatedData);
             toast.success(message);
+
           } else {
             toast.error(message);
           }
@@ -78,7 +88,7 @@ export default function EventAndResources() {
 
   return (
     <div className='container-xxl overflow-auto mt-5'>
-        <Row>
+        {/* <Row>
             <Col sm='12'>
                 <Card title='Striped' className='p-3'>
                     <CardBody>
@@ -133,7 +143,9 @@ export default function EventAndResources() {
                                                 <Card style={{border: "3px solid #f8f8f8"}}>
                                                     <CardBody className="fw-bolder mb-75">
                                                         <div className="d-flex justify-content-between mb-2">
-                                                            <div>image here</div>
+                                                            <div>
+                                                                <img src={image} class="img-rounded" alt="Cinque Terre" width="100" height="100"/>
+                                                            </div>
                                                             <div>
                                                                 <UncontrolledDropdown>
                                                                     <DropdownToggle className="icon-btn hide-arrow" color="transparent" size="sm" caret>
@@ -163,9 +175,6 @@ export default function EventAndResources() {
                                                                 <h6 className='text-danger' >{item?.form?.length}</h6>
                                                                 <h6 className={(item?.form?.id > 0) ? 'text-success' : 'text-danger'} ><FileText /> </h6>
                                                             </div>
-                                                            {/* <div className="avatar avatar-stats p-50 m-0 bg-light-primary">
-                                                                <div className='avatar-content'>{<UserX size={20}/>}</div>
-                                                            </div> */}
                                                         </div>
                                                     </CardBody>
                                                 </Card>
@@ -176,7 +185,8 @@ export default function EventAndResources() {
                         </Row>
                 </Card>
             </Col>
-        </Row>
+        </Row> */}
+        <Faq integrationFull={integrationFull}/>
     </div>
   )
 }
