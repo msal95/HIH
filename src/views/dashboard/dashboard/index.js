@@ -87,6 +87,9 @@ const Dashboard = () => {
 
   const [show, setShow] = useState(false);
 
+  const token = localStorage.getItem("accessToken");
+  console.log("🚀 ~ file: apiEndPoint.js:4 ~ token:", token);
+
   useEffect(() => {
     axios
       .get("/account-setting/data")
