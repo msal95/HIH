@@ -248,6 +248,10 @@ const WorkFlowsCard = (props) => {
     setIsEdit(true);
   };
 
+  const handleNavigation = (item)=>{
+    window.location.href=`http://127.0.0.1:8000/workflow-engine/builder/${item.id}`
+  }
+
   const handleEditWorkflow = async (e) => {
     e.preventDefault();
     setIsLoader(true);
