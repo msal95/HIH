@@ -1,6 +1,9 @@
 // ** Reactstrap Imports
 import { Fragment, useEffect, useState } from "react";
 import { Search } from "react-feather";
+import { toast } from "react-hot-toast";
+import { useQuery } from "react-query";
+import { useLocation } from "react-router-dom";
 import {
   Button,
   Col,
@@ -11,36 +14,21 @@ import {
 } from "reactstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { toast } from "react-hot-toast";
-import { useLocation, useParams } from "react-router-dom";
-import { useQuery } from "react-query";
 
 // ** Local Imports
-import atTheRate from "@src/assets/images/icons/social/at-credentiali-con.png";
-import gmail from "@src/assets/images/icons/social/gmai-logo.png";
-import microsoft from "@src/assets/images/icons/social/microsoft.png";
-import sendGrid from "@src/assets/images/icons/social/sendgrid.png";
-import CustomCard from "../../components/CustomCard/CustomCard";
-import CustomHeading from "../../components/CustomHeading/CustomHeading";
-import CustomModal from "../../components/CustomModal/CustomModal";
-import Divider from "../../components/Divider/Divider";
-import SendGrid from "../../components/SendGrid/SendGrid";
-import "../../style/base/base.scss";
-import CredentialsFilter from "./CredentialsFilter";
 import {
   deleteCredential,
   getCredentialsList,
   getIntegrationsList,
 } from "../../../api/apiMethods";
+import CustomCard from "../../components/CustomCard/CustomCard";
+import CustomHeading from "../../components/CustomHeading/CustomHeading";
+import CustomModal from "../../components/CustomModal/CustomModal";
+import Divider from "../../components/Divider/Divider";
 import NoRecordFound from "../../components/NoRecordFound/NoRecordFound";
-
-const dummyData = [
-  { id: 1, name: "SendGrid", image: sendGrid },
-  { id: 2, name: "Gmail", image: gmail },
-  { id: 3, name: "Microsoft", image: microsoft },
-  { id: 4, name: "Untitled Credential", image: atTheRate },
-  { id: 5, name: "Untitled Credential", image: atTheRate },
-];
+import SendGrid from "../../components/SendGrid/SendGrid";
+import "../../style/base/base.scss";
+import CredentialsFilter from "./CredentialsFilter";
 
 const colourOptions = [
   {
@@ -70,16 +58,11 @@ const Credentials = () => {
   const [allCredentialsData, setAllCredentialsData] = useState();
   const [credentialsData, setCredentialsData] = useState();
   const [searchedList, setSearchedList] = useState("");
-  const [addCredentialsList, setAddCredentialsList] = useState();
   const [selectedItem, setSelectedItem] = useState();
   const [isEdit, setIsEdit] = useState(false);
   const [isNewProject, setIsNewProject] = useState(false);
   const [optionsData, setOptionsData] = useState(colourOptions);
   const [integrationList, setIntegrationsList] = useState();
-  console.log(
-    "🚀 ~ file: index.js:79 ~ Credentials ~ integrationList:",
-    integrationList
-  );
 
   // API Call
   const { isLoading, data, error, refetch, isFetching, isError } = useQuery(
@@ -104,7 +87,6 @@ const Credentials = () => {
     if (!!data?.data?.data.data.length) {
       setCredentialsData(data?.data?.data?.data);
       setAllCredentialsData(data?.data?.data?.data);
-      setAddCredentialsList(data?.data?.data?.data);
     }
   }, [isFetching]);
 
@@ -312,7 +294,7 @@ const Credentials = () => {
                   key={item.id}
                 >
                   <img
-                    src={import.meta.env.VITE_API_URL + item?.image}
+                    src={item?.image}
                     alt="Google Icon"
                     width="56px"
                     height="56px"

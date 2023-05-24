@@ -1,6 +1,7 @@
 import React from "react";
 import { Col } from "reactstrap";
 import Divider from "../Divider/Divider";
+import { Layers } from "react-feather";
 export default function CustomHeading(props) {
   const {
     image,
@@ -12,7 +13,13 @@ export default function CustomHeading(props) {
     titleClass = "modal-title",
     subTitleClass = "modal-description",
     subImage,
+    isIcon = false,
   } = props;
+
+  console.log(
+    "🚀 ~ file: CustomHeading.js:17 ~ CustomHeading ~ isIcon:",
+    isIcon
+  );
   return (
     <>
       <div className="d-flex px-1 justify-content-center align-content-center">
@@ -37,6 +44,7 @@ export default function CustomHeading(props) {
                 height={iconHeight}
               />
             )}
+            {isIcon && <Layers size={16} className="me-1" />}
             <p className={subTitleClass}>{subTitle}</p>
           </div>
         </Col>
