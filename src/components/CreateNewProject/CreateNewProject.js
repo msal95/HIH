@@ -2,7 +2,7 @@ import { Formik } from "formik";
 import React from "react";
 import { Layers } from "react-feather";
 import { SendGridCreateProjectValidationSchema } from "../../utility/validationSchemas/CredentialsValidationSchema";
-import { Button, Form } from "reactstrap";
+import { Button, Form, Spinner } from "reactstrap";
 import InputField from "../InputField/InputField";
 
 export default function CreateNewProject(props) {
@@ -15,7 +15,18 @@ export default function CreateNewProject(props) {
     projects,
     selectedTab,
     isEditDetail,
+    isLoading = false,
   } = props;
+
+  // if (isLoading) {
+  //   return (
+  //     {isLoading && (
+  //     <div className="d-flex justify-content-center align-items-center">
+  //       <Spinner type="grow" color="primary" />
+  //     </div>
+  //     )}
+  //   );
+  // }
 
   return (
     <>
@@ -43,6 +54,11 @@ export default function CreateNewProject(props) {
         }) => {
           return (
             <Form className="auth-login-form mt-2" onSubmit={handleSubmit}>
+              {isLoading && (
+                <div className="d-flex justify-content-center align-items-center">
+                  <Spinner type="grow" color="primary" />
+                </div>
+              )}
               <InputField
                 label="Name"
                 type="text"
@@ -50,7 +66,7 @@ export default function CreateNewProject(props) {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.projectName}
-                placeholder="New Project"
+                placeholder={title}
                 errorType={errors.projectName && touched.projectName}
                 errorMessage={errors.projectName}
                 isRequired
@@ -98,6 +114,7 @@ export default function CreateNewProject(props) {
                   block
                   onClick={handleSubmit}
                   className="project-btn-create"
+                  disabled={isLoading}
                 >
                   {title}
                 </Button>

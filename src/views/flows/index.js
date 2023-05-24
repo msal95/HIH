@@ -2,6 +2,7 @@
 import classnames from "classnames";
 import { Fragment, useEffect, useState } from "react";
 import { Plus } from "react-feather";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Col,
@@ -14,22 +15,11 @@ import {
 } from "reactstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { useNavigate } from "react-router-dom";
 
 // ** Local Imports
-import atTheRate from "@src/assets/images/icons/social/at-credentiali-con.png";
-import gmail from "@src/assets/images/icons/social/gmai-logo.png";
-import microsoft from "@src/assets/images/icons/social/microsoft.png";
-import sendGrid from "@src/assets/images/icons/social/sendgrid.png";
 import "@styles/react/apps/app-email.scss";
-import CreateNewProject from "../../components/CreateNewProject/CreateNewProject";
-import CustomCard from "../../components/CustomCard/CustomCard";
-import CustomModal from "../../components/CustomModal/CustomModal";
-import Divider from "../../components/Divider/Divider";
-import WorkFlowsCard from "../../components/WorkFlowsCard/WorkFlowsCard";
-import "../../style/base/base.scss";
-import Sidebar from "./Sidebar";
-import CredentialsFilter from "../credentials/CredentialsFilter";
+import { toast } from "react-hot-toast";
+import { useQuery } from "react-query";
 import {
   createFolder,
   createProjects,
@@ -41,9 +31,15 @@ import {
   getProjectLists,
   getWorkflowLists,
 } from "../../../api/apiMethods";
-import { useQuery } from "react-query";
-import { toast } from "react-hot-toast";
+import CreateNewProject from "../../components/CreateNewProject/CreateNewProject";
+import CustomCard from "../../components/CustomCard/CustomCard";
+import CustomModal from "../../components/CustomModal/CustomModal";
+import Divider from "../../components/Divider/Divider";
 import NoRecordFound from "../../components/NoRecordFound/NoRecordFound";
+import WorkFlowsCard from "../../components/WorkFlowsCard/WorkFlowsCard";
+import "../../style/base/base.scss";
+import CredentialsFilter from "../credentials/CredentialsFilter";
+import Sidebar from "./Sidebar";
 
 const sortOptions = [
   {
@@ -80,10 +76,11 @@ const WorkFlows = () => {
   const [isActiveSubFolder, setIsActiveSubFolder] = useState(false);
   const [selectedOption, setSelectedOption] = useState();
   const [isEditDetail, setIsEditDetail] = useState(false);
-  console.log(
-    "🚀 ~ file: index.js:83 ~ WorkFlows ~ isEditDetail:",
-    isEditDetail
-  );
+  const [isLoader, setIsLoader] = useState(false);
+  // console.log(
+  //   "🚀 ~ file: index.js:83 ~ WorkFlows ~ isEditDetail:",
+  //   isEditDetail
+  // );
   const [flowsData, setFlowsData] = useState();
 
   let headerTitle;
@@ -211,6 +208,7 @@ const WorkFlows = () => {
   };
 
   const handleCreateWorkflow = async (values) => {
+    setIsLoader(true);
     try {
       const projectData = {
         name: values.projectName,
@@ -220,6 +218,7 @@ const WorkFlows = () => {
         if (res.data.code === 201) {
           workflowRefetch();
           handleToggleModal();
+          setIsLoader(false);
           toast.success("Workflow Added Successfully.");
         }
       });
@@ -229,6 +228,7 @@ const WorkFlows = () => {
         error
       );
       toast.error(error?.response?.data?.message);
+      setIsLoader(false);
     }
   };
 
@@ -257,17 +257,18 @@ const WorkFlows = () => {
   };
 
   const handleCreateFolder = async (values) => {
+    setIsLoader(true);
     try {
       const projectData = {
         name: values.projectName,
         project_id: values?.location ?? selectedNode.id,
       };
       await createFolder(projectData).then((res) => {
-        console.log("🚀 ~ file: index.js:209 ~ createFolder ~ res:", res);
         if (res.status === 201) {
           // setSelectedNode(null);
-          handleToggleModal();
           refetch();
+          setIsLoader(false);
+          handleToggleModal();
           toast.success("New Folder Added Successfully.");
         }
       });
@@ -277,6 +278,7 @@ const WorkFlows = () => {
         error
       );
       toast.error(error?.response?.data?.message);
+      setIsLoader(false);
     }
   };
 
@@ -295,6 +297,7 @@ const WorkFlows = () => {
   };
 
   const handleCreateSubFolder = async (values) => {
+    setIsLoader(true);
     try {
       const projectData = {
         name: values.projectName,
@@ -304,6 +307,7 @@ const WorkFlows = () => {
       await createFolder(projectData).then((res) => {
         if (res.status === 201) {
           refetch();
+          setIsLoader(false);
           toast.success("New Sub Folder Added Successfully.");
           // setIsNewProject(false);
           // setSelectedNode(null);
@@ -316,6 +320,7 @@ const WorkFlows = () => {
         error
       );
       toast.error(error?.response?.data?.message);
+      setIsLoader(false);
     }
   };
 
@@ -356,6 +361,7 @@ const WorkFlows = () => {
   };
 
   const handleEditProject = async (values) => {
+    setIsLoader(true);
     try {
       const projectData = {
         name: values.projectName,
@@ -367,6 +373,7 @@ const WorkFlows = () => {
           refetch();
           toast.success("Project Edited Successfully.");
           setSelectedItem(null);
+          setIsLoader(false);
           handleToggleModal();
           setIsEditProject(false);
         }
@@ -377,6 +384,7 @@ const WorkFlows = () => {
         error
       );
       toast.error(error?.response?.data?.message);
+      setIsLoader(false);
     }
   };
 
@@ -391,6 +399,7 @@ const WorkFlows = () => {
   };
 
   const handleEditFolder = async (values) => {
+    setIsLoader(true);
     try {
       const projectData = {
         name: values.projectName,
@@ -402,6 +411,7 @@ const WorkFlows = () => {
           refetch();
           toast.success("Folder Edited Successfully.");
           setSelectedItem(null);
+          setIsLoader(false);
           handleToggleModal();
           setIsEdit(false);
         }
@@ -413,10 +423,12 @@ const WorkFlows = () => {
       );
 
       toast.error(error?.response?.data?.message);
+      setIsLoader(false);
     }
   };
 
   const handleCreateProject = async (values) => {
+    setIsLoader(true);
     try {
       const projectData = {
         name: values.projectName,
@@ -427,7 +439,7 @@ const WorkFlows = () => {
         if (res.status === 201) {
           refetch();
           toast.success("New Project Added Successfully.");
-          // setIsNewProject(false);
+          setIsLoader(false);
           handleToggleModal();
         } else {
           toast.error(res.data.message);
@@ -440,6 +452,7 @@ const WorkFlows = () => {
         error
       );
       toast.error(error?.response?.data?.message);
+      setIsLoader(false);
     }
   };
 
@@ -819,6 +832,7 @@ const WorkFlows = () => {
             isWorkFLow={isActiveMainFolder}
             selectedTab={selectedTab}
             isEditDetail={isEditDetail}
+            isLoading={isLoader}
           />
         </div>
       </CustomModal>

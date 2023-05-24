@@ -13,6 +13,8 @@ const Todo = lazy(() => import("../../views/apps/todo"));
 const Email = lazy(() => import("../../views/apps/email"));
 const Credentials = lazy(() => import("../../views/credentials"));
 const WorkFlows = lazy(() => import("../../views/flows"));
+const WorkFlowsView = lazy(() => import("../../views/WorkflowView"));
+const Settings = lazy(() => import("../../views/settings"));
 const Kanban = lazy(() => import("../../views/apps/kanban"));
 const Calendar = lazy(() => import("../../views/apps/calendar"));
 
@@ -31,7 +33,7 @@ const EcommerceCheckout = lazy(() =>
   import("../../views/apps/ecommerce/checkout")
 );
 
-const UserList = lazy(() => import("../../views/apps/user/list"));
+const UserList = lazy(() => import("../../views/user/list"));
 const UserView = lazy(() => import("../../views/apps/user/view"));
 
 const Roles = lazy(() => import("../../views/apps/roles-permissions/roles"));
@@ -52,9 +54,9 @@ const AppRoutes = [
     element: <Engine />,
     path: "/apps/engine",
     meta: {
-        menuHidden: true,
-        layout:"horizontal"
-      }
+      menuHidden: true,
+      layout: "horizontal",
+    },
   },
   {
     element: <ViewFormRender />,
@@ -99,6 +101,30 @@ const AppRoutes = [
   {
     element: <WorkFlows />,
     path: "/apps/flows",
+    meta: {
+      appLayout: true,
+      className: "email-application",
+    },
+  },
+  {
+    element: <WorkFlowsView />,
+    path: "/apps/flows/:flowId",
+    meta: {
+      appLayout: true,
+      className: "email-application",
+    },
+  },
+  {
+    element: <Settings />,
+    path: "/apps/settings/:id",
+    meta: {
+      appLayout: true,
+      className: "email-application",
+    },
+  },
+  {
+    element: <Settings />,
+    path: "/apps/settings",
     meta: {
       appLayout: true,
       className: "email-application",
