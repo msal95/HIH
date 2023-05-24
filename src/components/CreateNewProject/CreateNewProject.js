@@ -50,7 +50,7 @@ export default function CreateNewProject(props) {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.projectName}
-                placeholder="New Project"
+                placeholder={title}
                 errorType={errors.projectName && touched.projectName}
                 errorMessage={errors.projectName}
                 isRequired

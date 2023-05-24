@@ -4,3 +4,9 @@ export const testKey = {
 export const integrationKey = {
     integration: 'integration',
 };
+export const formBuilderKey = {
+    formBuilder: 'formBuilder',
+};
+export const getModelKey = {
+    getModel: 'getModel',
+};

@@ -107,14 +107,14 @@ const LoginBasic = () => {
         if (response === 200) {
             toast.success(message);
             const data = {
-                ...res.data.userData,
-                accessToken: res.data.accessToken,
-                refreshToken: res.data.refreshToken,
+                ...res?.data?.userData,
+                accessToken: res?.data?.accessToken,
+                refreshToken: res?.data?.refreshToken,
             };
             console.log("🚀 ~ file: LoginBasic.js:75 ~ .then ~ data:", data);
             dispatch(handleLogin(data));
-            ability.update(res.data.userData.ability);
-            navigate(getHomeRouteForLoggedInUser(data.role));
+            ability.update(res?.data?.userData?.ability);
+            navigate(getHomeRouteForLoggedInUser(data?.role));
         } else {
           console.log('✅ element    ', message,
           validationErrors,
