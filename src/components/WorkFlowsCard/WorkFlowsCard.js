@@ -1,22 +1,6 @@
 // ** React Imports
-import {
-  Fragment,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import {
-  ChevronDown,
-  Edit3,
-  Eye,
-  MoreVertical,
-  Search,
-  Trash2,
-} from "react-feather";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { ChevronDown, Search } from "react-feather";
 import {
   Card,
   Col,
@@ -32,24 +16,21 @@ import {
   Spinner,
   UncontrolledDropdown,
 } from "reactstrap";
-import axios from "axios";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 // Local Imports
 import arrowIcon from "@src/assets/images/icons/Arrow.png";
 import nemtLogo from "@src/assets/images/icons/Nemt-logo.png";
 import webHook from "@src/assets/images/icons/Webhook.png";
 import sendGrid from "@src/assets/images/icons/social/sendgrid.png";
+import { toast } from "react-hot-toast";
+import { deleteWorkflow, editWorkflow } from "../../../api/apiMethods";
 import "../../style/views/workFlows.scss";
 import DropDown from "../DropDown/DropDown";
-import NoRecordFound from "../NoRecordFound/NoRecordFound";
 import MoreVerticalDropdown from "../MoreVerticalDropdown/MoreVerticalDropdown";
-import {
-  deleteWorkflow,
-  editWorkflow,
-  getWorkflowLists,
-} from "../../../api/apiMethods";
-import { toast } from "react-hot-toast";
-import { useQuery } from "react-query";
+import NoRecordFound from "../NoRecordFound/NoRecordFound";
+import { useNavigate } from "react-router-dom";
 
 // ** Bootstrap Checkbox Component
 
@@ -58,13 +39,6 @@ const nodesData = [
   { id: 2, icon: arrowIcon, isIcon: true },
   { id: 3, icon: webHook },
   { id: 4, icon: sendGrid },
-];
-
-const options = [
-  { id: 1, title: "Option 1" },
-  { id: 2, title: "Option 2" },
-  { id: 3, title: "Option 3" },
-  { id: 4, title: "Option 4" },
 ];
 
 const MySwal = withReactContent(Swal);
@@ -107,6 +81,8 @@ const WorkFlowsCard = (props) => {
   //   "workFLowsLists",
   //   async () => await getWorkflowLists()
   // );
+
+  const navigate = useNavigate();
 
   const [selectedRows, setSelectedRows] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
@@ -193,6 +169,7 @@ const WorkFlowsCard = (props) => {
       [itemId]: !prevStatusList[itemId],
     }));
 
+    setIsLoader(true);
     try {
       const projectData = {
         is_active: !!selectedRows?.length ? item : !item.status,
@@ -200,7 +177,6 @@ const WorkFlowsCard = (props) => {
         project_id: selectedTab.id,
       };
       await editWorkflow(projectData).then((res) => {
-        setIsLoader(true);
         if (res.status === 200) {
           refetch();
           setSelectedRows([]);
@@ -214,10 +190,16 @@ const WorkFlowsCard = (props) => {
         error
       );
       toast.error(error?.response?.data?.message);
+      setIsLoader(false);
     }
   };
 
   const onHandleDelete = async (data) => {
+    console.log(
+      "🚀 ~ file: WorkFlowsCard.js:195 ~ onHandleDelete ~ data:",
+      data
+    );
+
     return MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -231,14 +213,15 @@ const WorkFlowsCard = (props) => {
       buttonsStyling: false,
       preConfirm: async () => {
         const selectedIds = {
-          workflow_ids: !!selectedRows?.length ? selectedRows : [data.id],
+          workflow_ids: !!data?.id ? [data.id] : selectedRows,
+          // (data?.length && [data.id]) ??
+          // (!!selectedRows?.length ? selectedRows : [data.id]),
         };
         await deleteWorkflow(selectedIds);
         // const deletedItem = flowsData.filter((item) => item.id !== data.id);
         // setFlowsData(deletedItem);
       },
     }).then(function (result) {
-      setIsLoader(true);
       if (result.value) {
         refetch();
         setIsLoader(false);
@@ -267,6 +250,7 @@ const WorkFlowsCard = (props) => {
 
   const handleEditWorkflow = async (e) => {
     e.preventDefault();
+    setIsLoader(true);
     try {
       const projectData = {
         name: workflowName,
@@ -275,7 +259,6 @@ const WorkFlowsCard = (props) => {
         // parent_id: selectedNode.id,
       };
       await editWorkflow(projectData).then((res) => {
-        setIsLoader(true);
         if (res.status === 200) {
           refetch();
           setIsLoader(false);
@@ -291,6 +274,8 @@ const WorkFlowsCard = (props) => {
       );
 
       toast.error(error?.response?.data?.message);
+
+      setIsLoader(false);
     }
   };
 
@@ -362,7 +347,7 @@ const WorkFlowsCard = (props) => {
     );
   }
 
-  if (isLoading || isLoader) {
+  if (isLoading) {
     return (
       <div className="d-flex justify-content-center align-items-center">
         <Spinner type="grow" color="primary" />
@@ -446,6 +431,13 @@ const WorkFlowsCard = (props) => {
         {!workflowsList?.length && !!searchTerm?.length && (
           <NoRecordFound searchTerm={searchTerm} />
         )}
+
+        {isLoader && (
+          <div className="d-flex justify-content-center align-items-center">
+            <Spinner type="grow" color="primary" />
+          </div>
+        )}
+
         {workflowsList?.map((item) => {
           return (
             <div
@@ -538,7 +530,7 @@ const WorkFlowsCard = (props) => {
                         />
                       </FormGroup>
                       <MoreVerticalDropdown
-                        handleView={() => {}}
+                        handleView={() => navigate(`/apps/flows/${item.id}`)}
                         handleEdit={() => onPressEditWorkflowName(item)}
                         handleDelete={() => onHandleDelete(item)}
                       />

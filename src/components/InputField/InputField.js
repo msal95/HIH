@@ -7,7 +7,6 @@ import {
   Label,
   Row,
 } from "reactstrap";
-import classnames from "classnames";
 import {
   Eye,
   EyeOff,
@@ -33,17 +32,13 @@ export default function InputField(props) {
     value,
     autoFocus = false,
     placeholder,
-    className,
     iconSize,
     optionsData,
     isOption = false,
     errorMessage,
     errorType,
-    handleOnCreateNewProject,
     isRequired,
   } = props;
-  console.log("🚀 ~ file: InputField.js:45 ~ InputField ~ name:", name);
-  console.log("🚀 ~ file: InputField.js:45 ~ InputField ~ value:", value);
 
   const [inputVisibility, setInputVisibility] = useState(false);
 

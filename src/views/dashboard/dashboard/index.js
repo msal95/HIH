@@ -66,17 +66,7 @@ const Dashboard = () => {
   const { colors } = useContext(ThemeColors),
     { skin } = useSkin(),
     labelColor = skin === "dark" ? "#b4b7bd" : "#6e6b7b",
-    // tooltipShadow = "rgba(0, 0, 0, 0.25)",
     gridLineColor = "rgba(200, 200, 200, 0.2)",
-    // lineChartPrimary = "#666ee8",
-    // lineChartDanger = "#ff4961",
-    // warningColorShade = "#ffbd1f",
-    // warningLightColor = "#FDAC34",
-    // successColorShade = "#28dac6",
-    // primaryColorShade = "#836AF9",
-    // infoColorShade = "#299AFF",
-    // yellowColor = "#ffe800",
-    // greyColor = "#4F5D70",
     blueColor = "#2c9aff",
     blueLightColor = "#84D0FF",
     greyLightColor = "#EDF1F4";
@@ -84,8 +74,6 @@ const Dashboard = () => {
   const toggleTab = (tab) => {
     setActiveTab(tab);
   };
-
-  const [show, setShow] = useState(false);
 
   const token = localStorage.getItem("accessToken");
   console.log("🚀 ~ file: apiEndPoint.js:4 ~ token:", token);
@@ -97,7 +85,6 @@ const Dashboard = () => {
   }, []);
 
   // ** vars
-  const trackBgColor = "#e9ecef";
 
   return (
     <Fragment>
@@ -189,7 +176,7 @@ const Dashboard = () => {
                           <div className="d-grid w-100 mt-2">
                             <Button
                               color="primary"
-                              onClick={() => setShow(true)}
+                              // onClick={() => setShow(true)}
                             >
                               Upgrade Plan
                             </Button>
