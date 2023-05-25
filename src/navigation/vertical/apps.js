@@ -35,6 +35,12 @@ export default [
     icon: <FileText size={20} />,
     children: [
       {
+        id: "form-generated",
+        title: "Form generated",
+        icon: <Circle size={12} />,
+        navLink: "/apps/form/generated",
+      },
+      {
         id: "Formlisting",
         title: "Listing",
         icon: <Circle size={12} />,
