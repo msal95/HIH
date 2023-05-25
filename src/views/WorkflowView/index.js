@@ -42,6 +42,10 @@ const WorkflowView = () => {
     setActiveTab(tab);
   };
 
+  const handleNavigation = (item)=>{
+    window.location.href=`http://127.0.0.1:8000/workflow-engine/builder/${item}`
+  }
+
   return (
     <div className="container-xxl  overflow-auto">
       <div className="d-flex align-items-center justify-content-between">
@@ -50,7 +54,7 @@ const WorkflowView = () => {
           <h2 className="text-primary py-2">Workflow View</h2>
         </div>
         <div className="d-flex">
-          <Button outline color="primary">
+          <Button outline color="primary" onClick={()=>handleNavigation(1)}>
             Edit FLow
           </Button>
           <Button className="ms-2" color="primary">

@@ -9,7 +9,26 @@ import  './builder.css'
 import { formJsonEditor } from '../../../api/apiMethods';
 import { useLocation } from 'react-router-dom';
 import { Card, CardBody, CardText, Col, Row, Button, Label, Input } from 'reactstrap';
+import { useGetModels, useGetRelatedModel } from '../../../api/config/formBuilderQueries';
 export default function Editor() {
+
+
+    // get modes options
+        const modelsGet = useGetModels();
+        const [models, setModels] = useState([]);
+        const [nextOption, setNextOption] = useState(false);
+        const [checkBox, setCheckBox] = useState(false);
+        const [modelRelated, setModelRelated] = useState([]);
+
+        useEffect(() => {
+            if (modelsGet.isFetched && modelsGet.data) {
+                setModels(modelsGet.data);
+            }
+        }, [modelsGet.data, modelsGet.isFetched, modelsGet.isFetching]);
+        console.log('✅ models asdfasdfasdf>>>>>>>>>   ', models)
+
+
+    // get modes options
     const formEditorRef = useRef(null);
     const location = useLocation();
     console.log('✅ props    ', location?.state?.json)
@@ -17,6 +36,8 @@ export default function Editor() {
     const [stateFullData] = useState(location?.state);
     const [name, setName] = useState(stateFullData?.name ?? "");
     const [model, setModel] = useState(stateFullData?.model ?? "");
+    const [modelId, setModelId] = useState(stateFullData?.model_id ?? "");
+    const [modelType, setModelType] = useState(stateFullData?.model_type ?? "");
     const [editorId] = useState(stateFullData?.id ?? null);
 
     useEffect(() => {
@@ -39,6 +60,7 @@ export default function Editor() {
         }
       };
     }, [formJson]);
+
     const handleGetFormJson = async () => {
         try {
           const formJson = formEditorRef.current.saveSchema();
@@ -49,6 +71,8 @@ export default function Editor() {
             name,
             user_id: 1,
             editor_id: editorId,
+            modelId,
+            modelType,
           };
           const res = await formJsonEditor(data);
           const message = res?.message;
@@ -73,12 +97,32 @@ export default function Editor() {
         console.log(event.target.value)
         setName(event.target.value);
       };
-      const handleSelectChange = (event) => {
-        console.log(event.target.value)
+      const handleSelectChange = async (event) => {
+        console.log(event.target.value);
         setModel(event.target.value);
-      };
+        setModelType(event.target.value);
+        const data = {
+            model: event.target.value
+        }
+        const modelsGetRelated = await useGetRelatedModel(data);
+        console.log('✅ modelsGetRelated    ', modelsGetRelated)
+        setModelRelated(modelsGetRelated);
+        setNextOption(true);
+    };
+    const [isSwitchOn, setIsSwitchOn] = useState(true);
 
-      console.log('✅ formJson    ', stateFullData, 'formJson', formJson)
+    const handleSwitchToggle = () => {
+      setIsSwitchOn((prevValue) => !prevValue);
+      console.log(`Switch is ${isSwitchOn ? 'On' : 'Off'}`);
+      if (!isSwitchOn) {
+        setModelId(null);
+      }
+    };
+    const handleSelectOneChange = (event) => {
+        console.log(event.target.value);
+        setModelId(event.target.value);
+        // setNextOption(true);
+    };
     return (
         <div className='container-xxl overflow-auto mt-5'>
             <Row>
@@ -90,27 +134,52 @@ export default function Editor() {
                     </CardText>
                     </CardBody>
                         <Row className='mb-3'>
-                            <Col className='mb-1' xl='4' md='6' sm='12'>
+                            <Col className='mb-1' xl='3' md='6' sm='12'>
                                 <Label className='form-label' for='basicInput'>
                                     Enter Form Name
                                 </Label>
                                 <Input type="text" id="basicInput" placeholder="Name" value={name} onChange={handleInputChange} />
                             </Col>
-                            <Col className='mb-1' xl='4' md='6' sm='12'>
+                            <Col className='mb-1' xl='3' md='6' sm='12'>
                                 <Label className='form-label' for='basicInput'>
                                     Select one model
                                 </Label>
-                                <Input type='select' id='payment-select' onChange={handleSelectChange}>
+                                <select id="payment-select" className='form-select form-select-lg mb-3' onChange={handleSelectChange}>
                                     <option value={null}>Select one model</option>
-                                    <option>For User</option>
-                                    <option>For credentials</option>
-                                    <option>for Integration</option>
-                                </Input>
+                                    {models &&
+                                        models.map((item) => (
+                                            <option key={item}>{item}</option>
+                                        ))
+                                    }
+                                </select>
                             </Col>
+                            {nextOption  && <><Col className='mb-1' xl='3' md='6' sm='12'>
+                                <Label className='form-label' for='basicInput'>
+                                    For All
+                                </Label>
+                                <div className='form-check form-switch'>
+                                    <Input
+                                    type="checkbox"
+                                    checked={isSwitchOn}
+                                    onChange={handleSwitchToggle}
+                                />
+                                </div>
+                            </Col>{!isSwitchOn && <Col className='mb-1' xl='3' md='6' sm='12'>
+                                    <Label className='form-label' for='basicInput'>
+                                        Select
+                                    </Label>
+                                    <select id="select type" className='form-select form-select-lg mb-3' onChange={handleSelectOneChange}>
+                                        <option value={null}>Select one </option>
+                                        {modelRelated &&
+                                            modelRelated.map((item) => (
+                                                <option key={item?.id} value={item?.id}>{item?.name}</option>
+                                            ))}
+                                    </select>
+                                </Col>}</>}
                         </Row>
                         <div className='' id="form-editor"></div>
                         <Col sm='12 mt-4'>
-                            {console.log('✅ model === "Select one model"    ', model === "Select one model", !name === "", (!(name !== "") && (model !== "Select one model")))
+                            {console.log('✅ model === "Select one model" ', model === "Select one model", !name === "", (!(name !== "") && (model !== "Select one model")))
                             }
                             <Button.Ripple color='primary'  onClick={handleGetFormJson} disabled={!((name !== "") && (model !== "Select one model"))}>Save</Button.Ripple>
                         </Col>

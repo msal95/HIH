@@ -24,6 +24,7 @@ export default function MoreVerticalDropdown(props) {
           <DropdownItem className="w-100" onClick={handleView}>
             <Eye size={17} className="me-1" />
             View
+
           </DropdownItem>
         )}
         <DropdownItem className="w-100" onClick={handleEdit}>

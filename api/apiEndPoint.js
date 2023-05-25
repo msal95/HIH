@@ -1,17 +1,11 @@
 import axios from "axios";
 
-const token = localStorage.getItem("accessToken");
-const result = token.replace(/"/g, "");
-
-console.log(result);
-
+const token = localStorage.getItem("myToken");
 export const API_URL = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
-    Authorization: `Bearer ${result}`,
-
+    Authorization: `Bearer ${token}`,
     Accept: "application/json",
-
     "Access-Control-Allow-Origin": "*",
   },
 });
