@@ -3,7 +3,6 @@ import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import Editor from "../../views/builder/Editor";
 import ViewFormRender from "../../views/builder/ViewFormRender";
-import FormListing from "../../views/builder/FormListing";
 import Engine from "../../views/workflowBuilder/Engine";
 import Integration from "../../views/integrations/Integration";
 import EventAndResources from "../../views/integrations/EventAndResources";
@@ -17,6 +16,7 @@ const WorkFlowsView = lazy(() => import("../../views/WorkflowView"));
 const Settings = lazy(() => import("../../views/settings"));
 const Kanban = lazy(() => import("../../views/apps/kanban"));
 const Calendar = lazy(() => import("../../views/apps/calendar"));
+const FormListing = lazy(() => import("../../views/builder/FormListing"));
 
 const InvoiceAdd = lazy(() => import("../../views/apps/invoice/add"));
 const InvoiceList = lazy(() => import("../../views/apps/invoice/list"));

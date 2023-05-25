@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ZapOff } from "react-feather";
 import { Button, Col, Form, Row } from "reactstrap";
 
@@ -15,6 +15,13 @@ import CreateNewProject from "../CreateNewProject/CreateNewProject";
 import CustomHeading from "../CustomHeading/CustomHeading";
 import InputField from "../InputField/InputField";
 
+const authOptions = [
+  { id: 1, name: "Auth 2.0", value: "auth 2.0" },
+  { id: 2, name: "Api key", value: "api key" },
+  { id: 3, name: "JWT", value: "jwt" },
+  { id: 4, name: "Bearer token", value: "bearer token" },
+];
+
 export default function SendGrid(props) {
   const {
     isEdit,
@@ -25,7 +32,7 @@ export default function SendGrid(props) {
     handleOnCreateNewProject,
     optionsData,
   } = props;
-  console.log("🚀 ~ file: SendGrid.js:28 ~ SendGrid ~ item:", item);
+
   const { id, name, data, type } = item ?? {};
 
   return (
@@ -92,7 +99,7 @@ export default function SendGrid(props) {
                   }}
                   onBlur={handleBlur}
                   value={values.authType}
-                  optionsData={optionsData}
+                  optionsData={authOptions}
                   isOption
                   errorType={errors.authType && touched.authType}
                   errorMessage={errors.authType}
