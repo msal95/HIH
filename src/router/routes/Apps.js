@@ -7,6 +7,7 @@ import FormListing from "../../views/builder/FormListing";
 import Engine from "../../views/workflowBuilder/Engine";
 import Integration from "../../views/integrations/Integration";
 import EventAndResources from "../../views/integrations/EventAndResources";
+import FormsGenerated from "../../views/builder/FormsGenerated";
 
 const Chat = lazy(() => import("../../views/apps/chat"));
 const Todo = lazy(() => import("../../views/apps/todo"));
@@ -85,6 +86,14 @@ const AppRoutes = [
   {
     element: <FormListing />,
     path: "/apps/form/listing",
+    meta: {
+      appLayout: true,
+      className: "email-application",
+    },
+  },
+  {
+    element: <FormsGenerated />,
+    path: "/apps/form/generated",
     meta: {
       appLayout: true,
       className: "email-application",

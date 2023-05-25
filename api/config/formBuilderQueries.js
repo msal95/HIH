@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { useQuery} from 'react-query';
+import { useQuery, useQueryClient, useMutation} from 'react-query';
 import laravelApi from './laravelApi';
-import { formBuilderKey } from './queryKeys';
+import { formBuilderKey, integrationKey } from './queryKeys';
 
 export function useGetModels() {
     async function getData() {
@@ -14,17 +14,36 @@ export function useGetModels() {
 
     return useQuery([formBuilderKey.formBuilder], getData, { staleTime: Infinity });
 }
-// export function useGetRelatedModel(related) {
-//     async function getData() {
-//         let data = null;
-//         await axios.get(laravelApi.formBuilder.getRelatedModel, { params: related }).then((result) => {
-//             data = result.data?.data;
-//         });
-//         return data;
-//     }
+export function useGetIntegrationAndForms() {
+    async function getData() {
+        let data = null;
+        await axios.get(laravelApi.formBuilder.getIntegrationAndForms).then((result) => {
+            data = result.data?.data;
+        });
+        return data;
+    }
 
-//     return useQuery([getModelKey.getModel, related], getData, { staleTime: 1 * 60});
-// }
+    return useQuery([integrationKey.integration], getData, { staleTime: Infinity });
+}
+
+export function useEventFormMake() {
+    const queryClient = useQueryClient();
+    return useMutation(
+        (id) =>
+            axios
+                .post(laravelApi.formBuilder.postEventFormMake, id, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                })
+                .then((result) => result.data),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(formBuilderKey.formBuilder);
+            },
+        }
+    );
+}
 
 export async function useGetRelatedModel(related) {
     const { data } = await axios.get(laravelApi.formBuilder.getRelatedModel, { params: related });
