@@ -17,9 +17,11 @@ import withReactContent from "sweetalert2-react-content";
 
 // ** Local Imports
 import {
+  createProjects,
   deleteCredential,
   getCredentialsList,
   getIntegrationsList,
+  getProjectLists,
 } from "../../../api/apiMethods";
 import CustomCard from "../../components/CustomCard/CustomCard";
 import CustomHeading from "../../components/CustomHeading/CustomHeading";
@@ -30,18 +32,18 @@ import SendGrid from "../../components/SendGrid/SendGrid";
 import "../../style/base/base.scss";
 import CredentialsFilter from "./CredentialsFilter";
 
-const colourOptions = [
+const locationData = [
   {
-    value: "add-new",
+    name: "add-new",
     label: "Add New Customer",
     type: "button",
     color: "flat-success",
   },
-  { value: "ocean", label: "Ocean" },
-  { value: "blue", label: "Blue" },
-  { value: "purple", label: "Purple" },
-  { value: "red", label: "Red" },
-  { value: "orange", label: "Orange" },
+  // { name: "ocean", label: "Ocean" },
+  // { name: "blue", label: "Blue" },
+  // { name: "purple", label: "Purple" },
+  // { name: "red", label: "Red" },
+  // { name: "orange", label: "Orange" },
 ];
 
 const MySwal = withReactContent(Swal);
@@ -61,14 +63,38 @@ const Credentials = () => {
   const [selectedItem, setSelectedItem] = useState();
   const [isEdit, setIsEdit] = useState(false);
   const [isNewProject, setIsNewProject] = useState(false);
-  const [optionsData, setOptionsData] = useState(colourOptions);
   const [integrationList, setIntegrationsList] = useState();
+  const [locationOptions, setLocationOptions] = useState(locationData);
+  console.log(
+    "🚀 ~ file: index.js:68 ~ Credentials ~ locationOptions:",
+    locationOptions
+  );
 
   // API Call
   const { isLoading, data, error, refetch, isFetching, isError } = useQuery(
     "credentialsList",
     () => getCredentialsList()
   );
+
+  const {
+    isLoading: isProjectLoader,
+    data: projectsList,
+    error: projectError,
+    refetch: projectRefetch,
+    isFetching: isProjectRefetching,
+    isError: isProjectError,
+  } = useQuery("projectsList", () => getProjectLists());
+
+  useEffect(() => {
+    if (projectsList?.data?.data?.length) {
+      const newOptions = locationData.concat(projectsList?.data?.data);
+      console.log(
+        "🚀 ~ file: SendGrid.js:64 ~ useEffect ~ newOptions:",
+        newOptions
+      );
+      setLocationOptions(newOptions);
+    }
+  }, [isProjectRefetching]);
 
   const {
     isLoading: integrationLoader,
@@ -78,10 +104,6 @@ const Credentials = () => {
     isFetching: integrationIsFetching,
     isError: integrationIsError,
   } = useQuery("integrationsList", () => getIntegrationsList());
-  console.log(
-    "🚀 ~ file: index.js:94 ~ Credentials ~ integrationData:",
-    integrationData?.data?.integration
-  );
 
   useEffect(() => {
     if (!!data?.data?.data.data.length) {
@@ -203,10 +225,6 @@ const Credentials = () => {
   };
 
   const onClickSendGridCredential = (item) => {
-    console.log(
-      "🚀 ~ file: index.js:199 ~ onClickSendGridCredential ~ item:",
-      item
-    );
     setIsCredential(true);
     setIsSelectedCredential(true);
     setIsSendGridData(true);
@@ -222,24 +240,36 @@ const Credentials = () => {
     return null;
   };
 
-  const onSubmitNewProjectData = (values) => {
-    console.log(
-      "🚀 ~ file: index.js:76 ~ onSubmitCredentialsData ~ values:",
-      values
-    );
+  const onSubmitNewProjectData = async (values) => {
+    try {
+      const projectData = {
+        name: values.projectName,
+        description: values.description,
+      };
+      const newOptions = [
+        ...locationOptions,
+        projectData,
+        { is_project: true },
+      ];
 
-    const newLabel =
-      values.projectName.charAt(0).toUpperCase() + values.projectName.slice(1);
-    const newOptions = [
-      ...optionsData,
-      {
-        value: values.projectName,
-        label: newLabel,
-      },
-    ];
-    toast.success("New Project Added Successfully.");
-    handleOnCreateNewProject();
-    setOptionsData(newOptions);
+      await createProjects(projectData).then((res) => {
+        if (res.status === 201) {
+          projectRefetch();
+          toast.success("New Project Added Successfully.");
+          handleOnCreateNewProject();
+          setLocationOptions(newOptions);
+        } else {
+          toast.error(res.data.message);
+        }
+      });
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.js:266 ~ onSubmitNewProjectData ~ error:",
+        error
+      );
+
+      toast.error(error?.response?.data?.message);
+    }
     return null;
   };
   const selectedCredentialData = () => {
@@ -252,7 +282,7 @@ const Credentials = () => {
           onPressCredentials={onSubmitCredentialsData}
           onPressNewProject={onSubmitNewProjectData}
           handleOnCreateNewProject={handleOnCreateNewProject}
-          optionsData={optionsData}
+          optionsData={locationOptions}
         />
       );
     }

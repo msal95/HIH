@@ -13,10 +13,10 @@ import uiElements from "./ui-elements";
 export default [
   ...dashboards,
   ...apps,
-  // ...pages,
-  // ...uiElements,
-  // ...forms,
-  // ...tables,
-  // ...charts,
-  // ...others,
+  ...pages,
+  ...uiElements,
+  ...forms,
+  ...tables,
+  ...charts,
+  ...others,
 ];

@@ -25,10 +25,13 @@ import "../../style/base/base.scss";
 import ApexAreaCharts from "./ApexAreaCharts"; //
 import TabsVerticalLeft from "./TabsVerticalLeft";
 import { tabsVerticalLeft } from "./TabSourceCode";
+import { useParams } from "react-router-dom";
 
 const WorkflowView = () => {
   // ** Context
   const [activeTab, setActiveTab] = useState("1");
+
+  const { flowId } = useParams();
 
   const { colors } = useContext(ThemeColors),
     { skin } = useSkin(),
@@ -42,9 +45,9 @@ const WorkflowView = () => {
     setActiveTab(tab);
   };
 
-  const handleNavigation = (item)=>{
-    window.location.href=`http://127.0.0.1:8000/workflow-engine/builder/${item}`
-  }
+  const handleNavigation = () => {
+    window.location.href = `http://127.0.0.1:8000/workflow-engine/builder/${flowId}`;
+  };
 
   return (
     <div className="container-xxl  overflow-auto">
@@ -54,7 +57,7 @@ const WorkflowView = () => {
           <h2 className="text-primary py-2">Workflow View</h2>
         </div>
         <div className="d-flex">
-          <Button outline color="primary" onClick={()=>handleNavigation(1)}>
+          <Button outline color="primary" onClick={handleNavigation}>
             Edit FLow
           </Button>
           <Button className="ms-2" color="primary">
