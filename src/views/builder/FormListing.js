@@ -27,9 +27,10 @@ import DataTableRender from "./DataTableRender";
 
 export default function FormListing() {
   const TABLE_HEAD = [
+    { id: "select", label: "select", alignRight: false, orderable: false },
     { id: "id", label: "#", alignRight: false, orderable: false },
     { id: "name", label: "Form Name", alignRight: false, orderable: true },
-    { id: "Actions", label: "Actions", alignRight: false, orderable: false },
+    { id: "Actions", label: "Actions", alignRight: true, orderable: false },
   ];
   const [formJson, setFormJson] = useState([]);
   const [isLoader, setIsLoader] = useState(false);

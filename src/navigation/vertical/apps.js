@@ -60,12 +60,12 @@ export default [
         icon: <Circle size={12} />,
         navLink: "/apps/form/listing",
       },
-      {
-        id: "Editor",
-        title: "Editor",
-        icon: <Circle size={12} />,
-        navLink: "/apps/editor",
-      },
+      // {
+      //   id: "editor",
+      //   title: "Editor",
+      //   icon: <Circle size={12} />,
+      //   navLink: "/apps/editor",
+      // },
       //   {
       //     id: "view",
       //     title: "View",

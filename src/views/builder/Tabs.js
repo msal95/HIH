@@ -13,6 +13,7 @@ import {
   Activity,
   Edit,
   Settings,
+  Eye,
 } from "react-feather";
 
 const Tabs = ({ activeTab, toggleTab }) => {
@@ -26,7 +27,7 @@ const Tabs = ({ activeTab, toggleTab }) => {
       </NavItem>
       <NavItem>
         <NavLink active={activeTab === "2"} onClick={() => toggleTab("2")}>
-          <BarChart size={18} className="me-50" />
+          <Eye size={18} className="me-50" />
           <span className="fw-bold">Appearance</span>
         </NavLink>
       </NavItem>

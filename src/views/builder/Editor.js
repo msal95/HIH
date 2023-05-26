@@ -1,40 +1,42 @@
-import React, { useEffect, useRef, useState } from "react";
 import { FormEditor } from "@bpmn-io/form-js";
+import React, { useEffect, useRef, useState } from "react";
 import schema from "./schema.json";
 
-import "@bpmn-io/form-js/dist/assets/form-js.css";
 import "@bpmn-io/form-js/dist/assets/form-js-editor.css";
+import "@bpmn-io/form-js/dist/assets/form-js.css";
+import { ChevronLeft, Edit2, PlusSquare } from "react-feather";
 import { toast } from "react-hot-toast";
-import "./builder.css";
-import { formJsonEditor } from "../../../api/apiMethods";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
+  Button,
   Card,
   CardBody,
+  CardHeader,
   CardText,
   Col,
-  Row,
-  Button,
-  Label,
   Input,
+  Label,
+  Row,
+  Spinner,
   TabContent,
   TabPane,
-  CardHeader,
 } from "reactstrap";
+import { formJsonEditor } from "../../../api/apiMethods";
 import {
   useGetModels,
   useGetRelatedModel,
 } from "../../../api/config/formBuilderQueries";
-import Tabs from "./Tabs";
+import CustomModal from "../../components/CustomModal/CustomModal";
 import Divider from "../../components/Divider/Divider";
-import { Edit2 } from "react-feather";
+import Tabs from "./Tabs";
+import "./builder.css";
 export default function Editor() {
   // get modes options
   const modelsGet = useGetModels();
   const [models, setModels] = useState([]);
   const [nextOption, setNextOption] = useState(false);
-  const [checkBox, setCheckBox] = useState(false);
   const [modelRelated, setModelRelated] = useState([]);
+  const [isSwitchOn, setIsSwitchOn] = useState(true);
 
   useEffect(() => {
     if (modelsGet.isFetched && modelsGet.data) {
@@ -54,9 +56,14 @@ export default function Editor() {
   const [editorId] = useState(stateFullData?.id ?? null);
   const [activeTab, setActiveTab] = useState("1");
   const [isEditFormName, setIsEditFormName] = useState(false);
+  const [show, setShow] = useState(true);
+  console.log("🚀 ~ file: Editor.js:60 ~ Editor ~ show:", show);
+  const [isLoader, setIsLoader] = useState(true);
+  console.log("🚀 ~ file: Editor.js:62 ~ Editor ~ isLoader:", isLoader);
 
   useEffect(() => {
     const container = document.querySelector("#form-editor");
+    console.log("🚀 ~ file: Editor.js:67 ~ useEffect ~ container:", container);
     if (container && !formEditorRef.current) {
       const formEditor = new FormEditor({
         container,
@@ -74,7 +81,31 @@ export default function Editor() {
         formEditorRef.current = null;
       }
     };
-  }, [formJson]);
+  }, [formJson, isLoader]);
+
+  useEffect(() => {
+    setIsLoader(true);
+    const timer = setTimeout(() => {
+      setIsLoader(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [show]);
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === "Enter") {
+        setIsEditFormName(false);
+      } else if (event.key === "Escape") {
+        setIsEditFormName(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
 
   const handleEditFormName = () => {
     setIsEditFormName(true);
@@ -83,7 +114,6 @@ export default function Editor() {
   const handleGetFormJson = async () => {
     try {
       const formJson = formEditorRef.current.saveSchema();
-      console.log("formJson:", JSON.stringify(formJson));
       const formJsonData = JSON.stringify(formJson);
       const data = {
         data: formJsonData,
@@ -110,23 +140,22 @@ export default function Editor() {
       console.error(error);
     }
   };
+
   const handleInputChange = (event) => {
-    console.log(event.target.value);
     setName(event.target.value);
   };
+
   const handleSelectChange = async (event) => {
-    console.log(event.target.value);
     setModel(event.target.value);
     setModelType(event.target.value);
     const data = {
       model: event.target.value,
     };
+
     const modelsGetRelated = await useGetRelatedModel(data);
-    console.log("✅ modelsGetRelated    ", modelsGetRelated);
     setModelRelated(modelsGetRelated);
     setNextOption(true);
   };
-  const [isSwitchOn, setIsSwitchOn] = useState(true);
 
   const handleSwitchToggle = () => {
     setIsSwitchOn((prevValue) => !prevValue);
@@ -146,150 +175,221 @@ export default function Editor() {
     setActiveTab(tab);
   };
 
+  const onClickDiscardModal = () => {
+    setShow(false);
+  };
+
+  const handleToggleModal = () => {
+    if (!!modelType && isSwitchOn) {
+      setShow((prevState) => !prevState);
+    } else if (!!modelType && !isSwitchOn && !!modelId) {
+      setShow((prevState) => !prevState);
+    } else {
+      toast.error("Select One Model is required");
+    }
+  };
+
   return (
-    <div className="container-xxl overflow-auto">
-      <h2 className="text-primary py-2">Form Builder</h2>
+    <Card className="container-xxl overflow-auto pt-1">
+      {/* <h2 className="text-primary py-2">Form Builder</h2> */}
       <Row className="mb-2">
         <Col xs={12}>
-          <Tabs className="mb-2" activeTab={activeTab} toggleTab={toggleTab} />
+          {!show && (
+            <>
+              <div className="d-flex">
+                <Link to="/apps/form/listing" className="d-flex">
+                  <ChevronLeft
+                    size={27}
+                    className="me-1 bg-opacity-50 bg-primary"
+                    style={{
+                      width: 30,
+                      borderRadius: 16,
+                    }}
+                    color="white"
+                  />
+                  Back to Listing
+                </Link>
+                <div className="d-flex container justify-content-between align-items-center">
+                  <div className="d-flex align-items-center mb-1">
+                    {!isEditFormName ? (
+                      <h3>{name}</h3>
+                    ) : (
+                      <Input
+                        type="text"
+                        id="basicInput"
+                        placeholder="Name"
+                        value={name}
+                        onChange={handleInputChange}
+                      />
+                    )}
+                    {!isEditFormName && (
+                      <Edit2
+                        size={16}
+                        className="ms-2"
+                        onClick={handleEditFormName}
+                      />
+                    )}
+                  </div>
+                  <div>
+                    <Button
+                      color="primary"
+                      className="mb-2 me-1"
+                      outline
+                      onClick={handleGetFormJson}
+                      disabled={!(name !== "" && model !== "Select one model")}
+                    >
+                      Preview
+                    </Button>
+                    <Button
+                      color="primary"
+                      className="mb-2"
+                      onClick={handleGetFormJson}
+                      disabled={!(name !== "" && model !== "Select one model")}
+                    >
+                      Save
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <Divider />
+            </>
+          )}
           <TabContent activeTab={activeTab}>
             <TabPane tabId="1">
-              <Card title="Striped" className="px-2 pb-1">
-                <CardBody>
-                  <CardText>{stateFullData?.name}</CardText>
-                </CardBody>
-                <Row className="mb-3">
-                  <Col
-                    className="mb-1"
-                    xl={nextOption ? "5" : "7"}
-                    md="6"
-                    sm="12"
-                  >
-                    <h3>Select Category</h3>
-                    <p>
-                      To speed up the process you can select from one of our
-                      pre-made templates, start with a blank form and create
-                      your own.
-                    </p>
-                    {/* <Label className="form-label" for="basicInput">
-                      Enter Form Name
-                    </Label>
-                    <Input
-                      type="text"
-                      id="basicInput"
-                      placeholder="Name"
-                      value={name}
-                      onChange={handleInputChange}
-                    /> */}
-                  </Col>
-                  <Col className="mb-1" xl="3" md="6" sm="12">
-                    <Label className="form-label" for="basicInput">
-                      Select one model
-                    </Label>
-                    <select
-                      id="payment-select"
-                      className="form-select form-select-lg mb-3"
-                      onChange={handleSelectChange}
-                    >
-                      <option value={null}>Select one model</option>
-                      {models &&
-                        models?.map((item) => (
-                          <option key={item}>{item}</option>
-                        ))}
-                    </select>
-                  </Col>
-                  {nextOption && (
+              {show && (
+                <div className="p-1">
+                  {isLoader ? (
+                    <div className="d-flex justify-content-center align-items-center p-5">
+                      <Spinner type="grow" color="primary" />
+                    </div>
+                  ) : (
                     <>
-                      <Col className="mb-1" xl="1" md="6" sm="12">
-                        <Label className="form-label" for="basicInput">
-                          For All
-                        </Label>
-                        <div className="form-check form-switch">
-                          <Input
-                            type="checkbox"
-                            checked={isSwitchOn}
-                            onChange={handleSwitchToggle}
-                          />
-                        </div>
-                      </Col>
-                      {!isSwitchOn && (
-                        <Col className="mb-1" xl="3" md="6" sm="12">
-                          <Label className="form-label" for="basicInput">
-                            Select
-                          </Label>
-                          <select
-                            id="select type"
-                            className="form-select form-select-lg mb-3"
-                            onChange={handleSelectOneChange}
+                      <div className="d-flex justify-content-between align-items-center mb-1">
+                        <CardBody>
+                          <CardText>{stateFullData?.name}</CardText>
+                        </CardBody>
+                        <Row className="mb-3">
+                          <Col
+                            className="mb-1"
+                            xl={nextOption ? "5" : "7"}
+                            md="6"
+                            sm="12"
                           >
-                            <option value={null}>Select one </option>
-                            {modelRelated &&
-                              modelRelated.map((item) => (
-                                <option key={item?.id} value={item?.id}>
-                                  {item?.name}
-                                </option>
-                              ))}
-                          </select>
-                        </Col>
-                      )}
+                            <h3>Select Category</h3>
+                            <p>
+                              To speed up the process you can select from one of
+                              our pre-made templates, start with a blank form
+                              and create your own.
+                            </p>
+                          </Col>
+                          <Col
+                            className="mb-1"
+                            xl={!nextOption ? "4" : "3"}
+                            md="6"
+                            sm="12"
+                          >
+                            <Label className="form-label" for="basicInput">
+                              Select one model
+                            </Label>
+                            <select
+                              id="payment-select"
+                              className="form-select form-select-lg mb-3"
+                              onChange={handleSelectChange}
+                            >
+                              <option value={null}>Select one model</option>
+                              {models &&
+                                models?.map((item) => (
+                                  <option key={item}>{item}</option>
+                                ))}
+                            </select>
+                          </Col>
+                          {nextOption && (
+                            <>
+                              <Col className="mb-1" xl="1" md="6" sm="12">
+                                <Label className="form-label" for="basicInput">
+                                  For All
+                                </Label>
+                                <div className="form-check form-switch">
+                                  <Input
+                                    type="checkbox"
+                                    checked={isSwitchOn}
+                                    onChange={handleSwitchToggle}
+                                  />
+                                </div>
+                              </Col>
+                              {!isSwitchOn && (
+                                <Col className="mb-1" xl="3" md="6" sm="12">
+                                  <Label
+                                    className="form-label"
+                                    for="basicInput"
+                                  >
+                                    Select
+                                  </Label>
+                                  <select
+                                    id="select type"
+                                    className="form-select form-select-lg mb-3"
+                                    onChange={handleSelectOneChange}
+                                  >
+                                    <option value={null}>Select one </option>
+                                    {modelRelated &&
+                                      modelRelated.map((item) => (
+                                        <option key={item?.id} value={item?.id}>
+                                          {item?.name}
+                                        </option>
+                                      ))}
+                                  </select>
+                                </Col>
+                              )}
+                            </>
+                          )}
+                        </Row>
+                      </div>
+
+                      <Divider />
+
+                      <Button
+                        outline
+                        color="primary"
+                        className="d-flex"
+                        onClick={handleToggleModal}
+                      >
+                        <PlusSquare size={22} className="mt-1" />
+                        <div className="ms-2">
+                          <p style={{ textAlign: "left" }} className="m-0 p-0">
+                            Create New
+                          </p>
+                          <p>Create new form from scratch</p>
+                        </div>
+                      </Button>
                     </>
                   )}
-                </Row>
-              </Card>
-              <Row>
-                <Col sm="12">
-                  <Card title="Striped" className="p-2 pb-1">
-                    <CardHeader className="p-0 m-0">
-                      <div className="d-flex container justify-content-between align-items-center">
-                        <div className="d-flex">
-                          {!isEditFormName ? (
-                            <h3>Untitled</h3>
-                          ) : (
-                            <Input
-                              type="text"
-                              id="basicInput"
-                              placeholder="Name"
-                              value={name}
-                              onChange={handleInputChange}
-                            />
-                          )}
-                          {!isEditFormName && (
-                            <Edit2
-                              size={16}
-                              className="ms-2"
-                              onClick={handleEditFormName}
-                            />
-                          )}
-                        </div>
-                        <Button.Ripple
-                          color="primary"
-                          className="mb-2"
-                          onClick={handleGetFormJson}
-                          disabled={
-                            !(name !== "" && model !== "Select one model")
-                          }
-                        >
-                          Save
-                        </Button.Ripple>
+                </div>
+              )}
+              {!show && (
+                <Row>
+                  {isLoader ? (
+                    <div className="d-flex justify-content-center align-items-center p-5">
+                      <Spinner type="grow" color="primary" />
+                    </div>
+                  ) : (
+                    <Col sm="12">
+                      <div title="Striped" className="p-2 pb-1">
+                        <CardHeader className="p-0 m-0">
+                          <Tabs
+                            className="mb-2"
+                            activeTab={activeTab}
+                            toggleTab={toggleTab}
+                          />
+                        </CardHeader>
+                        <div className="" id="form-editor"></div>
                       </div>
-                      <Divider />
-                    </CardHeader>
-                    <div className="" id="form-editor"></div>
-                    {/* <Col sm="12 mt-4">
-                      {console.log(
-                        '✅ model === "Select one model" ',
-                        model === "Select one model",
-                        !name === "",
-                        !(name !== "") && model !== "Select one model"
-                      )}
-                     
-                    </Col> */}
-                  </Card>
-                </Col>
-              </Row>
+                    </Col>
+                  )}
+                </Row>
+              )}
             </TabPane>
             <TabPane tabId="2">
-              <h3>Tab2</h3>
+              {/* <ViewFormRender form={formJson} /> */}
             </TabPane>
             <TabPane tabId="3">
               <h3>Tab3</h3>
@@ -327,6 +427,98 @@ export default function Editor() {
           </Card>
         </Col>
       </Row> */}
-    </div>
+
+      {/* <CustomModal
+        toggleModal={handleToggleModal}
+        onDiscard={onClickDiscardModal}
+        show={show}
+        modalClass="modal-lg"
+      >
+        <div className="p-1">
+          <div className="d-flex justify-content-between align-items-center mb-1">
+            <CardBody>
+              <CardText>{stateFullData?.name}</CardText>
+            </CardBody>
+            <Row className="mb-3">
+              <Col className="mb-1" xl={nextOption ? "5" : "7"} md="6" sm="12">
+                <h3>Select Category</h3>
+                <p>
+                  To speed up the process you can select from one of our
+                  pre-made templates, start with a blank form and create your
+                  own.
+                </p>
+              </Col>
+              <Col className="mb-1" xl={!nextOption ? "4" : "3"} md="6" sm="12">
+                <Label className="form-label" for="basicInput">
+                  Select one model
+                </Label>
+                <select
+                  id="payment-select"
+                  className="form-select form-select-lg mb-3"
+                  onChange={handleSelectChange}
+                >
+                  <option value={null}>Select one model</option>
+                  {models &&
+                    models?.map((item) => <option key={item}>{item}</option>)}
+                </select>
+              </Col>
+              {nextOption && (
+                <>
+                  <Col className="mb-1" xl="1" md="6" sm="12">
+                    <Label className="form-label" for="basicInput">
+                      For All
+                    </Label>
+                    <div className="form-check form-switch">
+                      <Input
+                        type="checkbox"
+                        checked={isSwitchOn}
+                        onChange={handleSwitchToggle}
+                      />
+                    </div>
+                  </Col>
+                  {!isSwitchOn && (
+                    <Col className="mb-1" xl="3" md="6" sm="12">
+                      <Label className="form-label" for="basicInput">
+                        Select
+                      </Label>
+                      <select
+                        id="select type"
+                        className="form-select form-select-lg mb-3"
+                        onChange={handleSelectOneChange}
+                      >
+                        <option value={null}>Select one </option>
+                        {modelRelated &&
+                          modelRelated.map((item) => (
+                            <option key={item?.id} value={item?.id}>
+                              {item?.name}
+                            </option>
+                          ))}
+                      </select>
+                    </Col>
+                  )}
+                </>
+              )}
+            </Row>
+          </div>
+
+          <Divider />
+
+          <Button
+            outline
+            color="primary"
+            className="d-flex"
+            onClick={handleToggleModal}
+          >
+            <PlusSquare size={22} className="mt-1" />
+            <div className="ms-2">
+              <p style={{ textAlign: "left" }} className="m-0 p-0">
+                Create New
+              </p>
+              <p>Create new form from scratch</p>
+            </div>
+          </Button>
+        </div>
+      </CustomModal> */}
+    </Card>
   );
 }
