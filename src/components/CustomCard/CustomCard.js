@@ -44,12 +44,7 @@ export default function CustomCard(props) {
       <Card className="custom-card shadow-none ">
         <CardHeader className="d-flex justify-content-between align-items-start custom-card__card-header">
           {!!image && (
-            <img
-              src={import.meta.env.VITE_API_URL + image}
-              alt="Google Icon"
-              width="37px"
-              height="37px"
-            />
+            <img src={image} alt="Google Icon" width="37px" height="37px" />
           )}
           {isIcon && (
             <div className="custom-card__card-icon">
@@ -65,42 +60,6 @@ export default function CustomCard(props) {
             handleEdit={() => onHandleEdit(data)}
             handleDelete={() => onHandleDelete(data.id)}
           />
-          {/* <UncontrolledDropdown
-            className="chart-dropdown"
-            style={{
-              marginLeft: 2,
-            }}
-          >
-            <DropdownToggle
-              color=""
-              className="bg-transparent btn-sm border-0 p-0"
-            >
-              <MoreVertical size={18} className="cursor-pointer" />
-            </DropdownToggle>
-            <DropdownMenu end>
-              <DropdownItem
-                className="w-100"
-                onClick={() => onHandleView(data)}
-              >
-                <Eye size={17} className="me-1" />
-                View
-              </DropdownItem>
-              <DropdownItem
-                className="w-100"
-                onClick={() => onHandleEdit(data)}
-              >
-                <Edit3 size={17} className="me-1" />
-                Edit
-              </DropdownItem>
-              <DropdownItem
-                className="w-100"
-                onClick={() => onHandleDelete(data)}
-              >
-                <Trash2 size={17} className="me-1" />
-                Delete
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown> */}
         </CardHeader>
         <CardBody>
           <CardTitle
