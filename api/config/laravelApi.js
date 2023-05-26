@@ -25,6 +25,8 @@ function laravelApi() {
     formBuilder: {
       get: `${home}/form-builder/get-models`,
       getRelatedModel: `${home}/form-builder/get-models-related`,
+      postEventFormMake: `${home}/form-builder/event-form-make`,
+      getIntegrationAndForms: `${home}/form-builder/integration-and-forms`,
     },
   };
 }

@@ -1,35 +1,29 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 // import Table from './Table'
 import { useNavigate } from "react-router-dom";
 
 // ** Reactstrap Imports
 import {
-  Row,
-  Col,
-  Card,
-  CardText,
-  CardBody,
-  Label,
-  Input,
-  Spinner,
   Button,
+  Card,
+  CardBody,
+  Col,
+  Input,
+  Label,
+  Row,
+  Spinner,
 } from "reactstrap";
 
 import { toast } from "react-hot-toast";
 // ** Styles
 import "@styles/react/apps/app-users.scss";
-import DataTableRender from "./DataTableRender";
+import { Plus } from "react-feather";
 import {
   formJsonEditorDelete,
   getEditorAllForm,
 } from "../../../api/apiMethods";
 import Divider from "../../components/Divider/Divider";
-import { Plus, PlusSquare } from "react-feather";
-import CustomModal from "../../components/CustomModal/CustomModal";
-import {
-  useGetModels,
-  useGetRelatedModel,
-} from "../../../api/config/formBuilderQueries";
+import DataTableRender from "./DataTableRender";
 
 export default function FormListing() {
   const TABLE_HEAD = [
@@ -40,25 +34,8 @@ export default function FormListing() {
   const [formJson, setFormJson] = useState([]);
   const [isLoader, setIsLoader] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [show, setShow] = useState(false);
-  const [name, setName] = useState("");
-  const [models, setModels] = useState([]);
-  const [stateFullData] = useState();
-  const [modelId, setModelId] = useState("");
-  const [modelType, setModelType] = useState("");
-  const [nextOption, setNextOption] = useState(false);
-  const [isSwitchOn, setIsSwitchOn] = useState(true);
-  const [modelRelated, setModelRelated] = useState([]);
 
   const navigate = useNavigate();
-
-  const modelsGet = useGetModels();
-
-  useEffect(() => {
-    if (modelsGet.isFetched && modelsGet.data) {
-      setModels(modelsGet.data);
-    }
-  }, [modelsGet.data, modelsGet.isFetched, modelsGet.isFetching]);
 
   useEffect(() => {
     const fetchFormJson = async () => {
@@ -73,16 +50,6 @@ export default function FormListing() {
     };
     fetchFormJson();
   }, []);
-
-  const onClickDiscardModal = () => {
-    setShow(false);
-    // setIsActiveMainFolder(false);
-    // setIsActiveSubFolder(false);
-  };
-
-  const handleToggleModal = () => {
-    setShow((prevState) => !prevState);
-  };
 
   const ActiveApi = (action, row) => {
     if (action === "delete") {
@@ -126,36 +93,6 @@ export default function FormListing() {
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
     // onSearch(query);
-  };
-
-  const handleInputChange = (event) => {
-    console.log(event.target.value);
-    setName(event.target.value);
-  };
-  const handleSelectChange = async (event) => {
-    console.log(event.target.value);
-    setModels(event.target.value);
-    setModelType(event.target.value);
-    const data = {
-      model: event.target.value,
-    };
-    const modelsGetRelated = await useGetRelatedModel(data);
-    console.log("✅ modelsGetRelated    ", modelsGetRelated);
-    setModelRelated(modelsGetRelated);
-    setNextOption(true);
-  };
-
-  const handleSwitchToggle = () => {
-    setIsSwitchOn((prevValue) => !prevValue);
-    console.log(`Switch is ${isSwitchOn ? "On" : "Off"}`);
-    if (!isSwitchOn) {
-      setModelId(null);
-    }
-  };
-  const handleSelectOneChange = (event) => {
-    console.log(event.target.value);
-    setModelId(event.target.value);
-    // setNextOption(true);
   };
 
   return (
