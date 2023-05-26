@@ -15,6 +15,65 @@ import {
 } from "react-feather";
 
 export default [
+  {
+    header: "Apps & Pages",
+  },
+  {
+    id: "credentials",
+    title: "Credentials",
+    icon: <Table size={20} />,
+    navLink: "/apps/credentials",
+  },
+  {
+    id: "integration",
+    title: "Integrations",
+    icon: <FileText size={20} />,
+    children: [
+      {
+        id: "integrations-listing",
+        title: "Integrations",
+        icon: <Circle size={12} />,
+        navLink: "/apps/integration",
+      },
+      {
+        id: "integration-import",
+        title: "Integrations Import",
+        icon: <Circle size={12} />,
+        navLink: "/apps/integration/import",
+      },
+    ],
+  },
+  {
+    id: "builderApp",
+    title: "Builder",
+    icon: <FileText size={20} />,
+    children: [
+      {
+        id: "form-generated",
+        title: "Form generated",
+        icon: <Circle size={12} />,
+        navLink: "/apps/form/generated",
+      },
+      {
+        id: "Formlisting",
+        title: "Listing",
+        icon: <Circle size={12} />,
+        navLink: "/apps/form/listing",
+      },
+      {
+        id: "Editor",
+        title: "Editor",
+        icon: <Circle size={12} />,
+        navLink: "/apps/editor",
+      },
+      //   {
+      //     id: "view",
+      //     title: "View",
+      //     icon: <Circle size={12} />,
+      //     navLink: "/apps/view",
+      //   },
+    ],
+  },
   // {
   //   header: "Apps & Pages",
   // },

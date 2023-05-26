@@ -21,6 +21,7 @@ function laravelApi() {
     integration: {
       get: `${home}/integration/get`,
       delete: `${home}/integration/event/with/form`,
+      post: `${home}/import-export/:model/import`,
     },
     formBuilder: {
       get: `${home}/form-builder/get-models`,
