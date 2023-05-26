@@ -28,9 +28,9 @@ export function useDeleteEventWithForm() {
 export function useIntegrationImport() {
     const queryClient = useQueryClient();
     return useMutation(
-        (id) =>
+        (data) =>
             axios
-                .post(laravelApi.integration.post, id, {
+                .post(laravelApi.integration.post, data, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
