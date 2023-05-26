@@ -24,3 +24,22 @@ export function useDeleteEventWithForm() {
         },
     });
 }
+
+export function useIntegrationImport() {
+    const queryClient = useQueryClient();
+    return useMutation(
+        (id) =>
+            axios
+                .post(laravelApi.integration.post, id, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                })
+                .then((result) => result.data),
+        {
+            onSuccess: () => {
+                queryClient.invalidateQueries(integrationKey.integration);
+            },
+        }
+    );
+}

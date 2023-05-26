@@ -26,8 +26,21 @@ export default [
   {
     id: "integration",
     title: "Integrations",
-    icon: <Table size={20} />,
-    navLink: "/apps/integration",
+    icon: <FileText size={20} />,
+    children: [
+      {
+        id: "integrations-listing",
+        title: "Integrations",
+        icon: <Circle size={12} />,
+        navLink: "/apps/integration",
+      },
+      {
+        id: "integration-import",
+        title: "Integrations Import",
+        icon: <Circle size={12} />,
+        navLink: "/apps/integration/import",
+      },
+    ],
   },
   {
     id: "builderApp",
