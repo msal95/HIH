@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Edit, MoreVertical, Trash } from "react-feather";
+import { ChevronDown, Edit, MoreVertical, Trash } from "react-feather";
 import ReactPaginate from "react-paginate";
 import {
   Col,
@@ -27,11 +27,12 @@ const DataTableRender = ({
 }) => {
   console.log("🚀 ~ file: DataTableRender.js:28 ~ searchQuery:", searchQuery);
   const [currentPage, setCurrentPage] = useState(0);
+  console.log("🚀 ~ file: DataTableRender.js:30 ~ currentPage:", currentPage);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortField, setSortField] = useState(null);
   const [sortDirection, setSortDirection] = useState(null);
   const [searchedData, setSearchedData] = useState(data);
-  console.log("🚀 ~ file: DataTableRender.js:34 ~ searchedData:", searchedData);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
     if (!!searchQuery?.length) {
@@ -63,6 +64,28 @@ const DataTableRender = ({
     ActiveApi(action, row);
   };
 
+  const handleSelectAllRows = (event) => {
+    if (event.target.checked) {
+      const allRows = data.map((row) => row.id);
+      setSelectedRows(allRows);
+    } else {
+      setSelectedRows([]);
+    }
+  };
+
+  const handleItemSelection = (id) => {
+    const existingItem = selectedRows.filter((item) => item === id);
+
+    if (!!existingItem?.length) {
+      setSelectedRows(selectedRows?.filter((item) => item !== id));
+    } else {
+      // selectedRows.push([id]);
+      setSelectedRows([...selectedRows, id]);
+    }
+  };
+
+  const allSelected = selectedRows?.length === data?.length;
+
   const renderTableHead = () => {
     return (
       <tr>
@@ -72,7 +95,45 @@ const DataTableRender = ({
             className={`sortable ${column.orderable ? "orderable" : ""}`}
             onClick={() => column.orderable && handleSort(column.id)}
           >
-            {column.label}
+            {column.label === "select" && (
+              <div className="d-flex align-items-center checkbox-container">
+                <Input
+                  type="checkbox"
+                  className="checkbox-input"
+                  checked={allSelected}
+                  onChange={handleSelectAllRows}
+                />
+                <UncontrolledDropdown className="chart-dropdown checkbox-icon">
+                  <DropdownToggle
+                    color=""
+                    className="bg-transparent btn-sm p-0 "
+                  >
+                    <ChevronDown
+                      size={18}
+                      className="cursor-pointer"
+                      color="#b9b9c3"
+                    />
+                  </DropdownToggle>
+                  <DropdownMenu end>
+                    <DropdownItem
+                      className="w-100"
+                      // onClick={onHandleDelete}
+                    >
+                      Delete Selected
+                    </DropdownItem>
+                    <DropdownItem
+                      className="w-100"
+                      // onClick={() => {
+                      //   handleCheckboxChange(true);
+                      // }}
+                    >
+                      Duplicate Selected
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              </div>
+            )}
+            {column.label !== "select" && column.label}
             {column.orderable && sortField === column.id && (
               <span className="sort-icon">
                 {sortDirection === "asc" ? "▲" : "▼"}
@@ -86,16 +147,37 @@ const DataTableRender = ({
 
   const renderTableBody = () => {
     const startIndex = (currentPage + 1 - 1) * rowsPerPage;
+    console.log(
+      "🚀 ~ file: DataTableRender.js:150 ~ renderTableBody ~ startIndex:",
+      startIndex
+    );
     const endIndex = startIndex + rowsPerPage;
+    console.log(
+      "🚀 ~ file: DataTableRender.js:152 ~ renderTableBody ~ endIndex:",
+      endIndex
+    );
     const paginatedData = searchedData?.slice(startIndex, endIndex);
+    console.log(
+      "🚀 ~ file: DataTableRender.js:154 ~ renderTableBody ~ paginatedData:",
+      paginatedData
+    );
 
     return (
       <>
         {paginatedData.map((row) => (
           <tr key={row.id}>
+            <td style={{ width: 0 }}>
+              <div className="form-check">
+                <Input
+                  type="checkbox"
+                  checked={selectedRows.includes(row.id)}
+                  onChange={() => handleItemSelection(row.id)}
+                />
+              </div>
+            </td>
             <td>{row?.id}</td>
             <td>{row?.name}</td>
-            <td>
+            <td style={{ width: 20 }}>
               <UncontrolledDropdown>
                 <DropdownToggle
                   className="icon-btn hide-arrow"
@@ -164,7 +246,7 @@ const DataTableRender = ({
         nextLabel={""}
         pageCount={count || 1}
         activeClassName="active"
-        forcePage={currentPage !== 0 ? currentPage - 1 : 0}
+        forcePage={currentPage !== 0 ? currentPage + 1 - 1 : 0}
         onPageChange={(page) => handlePageChange(page)}
         pageClassName={"page-item"}
         nextLinkClassName={"page-link"}
