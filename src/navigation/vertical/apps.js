@@ -124,44 +124,6 @@ export default [
     navLink: "/apps/flows",
   },
   {
-    id: "credentials",
-    title: "Credentials",
-    icon: <Key size={20} />,
-    navLink: "/apps/credentials",
-  },
-  {
-    id: "integration",
-    title: "Integrations",
-    icon: <Table size={20} />,
-    navLink: "/apps/integration",
-  },
-  {
-    id: "builderApp",
-    title: "Builder",
-    icon: <FileText size={20} />,
-    children: [
-      {
-        id: "Formlisting",
-        title: "Listing",
-        icon: <Circle size={12} />,
-        navLink: "/apps/form/listing",
-      },
-      {
-        id: "Editor",
-        title: "Editor",
-        icon: <Circle size={12} />,
-        navLink: "/apps/editor",
-      },
-      //   {
-      //     id: "view",
-      //     title: "View",
-      //     icon: <Circle size={12} />,
-      //     navLink: "/apps/view",
-      //   },
-    ],
-  },
-
-  {
     id: "users",
     title: "User",
     icon: <User size={20} />,
