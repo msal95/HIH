@@ -8,7 +8,13 @@ import {
 } from "reactstrap";
 
 export default function MoreVerticalDropdown(props) {
-  const { handleView, handleEdit, handleDelete, isView = false } = props;
+  const {
+    handleView,
+    handleEdit,
+    handleDelete,
+    isView = false,
+    iconColor = "#b9b9c3",
+  } = props;
   return (
     <UncontrolledDropdown
       className="chart-dropdown"
@@ -17,14 +23,13 @@ export default function MoreVerticalDropdown(props) {
       }}
     >
       <DropdownToggle color="" className="bg-transparent btn-sm border-0 p-0">
-        <MoreVertical size={18} className="cursor-pointer" />
+        <MoreVertical size={18} className="cursor-pointer" color={iconColor} />
       </DropdownToggle>
       <DropdownMenu end>
         {!isView && (
           <DropdownItem className="w-100" onClick={handleView}>
             <Eye size={17} className="me-1" />
             View
-
           </DropdownItem>
         )}
         <DropdownItem className="w-100" onClick={handleEdit}>
