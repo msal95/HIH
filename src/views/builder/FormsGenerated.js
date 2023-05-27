@@ -26,15 +26,15 @@ export default function FormsGenerated() {
         const data = generatedQuery?.data;
         if (generatedQuery.isSuccess) {
           const message = data?.message;
-          const validationErrors = data?.validation_errors;
+        //   const validationErrors = data?.validation_errors;
           const response = data?.response;
           if (response === 200) {
             console.log('✅ data?.message    ', data?.data?.message, "data", data)
 
-              Object.keys(data?.data?.message).forEach((key) => {
-                console.log('✅ key    ', key)
-                  toast.success(data?.data?.message[key]);
-                });
+            //   Object.keys(data?.data?.message).forEach((key) => {
+            //     console.log('✅ key    ', key)
+            //       toast.success(data?.data?.message[key]);
+            //     });
                 toast.success(message);
                 setTimeout(() => {
                     navigate('/apps/form/listing');

@@ -27,6 +27,7 @@ export function useDeleteEventWithForm() {
 
 export function useIntegrationImport() {
     const queryClient = useQueryClient();
+
     return useMutation(
         (data) =>
             axios
@@ -38,8 +39,10 @@ export function useIntegrationImport() {
                 .then((result) => result.data),
         {
             onSuccess: () => {
-                queryClient.invalidateQueries(integrationKey.integration);
+                // Additional logic to update the query
+                queryClient.refetchQueries(integrationKey.integration);
             },
         }
     );
 }
+

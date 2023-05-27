@@ -19,6 +19,7 @@ import '@styles/base/pages/ui-feather.scss'
 
 const IntegrationListing = (props) => {
     const [stateIntegration] = useState(props?.integration);
+    console.log("stateIntegration", stateIntegration)
 
   const IconsArr = []
 

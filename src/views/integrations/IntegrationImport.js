@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useIntegrationImport } from "../../../api/config/integrationQueries";
 import {
   InputGroup,
@@ -12,10 +12,12 @@ import {
 } from "reactstrap";
 import { Form, FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
-import { getFormData } from "../../../api/config/utils/formUtil";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function IntegrationImport() {
   const importQuery = useIntegrationImport();
+  const navigate = useNavigate();
 
   const integrationSchema = Yup.object().shape({
     file: Yup.mixed().required("Integration Json File is required"),
@@ -43,6 +45,31 @@ export default function IntegrationImport() {
     const file = e.target.files[0];
     formik.setFieldValue("image", file);
   };
+  useEffect(() => {
+    const data = importQuery?.data;
+    if (importQuery.isSuccess) {
+      const message = data?.message;
+      const validationErrors = data?.validation_errors;
+      const response = data?.response;
+      if (response === 200) {
+        toast.success(message);
+        setTimeout(() => {
+          navigate('/apps/integration');
+        }, 3000);
+      } else {
+        Object.keys(validationErrors).forEach((key) => {
+          toast.error(validationErrors[key]);
+        });
+      }
+    //   setSubmitting(false);
+    }
+
+    if (importQuery.isError) {
+    //   setSubmitting(false);
+      const message = 'Error occurred while saving the data';
+      toast.error(message);
+    }
+  }, [importQuery.isSuccess, importQuery.isError]);
 
   const { errors, touched, handleSubmit, getFieldProps } = formik;
   console.log("✅ values", formik.values, "errors", errors, "touched", touched);
@@ -107,6 +134,7 @@ export default function IntegrationImport() {
                   <InputGroup>
                     <Input
                       type="file"
+                      accept="application/json"
                       onChange={(event) =>
                         formik.setFieldValue("file", event.target.files[0])
                       }
