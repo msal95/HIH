@@ -64,11 +64,11 @@ const Credentials = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [isNewProject, setIsNewProject] = useState(false);
   const [integrationList, setIntegrationsList] = useState();
-  const [locationOptions, setLocationOptions] = useState(locationData);
   console.log(
-    "🚀 ~ file: index.js:68 ~ Credentials ~ locationOptions:",
-    locationOptions
+    "🚀 ~ file: index.js:67 ~ Credentials ~ integrationList:",
+    integrationList
   );
+  const [locationOptions, setLocationOptions] = useState(locationData);
 
   // API Call
   const { isLoading, data, error, refetch, isFetching, isError } = useQuery(
@@ -104,6 +104,10 @@ const Credentials = () => {
     isFetching: integrationIsFetching,
     isError: integrationIsError,
   } = useQuery("integrationsList", () => getIntegrationsList());
+  console.log(
+    "🚀 ~ file: index.js:107 ~ Credentials ~ integrationData:",
+    integrationData
+  );
 
   useEffect(() => {
     if (!!data?.data?.data.data.length) {
@@ -113,8 +117,8 @@ const Credentials = () => {
   }, [isFetching]);
 
   useEffect(() => {
-    if (!!integrationData?.data?.integration?.length) {
-      setIntegrationsList(integrationData?.data?.integration);
+    if (!!integrationData?.data?.data?.length) {
+      setIntegrationsList(integrationData?.data?.data);
     }
   }, [integrationIsFetching]);
 
@@ -308,6 +312,11 @@ const Credentials = () => {
           </InputGroup>
 
           <div className="row">
+            {integrationIsFetching && (
+              <div className="container-xxl d-flex justify-content-center align-items-center">
+                <Spinner type="grow" color="primary" />
+              </div>
+            )}
             {!integrationList?.length && !!searchedList?.length && (
               <NoRecordFound searchTerm={searchedList} />
             )}
@@ -391,7 +400,12 @@ const Credentials = () => {
               </div>
             </div>
             <div className="content-header-right text-md-end col-md-3 col-12 d-md-block d-none">
-              <Button color="primary" onClick={toggleModal} block>
+              <Button
+                color="primary"
+                className="w-100"
+                onClick={toggleModal}
+                block
+              >
                 Add Credentials
               </Button>
             </div>

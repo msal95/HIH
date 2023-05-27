@@ -9,9 +9,10 @@ import {
   Plus,
 } from "react-feather";
 import { Collapse, ListGroup, ListGroupItem } from "reactstrap";
+import PropTypes from "prop-types";
 import MoreVerticalDropdown from "../../components/MoreVerticalDropdown/MoreVerticalDropdown";
 import polygon from "@src/assets/images/icons/polygon.png";
-export default function TreeNode(props) {
+function TreeNode(props) {
   const {
     node,
     handleActiveTab,
@@ -20,8 +21,8 @@ export default function TreeNode(props) {
     handleEditProjectModal,
     handleDeleteProject,
     handleActiveTabSubFolders,
-    handleOnMouseEnter,
-    handleOnMouseLeave,
+    // handleOnMouseEnter,
+    // handleOnMouseLeave,
     handleToggleCreateSubFolderModal,
     handleEditFolderModal,
     handleDeleteFolder,
@@ -36,12 +37,6 @@ export default function TreeNode(props) {
   return (
     <>
       {node.is_project ? (
-        // <div className="container__option-selector">
-        //   <div onClick={handleToggle} className="cursor-pointer">
-        //     {isOpen ? <ChevronUp /> : <ChevronDown />}
-        //     {node.name}
-        //   </div>
-        // </div>
         <div
           className={`container__option-selector  ${
             selectedTab?.name === node?.name && "bg-primary text-light"
@@ -85,17 +80,14 @@ export default function TreeNode(props) {
         </div>
       ) : (
         <div
-          className={`d-flex justify-content-between container__folders-list ${
+          className={`d-flex justify-content-between ${
             selectedTab?.name === node?.name && "bg-primary text-light"
           }`}
-          onMouseEnter={() => handleOnMouseEnter(node)}
-          onMouseLeave={handleOnMouseLeave}
+          // onMouseEnter={() => handleOnMouseEnter(node)}
+          // onMouseLeave={handleOnMouseLeave}
           onClick={() => handleActiveTabSubFolders(node)}
         >
-          <div
-            className="d-flex"
-            //   style={{ marginLeft: indent }}
-          >
+          <div className="d-flex">
             {isOpen ? (
               <FolderMinus
                 size={18}
@@ -122,7 +114,7 @@ export default function TreeNode(props) {
             </span>
           </div>
           {/* {hoverItem && hoverItem.uuid === node.uuid && ( */}
-          <div className="d-flex pe-1 align-items-center">
+          <div className="d-flex align-items-center">
             <Plus
               size={16}
               color="#131313"
@@ -132,7 +124,7 @@ export default function TreeNode(props) {
             <MoreVerticalDropdown
               isView
               handleEdit={() => handleEditFolderModal(node)}
-              handleDelete={() => handleDeleteFolder(hoverItem.id)}
+              handleDelete={() => handleDeleteFolder(node.id)}
             />
           </div>
           {/* )} */}
@@ -141,14 +133,61 @@ export default function TreeNode(props) {
       {node.tree.length > 0 && (
         <Collapse isOpen={isOpen}>
           <ListGroup>
-            {node.tree.map((childNode) => (
-              <ListGroupItem key={childNode.id}>
-                <TreeNode node={childNode} />
-              </ListGroupItem>
-            ))}
+            {node.tree.map((childNode) => {
+              // handleLevel();
+              return (
+                <ListGroupItem
+                  key={childNode.id}
+                  className={`pt-1 pb-0 pe-0 ${
+                    selectedTab?.name === node?.name && "bg-primary text-light"
+                  }`}
+                >
+                  <TreeNode
+                    node={childNode}
+                    handleActiveTab={handleActiveTab}
+                    selectedTab={selectedTab}
+                    handleToggleCreateFolderModal={
+                      handleToggleCreateFolderModal
+                    }
+                    handleEditProjectModal={handleEditProjectModal}
+                    handleDeleteProject={handleDeleteProject}
+                    handleActiveTabSubFolders={handleActiveTabSubFolders}
+                    handleToggleCreateSubFolderModal={
+                      handleToggleCreateSubFolderModal
+                    }
+                    handleEditFolderModal={handleEditFolderModal}
+                    handleDeleteFolder={handleDeleteFolder}
+                  />
+                </ListGroupItem>
+              );
+            })}
           </ListGroup>
         </Collapse>
       )}
     </>
   );
 }
+
+TreeNode.propTypes = {
+  handleActiveTabSubFolders: PropTypes.func.isRequired,
+  handleActiveTabFolders: PropTypes.func.isRequired,
+  handleToggleCreateFolderModal: PropTypes.func.isRequired,
+  handleCreateProject: PropTypes.func.isRequired,
+  handleToggleCreateSubFolderModal: PropTypes.func.isRequired,
+  handleDeleteFolder: PropTypes.func.isRequired,
+  handleDeleteProject: PropTypes.func.isRequired,
+  handleEditFolderModal: PropTypes.func.isRequired,
+  handleEditProjectModal: PropTypes.func.isRequired,
+  handleActiveTab: PropTypes.func.isRequired,
+
+  // optionalArray: PropTypes.array,
+  // optionalBigInt: PropTypes.bigint,
+  // optionalBool: PropTypes.bool,
+  // optionalFunc: PropTypes.func,
+  // optionalNumber: PropTypes.number,
+  // optionalObject: PropTypes.object,
+  // optionalString: PropTypes.string,
+  // optionalSymbol: PropTypes.symbol,
+};
+
+export default TreeNode;
