@@ -39,7 +39,7 @@ export default [
         id: "integration-import",
         title: "Integrations Import",
         icon: <Circle size={12} />,
-        navLink: "/apps/integration/import",
+        navLink: "/apps/import",
       },
     ],
   },

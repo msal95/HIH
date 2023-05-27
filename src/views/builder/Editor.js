@@ -389,7 +389,7 @@ export default function Editor() {
               )}
             </TabPane>
             <TabPane tabId="2">
-              {/* <ViewFormRender form={formJson} /> */}
+              <h3>Tab2</h3>
             </TabPane>
             <TabPane tabId="3">
               <h3>Tab3</h3>
