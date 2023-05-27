@@ -63,6 +63,7 @@ const WorkFlows = () => {
   const [selectedItem, setSelectedItem] = useState();
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
+  console.log("🚀 ~ file: index.js:66 ~ WorkFlows ~ selectedTab:", selectedTab);
   const [isEdit, setIsEdit] = useState(false);
   const [isEditProject, setIsEditProject] = useState(false);
   const [isWorkFLow, setIsWorkFLow] = useState(false);
@@ -184,6 +185,10 @@ const WorkFlows = () => {
     setIsProjects(false);
     setIsActiveMainFolder(false);
     // setIsEditDetail(false);
+  };
+
+  const handleAlert = () => {
+    alert(123);
   };
 
   const onClickDiscardModal = () => {
@@ -604,6 +609,7 @@ const WorkFlows = () => {
       <Sidebar
         handleActiveTab={handleActiveTab}
         handleActiveTabSubFolders={handleActiveTabSubFolders}
+        handleAlert={handleAlert}
         handleActiveTabFolders={handleActiveTabFolders}
         handleCreateProject={handleToggleCreateProjectModal}
         handleToggleCreateFolderModal={handleToggleCreateFolderModal}

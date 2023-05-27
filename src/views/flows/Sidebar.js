@@ -1,9 +1,12 @@
 // ** React Imports
 import classnames from "classnames";
 import { useState } from "react";
+import PropTypes from "prop-types";
 import {
   Edit3,
   Folder,
+  FolderMinus,
+  FolderPlus,
   Layers,
   MoreVertical,
   Plus,
@@ -11,10 +14,12 @@ import {
 } from "react-feather";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {
+  Collapse,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
   ListGroup,
+  ListGroupItem,
   Spinner,
   UncontrolledDropdown,
 } from "reactstrap";
@@ -30,6 +35,7 @@ const Sidebar = (props) => {
   const {
     sidebarOpen,
     handleActiveTab,
+    handleAlert,
     selectedTab,
     projects,
     setIsProjects,
@@ -159,7 +165,10 @@ const Sidebar = (props) => {
           show: sidebarOpen,
         })}
       >
-        <div className="sidebar overflow-auto" style={{ width: "100%" }}>
+        <div
+          className="sidebar overflow-auto bg-white"
+          style={{ width: "100%" }}
+        >
           <div
             className="sidebar-content email-app-sidebar"
             style={{
@@ -206,10 +215,10 @@ const Sidebar = (props) => {
                 </h3>
               ) : (
                 <>
-                  <ListGroup tag="div" className="list-group-messages">
+                  {/* <ListGroup tag="div" className="list-group-messages">
                     {renderTree(projects)}
-                  </ListGroup>
-                  {/* <TreeView
+                  </ListGroup> */}
+                  <TreeView
                     data={projects}
                     handleActiveTab={handleActiveTabFolders}
                     selectedTab={selectedTab}
@@ -219,14 +228,14 @@ const Sidebar = (props) => {
                     handleEditProjectModal={handleEditProjectModal}
                     handleDeleteProject={handleDeleteProject}
                     handleActiveTabSubFolders={handleActiveTabSubFolders}
-                    handleOnMouseEnter={handleOnMouseEnter}
-                    handleOnMouseLeave={handleOnMouseLeave}
+                    // handleOnMouseEnter={handleOnMouseEnter}
+                    // handleOnMouseLeave={handleOnMouseLeave}
                     handleToggleCreateSubFolderModal={
                       handleToggleCreateSubFolderModal
                     }
                     handleEditFolderModal={handleEditFolderModal}
                     handleDeleteFolder={handleDeleteFolder}
-                  /> */}
+                  />
                 </>
               )}
               {/* </PerfectScrollbar> */}
@@ -236,6 +245,28 @@ const Sidebar = (props) => {
       </div>
     </>
   );
+};
+
+Sidebar.propTypes = {
+  handleActiveTabSubFolders: PropTypes.func.isRequired,
+  handleActiveTabFolders: PropTypes.func.isRequired,
+  handleToggleCreateFolderModal: PropTypes.func.isRequired,
+  handleCreateProject: PropTypes.func.isRequired,
+  handleToggleCreateSubFolderModal: PropTypes.func.isRequired,
+  handleDeleteFolder: PropTypes.func.isRequired,
+  handleDeleteProject: PropTypes.func.isRequired,
+  handleEditFolderModal: PropTypes.func.isRequired,
+  handleEditProjectModal: PropTypes.func.isRequired,
+  handleActiveTab: PropTypes.func.isRequired,
+
+  // optionalArray: PropTypes.array,
+  // optionalBigInt: PropTypes.bigint,
+  // optionalBool: PropTypes.bool,
+  // optionalFunc: PropTypes.func,
+  // optionalNumber: PropTypes.number,
+  // optionalObject: PropTypes.object,
+  // optionalString: PropTypes.string,
+  // optionalSymbol: PropTypes.symbol,
 };
 
 export default Sidebar;
