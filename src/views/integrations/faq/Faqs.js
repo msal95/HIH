@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 
 // ** Icons Imports
 import * as Icon from 'react-feather'
+import { useNavigate } from "react-router-dom";
 
 // ** Reactstrap Imports
 import {
@@ -22,7 +23,9 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
+  Tooltip,
+  Fragment
 } from 'reactstrap'
 
 import Swal from 'sweetalert2'
@@ -30,8 +33,9 @@ import { useDeleteEventWithForm } from '../../../../api/config/integrationQuerie
 import { toast } from 'react-hot-toast'
 
 const Faqs = ({ data }) => {
-    // console.log('✅ data    ', data)
+    const navigate = useNavigate();
     const [dataVAlue, setDataValue] = useState(data);
+    const [tooltipOpen, setTooltipOpen] = useState(false)
   const dataToRender = []
   const eventFormDelete = useDeleteEventWithForm();
   useEffect(() => {
@@ -50,9 +54,11 @@ const Faqs = ({ data }) => {
             ...resource,
             events: resource.events.filter(event => event.id !== resourceIdToRemove)
             }));
+            const eventsData = dataVAlue?.events.filter(event => event.id !== resourceIdToRemove)
         setDataValue((prevState) => ({
             ...prevState, // Preserve other properties in the state
             resources: filteredResources, // Update only the resources data
+            events: eventsData, // Update only the resources data
         }));
 
         console.log('✅ filteredEvent', dataVAlue)
@@ -110,6 +116,22 @@ const Faqs = ({ data }) => {
               eventFormDelete.mutate(row?.id);
             }
           });
+    }
+    if (action === 'View') {
+
+        if (!(row?.bpmn_form === null)) {
+            navigate("/apps/view", { state: row?.bpmn_form });
+        } else {
+            toast.error(`No Form Available of Event ${row?.name}`);
+        }
+    }
+    if (action === 'Edit') {
+
+        if (!(row?.bpmn_form === null)) {
+            navigate("/apps/editor", { state: row?.bpmn_form });
+        } else {
+            toast.error(`No Form Available of Event ${row?.name}`);
+        }
     }
 };
 
@@ -173,9 +195,9 @@ const Faqs = ({ data }) => {
                                                 <Icon.MoreVertical size={15} />
                                             </DropdownToggle>
                                             <DropdownMenu>
-                                                <DropdownItem  onClick={(e) => { e.preventDefault(); handleMenuAction('Create New', r); }} >
+                                                {/* <DropdownItem  onClick={(e) => { e.preventDefault(); handleMenuAction('Create New', r); }} >
                                                 <Icon.Edit className="me-50" size={15}/> <span className="align-middle">Create New</span>
-                                                </DropdownItem>
+                                                </DropdownItem> */}
                                                 <DropdownItem onClick={(e) => { e.preventDefault(); handleMenuAction('Edit', r); }}  >
                                                 <Icon.Edit className="me-50" size={15} /> <span className="align-middle">Edit</span>
                                                 </DropdownItem>
@@ -190,12 +212,23 @@ const Faqs = ({ data }) => {
                                     </div>
                                 </div>
                                 <div className='d-flex justify-content-between align-items-center'>
+                                    <>
                                     <div>
-                                        <h5>{r?.name}</h5>
+                                    {/* <Tooltip
+                                        placement='top'
+                                        isOpen={tooltipOpen}
+                                        target='ControlledExample'
+                                        toggle={() => setTooltipOpen(!tooltipOpen)}
+                                    >
+                                        {r?.name}
+                                     </Tooltip> */}
+                                        <h5 id='ControlledExample'>{r?.name?.length > 10 ? `${r?.name.substr(0, 20)}...` : r?.name}</h5>
+
                                         <h6 className='text-danger' >{r?.create_at_date}</h6>
                                         <h6 className='text-danger' >{r?.form?.length}</h6>
-                                        <h6 className={(r?.form?.id > 0) ? 'text-success' : 'text-danger'} ><Icon.FileText /> </h6>
+                                        <h6 className={(r?.bpmn_form?.id > 0) ? 'text-success' : 'text-danger'} ><Icon.FileText /> </h6>
                                     </div>
+                                    </>
                                 </div>
                             </CardBody>
                         </Card>
@@ -244,9 +277,9 @@ const Faqs = ({ data }) => {
                                                         <Icon.MoreVertical size={15} />
                                                     </DropdownToggle>
                                                     <DropdownMenu>
-                                                        <DropdownItem  onClick={(e) => { e.preventDefault(); handleMenuAction('Create New', r); }} >
+                                                        {/* <DropdownItem  onClick={(e) => { e.preventDefault(); handleMenuAction('Create New', r); }} >
                                                         <Icon.Edit className="me-50" size={15}/> <span className="align-middle">Create New</span>
-                                                        </DropdownItem>
+                                                        </DropdownItem> */}
                                                         <DropdownItem onClick={(e) => { e.preventDefault(); handleMenuAction('Edit', r); }}  >
                                                         <Icon.Edit className="me-50" size={15} /> <span className="align-middle">Edit</span>
                                                         </DropdownItem>
@@ -265,7 +298,7 @@ const Faqs = ({ data }) => {
                                                 <h5>{r?.name}</h5>
                                                 <h6 className='text-danger' >{r?.create_at_date}</h6>
                                                 <h6 className='text-danger' >{r?.form?.length}</h6>
-                                                <h6 className={(r?.form?.id > 0) ? 'text-success' : 'text-danger'} ><Icon.FileText /> </h6>
+                                                <h6 className={(r?.bpmn_form?.id > 0) ? 'text-success' : 'text-danger'} ><Icon.FileText /> </h6>
                                             </div>
                                         </div>
                                     </CardBody>

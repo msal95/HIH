@@ -23,7 +23,7 @@ export function useGetIntegrationAndForms() {
         return data;
     }
 
-    return useQuery([integrationKey.integration], getData, { staleTime: Infinity });
+    return useQuery([integrationKey.integration], getData, { staleTime: 1 });
 }
 
 export function useEventFormMake() {
