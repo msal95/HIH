@@ -78,7 +78,7 @@ const AppRoutes = [
   },
   {
     element: <IntegrationImport />,
-    path: "/apps/integration/import",
+    path: "/apps/import",
     meta: {
       appLayout: true,
       className: "email-application",
