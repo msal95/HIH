@@ -59,10 +59,7 @@ const Credentials = () => {
   const [isSelectedCredential, setIsSelectedCredential] = useState(false);
   const [allCredentialsData, setAllCredentialsData] = useState();
   const [credentialsData, setCredentialsData] = useState();
-  console.log(
-    "🚀 ~ file: index.js:62 ~ Credentials ~ credentialsData:",
-    credentialsData
-  );
+
   const [searchedList, setSearchedList] = useState("");
   const [selectedItem, setSelectedItem] = useState();
   const [isEdit, setIsEdit] = useState(false);
@@ -88,10 +85,7 @@ const Credentials = () => {
   useEffect(() => {
     if (projectsList?.data?.data?.length) {
       const newOptions = locationData.concat(projectsList?.data?.data);
-      console.log(
-        "🚀 ~ file: SendGrid.js:64 ~ useEffect ~ newOptions:",
-        newOptions
-      );
+
       setLocationOptions(newOptions);
     }
   }, [isProjectRefetching]);
@@ -104,10 +98,6 @@ const Credentials = () => {
     isFetching: integrationIsFetching,
     isError: integrationIsError,
   } = useQuery("integrationsList", () => getIntegrationsList());
-  console.log(
-    "🚀 ~ file: index.js:107 ~ Credentials ~ integrationData:",
-    integrationData
-  );
 
   useEffect(() => {
     if (!!data?.data?.data.data.length) {
@@ -117,8 +107,8 @@ const Credentials = () => {
   }, [isFetching]);
 
   useEffect(() => {
-    if (!!integrationData?.data?.data?.length) {
-      setIntegrationsList(integrationData?.data?.data);
+    if (!!integrationData?.data?.data?.integration?.length) {
+      setIntegrationsList(integrationData?.data?.data?.integration);
     }
   }, [integrationIsFetching]);
 
@@ -287,6 +277,7 @@ const Credentials = () => {
           onPressNewProject={onSubmitNewProjectData}
           handleOnCreateNewProject={handleOnCreateNewProject}
           optionsData={locationOptions}
+          forms={integrationData?.data?.data?.auth}
         />
       );
     }

@@ -25,10 +25,8 @@ const DataTableRender = ({
   onPageChange,
   searchQuery,
 }) => {
-  console.log("🚀 ~ file: DataTableRender.js:28 ~ searchQuery:", searchQuery);
   const [currentPage, setCurrentPage] = useState(0);
-  console.log("🚀 ~ file: DataTableRender.js:30 ~ currentPage:", currentPage);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage] = useState(5);
   const [sortField, setSortField] = useState(null);
   const [sortDirection, setSortDirection] = useState(null);
   const [searchedData, setSearchedData] = useState(data);
@@ -147,20 +145,8 @@ const DataTableRender = ({
 
   const renderTableBody = () => {
     const startIndex = (currentPage + 1 - 1) * rowsPerPage;
-    console.log(
-      "🚀 ~ file: DataTableRender.js:150 ~ renderTableBody ~ startIndex:",
-      startIndex
-    );
     const endIndex = startIndex + rowsPerPage;
-    console.log(
-      "🚀 ~ file: DataTableRender.js:152 ~ renderTableBody ~ endIndex:",
-      endIndex
-    );
     const paginatedData = searchedData?.slice(startIndex, endIndex);
-    console.log(
-      "🚀 ~ file: DataTableRender.js:154 ~ renderTableBody ~ paginatedData:",
-      paginatedData
-    );
 
     return (
       <>

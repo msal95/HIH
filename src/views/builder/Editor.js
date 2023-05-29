@@ -6,7 +6,7 @@ import "@bpmn-io/form-js/dist/assets/form-js-editor.css";
 import "@bpmn-io/form-js/dist/assets/form-js.css";
 import { ChevronLeft, Edit2, PlusSquare } from "react-feather";
 import { toast } from "react-hot-toast";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Button,
   Card,
@@ -47,19 +47,26 @@ export default function Editor() {
   // get modes options
   const formEditorRef = useRef(null);
   const location = useLocation();
-  const [formJson] = useState(location?.state?.json);
-  const [stateFullData] = useState(location?.state);
+  console.log("🚀 ~ file: Editor.js:50 ~ Editor ~ location:", location);
+  const [formJson] = useState(location?.state?.row?.json);
+  const [stateFullData] = useState(location?.state?.row);
   const [name, setName] = useState(stateFullData?.name ?? "Untitled");
   const [model, setModel] = useState(stateFullData?.model ?? "");
-  const [modelId, setModelId] = useState(stateFullData?.model_id ?? "");
-  const [modelType, setModelType] = useState(stateFullData?.model_type ?? "");
+  const [modelId, setModelId] = useState(
+    location?.state?.row?.related_id ?? ""
+  );
+  const [modelType, setModelType] = useState(
+    location?.state?.row?.related_type ?? ""
+  );
   const [editorId] = useState(stateFullData?.id ?? null);
   const [activeTab, setActiveTab] = useState("1");
   const [isEditFormName, setIsEditFormName] = useState(false);
-  const [show, setShow] = useState(true);
-  console.log("🚀 ~ file: Editor.js:60 ~ Editor ~ show:", show);
+  const [show, setShow] = useState(
+    !!location?.state?.isEdit ? !location?.state?.isEdit : true
+  );
   const [isLoader, setIsLoader] = useState(true);
-  console.log("🚀 ~ file: Editor.js:62 ~ Editor ~ isLoader:", isLoader);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const container = document.querySelector("#form-editor");
@@ -68,7 +75,7 @@ export default function Editor() {
       const formEditor = new FormEditor({
         container,
       });
-      if (location?.state?.id > 0) {
+      if (location?.state?.row?.id > 0) {
         formEditor.importSchema(JSON.parse(formJson));
       } else {
         formEditor.importSchema(schema);
@@ -129,6 +136,7 @@ export default function Editor() {
       const response = res?.response;
       if (response === 200) {
         toast.success(message);
+        navigate("/apps/form/listing");
       } else {
         console.log("✅ element    ", message, validationErrors, response);
         Object.keys(validationErrors).forEach((key) => {

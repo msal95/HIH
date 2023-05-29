@@ -82,8 +82,11 @@ export default function FormListing() {
       navigate("/apps/view", { state: row });
     }
     if (action === "edit") {
-      console.log("✅ row    ", row);
-      navigate("/apps/editor", { state: row });
+      const params = {
+        row,
+        isEdit: true,
+      };
+      navigate("/apps/editor", { state: params });
     }
     if (action === "create") {
       console.log("✅ row    ", row);
