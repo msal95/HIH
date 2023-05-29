@@ -81,9 +81,12 @@ const DataTableRender = ({
           }).then((result) => {
               if (result.isConfirmed) {
                   ActiveApi(action, row);
-            }
-        });
-    }
+                }
+            });
+        } else {
+
+            ActiveApi(action, row);
+        }
   };
 
   const handleSelectAllRows = (event) => {
