@@ -3,7 +3,7 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 
 // ** Reactstrap Imports
-import { Card, CardBody, CardText, Col, Row, Button, Label, Input, InputGroup, InputGroupText, UncontrolledTooltip } from 'reactstrap';
+import { Card, CardBody, CardText, Col, Row, Button, Label, Input, InputGroup, InputGroupText, UncontrolledTooltip, Spinner } from 'reactstrap';
 
 // import { toast } from "react-hot-toast";
 
@@ -90,8 +90,11 @@ export default function Integration() {
                 <hr></hr>
             </Row>
         </div>
-        {(integration?.integrations?.length > 0) &&
+        {(integration?.integrations?.length > 0) ?
             <IntegrationListing integration={integration?.integrations} handleRowAction={handleRowAction}/>
+            : <div className="d-flex justify-content-center align-items-center p-5">
+            <Spinner type="grow" color="primary" />
+        </div>
         }
     </div>
   )
