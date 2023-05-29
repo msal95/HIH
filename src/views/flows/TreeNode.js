@@ -38,20 +38,33 @@ function TreeNode(props) {
     <>
       {node.is_project ? (
         <div
-          className={`container__option-selector  ${
+          className={`container__option-selector rounded-2  ${
             selectedTab?.name === node?.name && "bg-primary text-light"
           }`}
+          style={{
+            width: "fit-content",
+            padding: selectedTab?.name === node?.name && "5px",
+          }}
         >
           <div onClick={() => handleActiveTab(node)} className="cursor-pointer">
-            <img
+            {/* <img
               src={polygon}
               alt="Polygon icon"
               className="me-1"
               width="10px"
               height="7px"
               onClick={handleToggle}
+            /> */}
+            {isOpen ? (
+              <ChevronUp onClick={handleToggle} size={18} className="me-1" />
+            ) : (
+              <ChevronDown onClick={handleToggle} size={18} className="me-1" />
+            )}
+            <Layers
+              size={16}
+              className="me-1"
+              color={selectedTab?.name === node?.name ? "#fff" : "#131313"}
             />
-            <Layers size={16} className="me-1" color="#131313" />
             <span
               className={`container__option-heading ${
                 selectedTab?.name === node?.name && "text-light"
@@ -65,7 +78,7 @@ function TreeNode(props) {
           <div className="d-flex align-items-center">
             <Plus
               size={16}
-              color="#131313"
+              color={selectedTab?.name === node?.name ? "#fff" : "#131313"}
               className="me-50 container__add-project-button-icon"
               onClick={() => {
                 handleToggleCreateFolderModal(node);
@@ -75,14 +88,20 @@ function TreeNode(props) {
               handleEdit={() => handleEditProjectModal(node)}
               handleDelete={() => handleDeleteProject(node.id)}
               isView
+              iconColor={selectedTab?.name === node?.name ? "#fff" : "#131313"}
             />
           </div>
         </div>
       ) : (
         <div
           className={`d-flex justify-content-between ${
-            selectedTab?.name === node?.name && "bg-primary text-light"
+            selectedTab?.name === node?.name &&
+            "bg-primary text-light rounded-2"
           }`}
+          style={{
+            width: "fit-content",
+            padding: selectedTab?.name === node?.name && "5px",
+          }}
           // onMouseEnter={() => handleOnMouseEnter(node)}
           // onMouseLeave={handleOnMouseLeave}
           onClick={() => handleActiveTabSubFolders(node)}
@@ -92,12 +111,14 @@ function TreeNode(props) {
               <FolderMinus
                 size={18}
                 className="me-1 curser-pointer"
+                color={selectedTab?.name === node?.name ? "#fff" : "#131313"}
                 onClick={handleToggle}
               />
             ) : (
               <FolderPlus
                 size={18}
                 className="me-1 curser-pointer"
+                color={selectedTab?.name === node?.name ? "#fff" : "#131313"}
                 onClick={handleToggle}
               />
             )}
@@ -112,21 +133,25 @@ function TreeNode(props) {
                 ? `${node?.name.substr(0, 7)}...`
                 : node?.name}
             </span>
+            <div className="d-flex align-items-center">
+              <Plus
+                size={16}
+                color={selectedTab?.name === node?.name ? "#fff" : "#131313"}
+                className="cursor-pointer me-1"
+                onClick={() => handleToggleCreateSubFolderModal(node)}
+              />
+              <MoreVerticalDropdown
+                isView
+                handleEdit={() => handleEditFolderModal(node)}
+                handleDelete={() => handleDeleteFolder(node.id)}
+                iconColor={
+                  selectedTab?.name === node?.name ? "#fff" : "#131313"
+                }
+              />
+            </div>
           </div>
           {/* {hoverItem && hoverItem.uuid === node.uuid && ( */}
-          <div className="d-flex align-items-center">
-            <Plus
-              size={16}
-              color="#131313"
-              className="cursor-pointer me-1"
-              onClick={() => handleToggleCreateSubFolderModal(node)}
-            />
-            <MoreVerticalDropdown
-              isView
-              handleEdit={() => handleEditFolderModal(node)}
-              handleDelete={() => handleDeleteFolder(node.id)}
-            />
-          </div>
+
           {/* )} */}
         </div>
       )}
@@ -136,12 +161,7 @@ function TreeNode(props) {
             {node.tree.map((childNode) => {
               // handleLevel();
               return (
-                <ListGroupItem
-                  key={childNode.id}
-                  className={`pt-1 pb-0 pe-0 ${
-                    selectedTab?.name === node?.name && "bg-primary text-light"
-                  }`}
-                >
+                <ListGroupItem key={childNode.id} className={`pt-1 pb-0 pe-0 `}>
                   <TreeNode
                     node={childNode}
                     handleActiveTab={handleActiveTab}
