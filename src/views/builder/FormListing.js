@@ -61,7 +61,10 @@ export default function FormListing() {
           const response = res?.response;
           if (response === 200) {
             toast.success(message);
+            // fetchFormJson();
             const updatedData = formJson.filter((item) => item.id !== row?.id);
+            console.log('✅ updatedData    ', updatedData, "formJson", formJson)
+
             setFormJson(updatedData);
           } else {
             console.log("✅ element    ", message, validationErrors, response);

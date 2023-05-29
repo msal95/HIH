@@ -15,6 +15,7 @@ import {
   Card,
   CardBody,
 } from "reactstrap";
+import Swal from "sweetalert2";
 
 const DataTableRender = ({
   data,
@@ -32,6 +33,12 @@ const DataTableRender = ({
   const [searchedData, setSearchedData] = useState(data);
   const [selectedRows, setSelectedRows] = useState([]);
 
+  console.log("✅ searchedData    ", searchedData, "data", data);
+
+  useEffect(() => {
+    // const paginatedData = data;
+    setSearchedData(data);
+  }, [data]);
   useEffect(() => {
     if (!!searchQuery?.length) {
       const filteredData = data.filter((post) => {
@@ -59,7 +66,21 @@ const DataTableRender = ({
   };
 
   const handleRowAction = (action, row) => {
-    ActiveApi(action, row);
+    if (action === "delete") {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          ActiveApi(action, row);
+        }
+      });
+    } else {
+      ActiveApi(action, row);
+    }
   };
 
   const handleSelectAllRows = (event) => {

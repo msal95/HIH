@@ -3,7 +3,7 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 
 // ** Reactstrap Imports
-import { Card, CardBody, CardText, Col, Row, Button, Label, Input, InputGroup, InputGroupText, UncontrolledTooltip } from 'reactstrap';
+import { Card, CardBody, CardText, Col, Row, Button, Label, Input, InputGroup, InputGroupText, UncontrolledTooltip, Spinner } from 'reactstrap';
 
 // import { toast } from "react-hot-toast";
 
@@ -21,10 +21,12 @@ export default function Integration() {
     const navigate = useNavigate();
 
     const [integration, setIntegration] = useState([]);
+    const [fetchCondition, setFetchCondition] = useState(true);
 
     useEffect(() => {
         if (integrationQuery.isFetched && integrationQuery.data) {
             setIntegration(integrationQuery.data);
+            setFetchCondition(false);
         }
       }, [integrationQuery.data, integrationQuery.isFetched, integrationQuery.isFetching]);
     //   console.log('✅ integration    ', integration)
@@ -90,8 +92,11 @@ export default function Integration() {
                 <hr></hr>
             </Row>
         </div>
-        {(integration?.integrations?.length > 0) &&
+        {(integration?.integrations?.length > 0) ?
             <IntegrationListing integration={integration?.integrations} handleRowAction={handleRowAction}/>
+            : fetchCondition && <div className="d-flex justify-content-center align-items-center p-5">
+            <Spinner type="grow" color="primary" />
+        </div>
         }
     </div>
   )
