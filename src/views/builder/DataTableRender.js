@@ -263,7 +263,7 @@ const DataTableRender = ({
 
   return (
     <div>
-      <Table striped responsive>
+      <Table striped>
         <thead>{renderTableHead()}</thead>
         <tbody>
           {!searchedData?.length ? (

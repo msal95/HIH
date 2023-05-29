@@ -59,15 +59,15 @@ const Credentials = () => {
   const [isSelectedCredential, setIsSelectedCredential] = useState(false);
   const [allCredentialsData, setAllCredentialsData] = useState();
   const [credentialsData, setCredentialsData] = useState();
+  console.log(
+    "🚀 ~ file: index.js:62 ~ Credentials ~ credentialsData:",
+    credentialsData
+  );
   const [searchedList, setSearchedList] = useState("");
   const [selectedItem, setSelectedItem] = useState();
   const [isEdit, setIsEdit] = useState(false);
   const [isNewProject, setIsNewProject] = useState(false);
   const [integrationList, setIntegrationsList] = useState();
-  console.log(
-    "🚀 ~ file: index.js:67 ~ Credentials ~ integrationList:",
-    integrationList
-  );
   const [locationOptions, setLocationOptions] = useState(locationData);
 
   // API Call
