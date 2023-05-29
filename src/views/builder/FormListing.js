@@ -63,7 +63,12 @@ export default function FormListing() {
             toast.success(message);
             // fetchFormJson();
             const updatedData = formJson.filter((item) => item.id !== row?.id);
-            console.log('✅ updatedData    ', updatedData, "formJson", formJson)
+            console.log(
+              "✅ updatedData    ",
+              updatedData,
+              "formJson",
+              formJson
+            );
 
             setFormJson(updatedData);
           } else {

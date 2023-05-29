@@ -262,6 +262,17 @@ export default function Editor() {
               <Divider />
             </>
           )}
+          <Col sm="12">
+            <div title="Striped" className="p-2 pb-1">
+              <CardHeader className="p-0 m-0">
+                <Tabs
+                  className="mb-2"
+                  activeTab={activeTab}
+                  toggleTab={toggleTab}
+                />
+              </CardHeader>
+            </div>
+          </Col>
           <TabContent activeTab={activeTab}>
             <TabPane tabId="1">
               {show && (
@@ -375,11 +386,12 @@ export default function Editor() {
               )}
               {!show && (
                 <Row>
-                  {isLoader ? (
+                  {isLoader && (
                     <div className="d-flex justify-content-center align-items-center p-5">
                       <Spinner type="grow" color="primary" />
                     </div>
-                  ) : (
+                  )}
+                  {/* ) : (
                     <Col sm="12">
                       <div title="Striped" className="p-2 pb-1">
                         <CardHeader className="p-0 m-0">
@@ -392,9 +404,11 @@ export default function Editor() {
                         <div className="" id="form-editor"></div>
                       </div>
                     </Col>
-                  )}
+                  )} */}
                 </Row>
               )}
+
+              {!show && <div className="" id="form-editor"></div>}
             </TabPane>
             <TabPane tabId="2">
               <h3>Tab2</h3>
