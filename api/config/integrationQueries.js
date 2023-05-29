@@ -12,7 +12,7 @@ export function useGetIntegration(filters) {
         return data;
     }
 
-    return useQuery([integrationKey.integration, filters], getData, { staleTime: Infinity });
+    return useQuery([integrationKey.integration, filters], getData, { staleTime: 0 });
 }
 
 export function useDeleteEventWithForm() {
