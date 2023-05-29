@@ -12,7 +12,7 @@ export function useGetModels() {
         return data;
     }
 
-    return useQuery([formBuilderKey.formBuilder], getData, { staleTime: Infinity });
+    return useQuery([formBuilderKey.formBuilder], getData, { staleTime: 1 });
 }
 export function useGetIntegrationAndForms() {
     async function getData() {

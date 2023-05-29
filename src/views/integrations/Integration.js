@@ -21,10 +21,12 @@ export default function Integration() {
     const navigate = useNavigate();
 
     const [integration, setIntegration] = useState([]);
+    const [fetchCondition, setFetchCondition] = useState(true);
 
     useEffect(() => {
         if (integrationQuery.isFetched && integrationQuery.data) {
             setIntegration(integrationQuery.data);
+            setFetchCondition(false);
         }
       }, [integrationQuery.data, integrationQuery.isFetched, integrationQuery.isFetching]);
     //   console.log('✅ integration    ', integration)
@@ -92,7 +94,7 @@ export default function Integration() {
         </div>
         {(integration?.integrations?.length > 0) ?
             <IntegrationListing integration={integration?.integrations} handleRowAction={handleRowAction}/>
-            : <div className="d-flex justify-content-center align-items-center p-5">
+            : fetchCondition && <div className="d-flex justify-content-center align-items-center p-5">
             <Spinner type="grow" color="primary" />
         </div>
         }
