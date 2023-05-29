@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Card, CardBody, CardText, Col, Input, Label, Row } from 'reactstrap'
+import { Button, Card, CardBody, CardText, Col, Input, Label, Row, Spinner } from 'reactstrap'
 import { useEventFormMake, useGetIntegrationAndForms } from '../../../api/config/formBuilderQueries'
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import ExtensionsHeader from '@components/extensions-header'
+
 
 export default function FormsGenerated() {
     const getIntegrationFoms = useGetIntegrationAndForms();
@@ -12,6 +14,7 @@ export default function FormsGenerated() {
     const [hasEvents, setHasEvents] = useState(false);
     const [integ_id, setInteg_id] = useState(null);
     const [submitting, setSubmitting] = useState(false);
+    const [buttonHide, setButtonHide] = useState(true);
 
     const navigate = useNavigate();
 
@@ -29,6 +32,7 @@ export default function FormsGenerated() {
         //   const validationErrors = data?.validation_errors;
           const response = data?.response;
           if (response === 200) {
+            setButtonHide(false);
             console.log('✅ data?.message    ', data?.data?.message, "data", data)
 
             //   Object.keys(data?.data?.message).forEach((key) => {
@@ -78,40 +82,44 @@ export default function FormsGenerated() {
         generatedQuery.mutate(data);
     }
 
+
   return (
     <div className='container-xxl overflow-auto mt-5'>
-            <Row>
-                <Col sm='12'>
-                    <Card title='Striped' className='p-3'>
-                        <CardBody>
-                        <CardText>
-                            Integration Form Generated
-                        </CardText>
-                            <Row className='mb-3'>
-                                <Col className='mb-1' xl='6' md='6' sm='12'>
-                                    <Label className='form-label' for='basicInput'>
-                                        Integration
-                                    </Label>
-                                    <select id="payment-select" className='form-select form-select-lg mb-3' onChange={handleChangeIntegration}>
-                                        <option value={null}>Select one Selection</option>
-                                        {integrationWithForms &&
-                                            integrationWithForms.map((item) => (
-                                                <option key={item?.id} value={item?.id}>{item?.name}</option>
-                                            ))
-                                        }
-                                    </select>
-                                    {console.log('✅ hasForm    ', hasForm)
+        <Row>
+            <Col sm='12'>
+                <Card title='Striped' className='p-3'>
+                    <CardBody>
+                    <CardText>
+                        Integration Form Generated
+                    </CardText>
+                        <Row className='mb-3'>
+                        {submitting && <div className="d-flex justify-content-center align-items-center p-5">
+                            <Spinner type="grow" color="primary" />
+                        </div>}
+                            <Col className='mb-1' xl='6' md='6' sm='12'>
+                                <Label className='form-label' for='basicInput'>
+                                    Integration
+                                </Label>
+                                <select id="payment-select" className='form-select form-select-lg mb-3' onChange={handleChangeIntegration}>
+                                    <option value={null}>Select one Selection</option>
+                                    {integrationWithForms &&
+                                        integrationWithForms.map((item) => (
+                                            <option key={item?.id} value={item?.id}>{item?.name}</option>
+                                        ))
                                     }
-                                    {hasForm && <p className='text-danger'>Forms Created For This Integration</p>}
-                                </Col>
-                                {hasEvents  && (!hasForm) && <Col className='mb-1 mt-2' xl='6' md='6' sm='12'>
-                                  <Button.Ripple color='primary' onClick={handleGeneratedForms} disabled={submitting} >Generate Forms</Button.Ripple>
-                                </Col>}
-                            </Row>
-                        </CardBody>
-                    </Card>
-                </Col>
-            </Row>
+                                </select>
+                                {console.log('✅ hasForm    ', hasForm)
+                                }
+                                {hasForm && <p className='text-danger'>Forms Created For This Integration</p>}
+                            </Col>
+                            {hasEvents  && (!hasForm) && buttonHide && <Col className='mb-1 mt-2' xl='6' md='6' sm='12'>
+                                <Button.Ripple color='primary' onClick={handleGeneratedForms} disabled={submitting} >Generate Forms</Button.Ripple>
+                            </Col>}
+                        </Row>
+                    </CardBody>
+                </Card>
+            </Col>
+        </Row>
     </div>
   )
 }
