@@ -51,8 +51,13 @@ export default function SendGrid(props) {
 
   const [stateFullData] = useState();
 
+  const handleAlert = () => {
+    alert("test");
+  };
+
   const handleGetFormJson = async (data, errors) => {
     const formValue = JSON.stringify(data);
+    alert("Testing");
 
     try {
       const formValueData = {
@@ -121,8 +126,8 @@ export default function SendGrid(props) {
               authUrl: data?.auth_url ?? "",
               clientId: data?.client_id ?? "",
             }}
-            validationSchema={SendGridValidationSchema}
-            onSubmit={onPressCredentials}
+            // validationSchema={SendGridValidationSchema}
+            onSubmit={handleGetFormJson}
           >
             {({
               values,

@@ -1,61 +1,220 @@
-import React from "react";
-import { Button, Offcanvas, OffcanvasBody, OffcanvasHeader } from "reactstrap";
+import React, { useEffect, useState } from "react";
+import { Clock, Search } from "react-feather";
+import {
+  Button,
+  Input,
+  InputGroup,
+  InputGroupText,
+  Nav,
+  NavItem,
+  NavLink,
+  Offcanvas,
+  OffcanvasBody,
+  OffcanvasHeader,
+  Spinner,
+  TabContent,
+  TabPane,
+} from "reactstrap";
+import "../../style/components/offCanvasAnimation.scss";
 
-export default function OffCanvas(props) {
-  const { canvasOpen, canvasScroll, toggleCanvasScroll } = props;
+import NoRecordFound from "../NoRecordFound/NoRecordFound";
+
+export default function CustomOffCanvas(props) {
+  const {
+    canvasOpen,
+    canvasScroll,
+    toggleCanvasScroll,
+    canvasPlacement,
+    toggleCanvasEnd,
+    active,
+    toggleTabs,
+    isLoading,
+    data,
+    error,
+    isError,
+    onAddNode,
+  } = props;
+  console.log("🚀 ~ file: OffCanvas.js:35 ~ CustomOffCanvas ~ data:", data);
+  const [query, setQuery] = useState("");
+  const [integrationData, setIntegrationData] = useState(data);
+  console.log(
+    "🚀 ~ file: OffCanvas.js:38 ~ CustomOffCanvas ~ integrationData:",
+    integrationData
+  );
+
+  let list = data;
+
+  useEffect(() => {
+    if (query?.length) {
+      const searchedData = data.filter((post) => {
+        return post.name.toLowerCase().includes(query.toLowerCase());
+      });
+      list = searchedData;
+      // setIntegrationData(searchedData);
+    } else {
+      // setIntegrationData(data);
+      list = data;
+    }
+  }, [query]);
+
+  const handleOnChange = (event) => {
+    setQuery(event.target.value);
+  };
+
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        <Spinner type="grow" color="primary" />
+      </div>
+    );
+  }
 
   return (
     <Offcanvas
       scrollable={canvasScroll}
-      //   backdrop={canvasBackdrop}
-      direction="end"
+      direction={canvasPlacement}
       isOpen={canvasOpen}
       toggle={toggleCanvasScroll}
-      className="mt-5"
+      style={{ width: "25rem" }}
+      className={canvasOpen ? "offcanvas-open" : "offcanvas-close"}
     >
-      <OffcanvasHeader toggle={toggleCanvasScroll}>
-        OffCanvas {canvasScroll ? "Scroll" : "Backdrop"}
-      </OffcanvasHeader>
-      <OffcanvasBody className="my-auto mx-0 flex-grow-0">
-        <p className="text-center">
-          Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in
-          laying out print, graphic or web designs. The passage is attributed to
-          an unknown typesetter in the 15th century who is thought to have
-          scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a
-          type specimen book.
-        </p>
-        <p className="text-center">
-          Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in
-          laying out print, graphic or web designs. The passage is attributed to
-          an unknown typesetter in the 15th century who is thought to have
-          scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a
-          type specimen book.
-        </p>
-        <p className="text-center">
-          Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in
-          laying out print, graphic or web designs. The passage is attributed to
-          an unknown typesetter in the 15th century who is thought to have
-          scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a
-          type specimen book.
-        </p>
-        <p className="text-center">
-          Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in
-          laying out print, graphic or web designs. The passage is attributed to
-          an unknown typesetter in the 15th century who is thought to have
-          scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a
-          type specimen book.
-        </p>
-        <Button
-          block
-          color="primary"
-          onClick={toggleCanvasScroll}
-          className="mb-1"
-        >
-          Continue
-        </Button>
-        <Button block outline color="secondary" onClick={toggleCanvasScroll}>
-          Cancel
-        </Button>
+      <OffcanvasHeader toggle={toggleCanvasEnd} />
+
+      {isError && (
+        <div className="container-xxl d-flex justify-content-center align-items-center">
+          <h3>{error.message}</h3>
+        </div>
+      )}
+
+      <OffcanvasBody className="mx-0 flex-grow-0">
+        <Nav tabs>
+          <NavItem>
+            <NavLink
+              active={active === "1"}
+              onClick={() => {
+                toggleTabs("1");
+              }}
+            >
+              All
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              active={active === "2"}
+              onClick={() => {
+                toggleTabs("2");
+              }}
+            >
+              App
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              active={active === "3"}
+              onClick={() => {
+                toggleTabs("3");
+              }}
+            >
+              Core
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              active={active === "4"}
+              onClick={() => {
+                toggleTabs("4");
+              }}
+            >
+              Trigger
+            </NavLink>
+          </NavItem>
+        </Nav>
+        <TabContent activeTab={active}>
+          <TabPane tabId="1">
+            <InputGroup className="input-group-merge  ">
+              <InputGroupText
+              // className="round"
+              >
+                <Search className="text-muted" size={14} />
+              </InputGroupText>
+              <Input
+                value={query}
+                // className="round"
+                placeholder="Search for nodes"
+                onChange={handleOnChange}
+              />
+            </InputGroup>
+            <div className="row">
+              {!integrationData?.length && !!query?.length && (
+                <NoRecordFound searchTerm={query} />
+              )}
+
+              {list?.map((item) => {
+                return (
+                  <div
+                    className="col-md-5 d-flex flex-column align-items-center mt-2 ps-0"
+                    key={item.id}
+                  >
+                    <img
+                      src={item?.image}
+                      alt="Google Icon"
+                      width="56px"
+                      height="56px"
+                      onClick={() => onAddNode(item)}
+                      className="pointer-icon"
+                    />
+                    <h3
+                      className="icon-title mt-1"
+                      // onClick={() => onClickSendGridCredential(item)}
+                    >
+                      {/* {item?.name} */}
+                      {item.name?.length > 6
+                        ? `${item.name.substr(0, 6)}..`
+                        : item.name}
+                    </h3>
+                  </div>
+                );
+              })}
+            </div>
+          </TabPane>
+          <TabPane tabId="2">
+            <p>
+              Dragée jujubes caramels tootsie roll gummies gummies icing bonbon.
+              Candy jujubes cake cotton candy. Jelly-o lollipop oat cake
+              marshmallow fruitcake candy canes toffee. Jelly oat cake pudding
+              jelly beans brownie lemon drops ice cream halvah muffin. Brownie
+              candy tiramisu macaroon tootsie roll danish.
+            </p>
+            <p>
+              Croissant pie cheesecake sweet roll. Gummi bears cotton candy tart
+              jelly-o caramels apple pie jelly danish marshmallow. Icing
+              caramels lollipop topping. Bear claw powder sesame snaps.
+            </p>
+          </TabPane>
+          <TabPane tabId="3">
+            <p>
+              Gingerbread cake cheesecake lollipop topping bonbon chocolate
+              sesame snaps. Dessert macaroon bonbon carrot cake biscuit.
+              Lollipop lemon drops cake gingerbread liquorice. Sweet gummies
+              dragée. Donut bear claw pie halvah oat cake cotton candy sweet
+              roll. Cotton candy sweet roll donut ice cream.
+            </p>
+            <p>
+              Halvah bonbon topping halvah ice cream cake candy. Wafer gummi
+              bears chocolate cake topping powder. Sweet marzipan cheesecake
+              jelly-o powder wafer lemon drops lollipop cotton candy.
+            </p>
+          </TabPane>
+          <TabPane tabId="4">
+            <div className="d-flex mt-1">
+              <Clock size={18} className="me-1" />
+              <div>
+                <h5>Test Heading</h5>
+                <p>Run the flows every day, hour, or custom interval</p>
+              </div>
+            </div>
+          </TabPane>
+        </TabContent>
       </OffcanvasBody>
     </Offcanvas>
   );

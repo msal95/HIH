@@ -12,6 +12,7 @@ import {
   Table,
   Settings,
   Key,
+  Shuffle,
 } from "react-feather";
 
 export default [
@@ -149,6 +150,12 @@ export default [
   //   icon: <Settings size={20} />,
   //   navLink: "/apps/settings/:id",
   // },
+  {
+    id: "flows-builder",
+    title: "FLows Builder",
+    icon: <Shuffle size={20} />,
+    navLink: "/apps/flows-builder",
+  },
   {
     id: "settings",
     title: "Settings",

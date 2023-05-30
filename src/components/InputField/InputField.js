@@ -42,6 +42,7 @@ export default function InputField(props) {
   } = props;
 
   const [inputVisibility, setInputVisibility] = useState(false);
+  console.log("🚀 ~ file: InputField.js:29 ~ InputField ~ type:", type);
 
   useEffect(() => {
     console.log("🚀 ~ file: InputField.js:57 ~ useEffect ~ first:");

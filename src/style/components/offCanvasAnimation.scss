@@ -1,0 +1,32 @@
+.offcanvas-open {
+  transition: transform 700ms ease-out, opacity 700ms ease-out;
+  transform: translateX(0) !important;
+  opacity: 1 !important;
+}
+
+.offcanvas-close {
+  transition: transform 900ms ease-out, opacity 900ms ease-out;
+  transform: translateX(100%) !important;
+  opacity: 0 !important;
+}
+// .offcanvas-animation-enter {
+//   transform: translateX(100%);
+//   opacity: 0;
+// }
+
+// .offcanvas-animation-enter-active {
+//   transform: translateX(0);
+//   opacity: 1;
+//   transition: transform 300ms ease-out, opacity 300ms ease-out;
+// }
+
+// .offcanvas-animation-exit {
+//   transform: translateX(0);
+//   opacity: 1;
+// }
+
+// .offcanvas-animation-exit-active {
+//   transform: translateX(100%);
+//   opacity: 0;
+//   transition: transform 300ms ease-out, opacity 300ms ease-out;
+// }
