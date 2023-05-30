@@ -1,4 +1,5 @@
 import moment from "moment/moment";
+import { Clock, Rss } from "react-feather";
 
 export const getDMYFromDate = (date = "2023-05-11T07:59:13.000000Z") => {
   const dateTime = date;
@@ -25,3 +26,48 @@ export const getDMYFromDate = (date = "2023-05-11T07:59:13.000000Z") => {
 
   return relativeTime;
 };
+
+export const triggerData = [
+  {
+    id: 1,
+    icon: <Rss size={16} className="me-1" />,
+    title: "On App Event",
+    description: "Run the flows every day, hour, or custom interval",
+    // arrowIcon:
+  },
+  {
+    id: 2,
+    icon: <Clock size={16} className="me-1" />,
+    title: "On a schedule",
+    description: "Run the flows every day, hour, or custom interval",
+    // arrowIcon:
+  },
+  {
+    id: 3,
+    icon: <Clock size={16} className="me-1" />,
+    title: "On Webhook Call",
+    description: "Run the flows every day, hour, or custom interval",
+    // arrowIcon:
+  },
+  {
+    id: 4,
+    icon: <Clock size={16} className="me-1" />,
+    title: "Manually",
+    description: "Run the flows every day, hour, or custom interval",
+    // arrowIcon:
+  },
+  {
+    id: 5,
+    icon: <Clock size={16} className="me-1" />,
+    title: "When call by another workflow",
+    description: "Run the flows every day, hour, or custom interval",
+    // arrowIcon:
+  },
+  {
+    id: 6,
+    icon: <Clock size={16} className="me-1" />,
+    title: "Other ways",
+    description: "Run the flows every day, hour, or custom interval",
+    // arrowIcon:
+  },
+];
