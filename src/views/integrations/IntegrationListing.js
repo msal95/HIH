@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 
 // ** Third Party Components
 // import classnames from 'classnames'
@@ -18,31 +18,16 @@ import { Row, Col, Card, Input, CardBody, InputGroup, InputGroupText, Uncontroll
 import '@styles/base/pages/ui-feather.scss'
 
 const IntegrationListing = (props) => {
-    const [stateIntegration] = useState(props?.integration);
+    const [stateIntegration, setStateIntegration] = useState(props?.integration);
+    console.log("props", props)
     console.log("stateIntegration", stateIntegration)
 
+    useEffect(() => {
+        // const paginatedData = data;
+        setStateIntegration(props?.integration);
+      }, [props?.integration]);
+
   const IconsArr = []
-
-  // ** States
-//   const [query, setQuery] = useState([]),
-//     [filteredArr, setFilteredArr] = useState([]),
-//     [active, setActive] = useState(null)
-
-//   for (const key in Icons) {
-//     IconsArr.push(key)
-//   }
-
-//   const handleFilter = val => {
-//     const arr = []
-//     if (val.length) {
-//       IconsArr.filter(icon => {
-//         if (icon.toLowerCase().includes(val.toLowerCase())) {
-//           arr.push(icon)
-//         }
-//       })
-//     }
-//     setFilteredArr([...arr])
-//   }
 
   const handleIconCardClick = (row) => {
     console.log('✅ row    ', row)
@@ -53,8 +38,6 @@ const IntegrationListing = (props) => {
     const dataToRender = stateIntegration?.length
     if (dataToRender > 0) {
       return stateIntegration.map(icon => {
-        console.log('✅ icon    ', icon)
-
         return (
           <Fragment key={icon?.id}>
               <Card
@@ -85,22 +68,6 @@ const IntegrationListing = (props) => {
     <Fragment>
       <Breadcrumbs title='Integrations' data={[{ title: 'Integration' }, { title: 'Listing' }]} />
       <Row>
-        {/* <Col sm='12'>
-          <div className='icon-search-wrapper my-3 mx-auto'>
-            <InputGroup className='input-group-merge mb-1'>
-              <InputGroupText>
-                <Icons.Search size={14} />
-              </InputGroupText>
-              <Input
-                placeholder='Search icons...'
-                onChange={e => {
-                  handleFilter(e.target.value)
-                  setQuery(e.target.value)
-                }}
-              />
-            </InputGroup>
-          </div>
-        </Col> */}
       </Row>
       <div className='d-flex flex-wrap' id='icons-container'>
         {renderIcons()}
