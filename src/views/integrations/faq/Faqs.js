@@ -36,13 +36,14 @@ import { toast } from 'react-hot-toast'
 
 const Faqs = ({ data }) => {
     const navigate = useNavigate();
+    const [dataFull, setDataFull] = useState(data);
     const [dataVAlue, setDataValue] = useState(data);
-    const [tooltipOpen, setTooltipOpen] = useState(false)
+    const [searchTerm, setSearchTerm] = useState("");
+    // const [tooltipOpen, setTooltipOpen] = useState(false)
   const dataToRender = []
   const eventFormDelete = useDeleteEventWithForm();
   useEffect(() => {
     const data = eventFormDelete?.data;
-    console.log("data", data, 'eventFormDelete',  eventFormDelete);
     if (eventFormDelete.isSuccess) {
       const message = data?.message;
       const response = data?.response;
@@ -60,8 +61,6 @@ const Faqs = ({ data }) => {
             resources: filteredResources, // Update only the resources data
             events: eventsData, // Update only the resources data
         }));
-
-        console.log('✅ filteredEvent', dataVAlue)
       } else {
         toast.error(message);
       }
@@ -82,7 +81,6 @@ const Faqs = ({ data }) => {
     dataToRender.push(val)
   })
   const handleMenuAction = (action, row) => {
-    console.log('action, row', action, row);
     if (action === "Delete") {
         Swal.fire({
             title: 'Are you sure?',
@@ -139,9 +137,35 @@ const Faqs = ({ data }) => {
     })
   }
 
-  const handleForms = (item) => {
-    alert(123);
-    console.log('✅ item    ', item?.target?.value)
+  const handleForms = (event) => {
+    const filter = event?.target?.value;
+    if (filter === "Events With forms") {
+        const filteredResources = dataFull?.resources?.map(resource => ({
+            ...resource,
+            events: resource.events.filter((item) => item.bpmn_form !== null && item.hasOwnProperty('bpmn_form'))
+            }));
+            const eventsData = dataFull?.events.filter((item) => item.bpmn_form !== null && item.hasOwnProperty('bpmn_form'));
+            setDataValue((prevState) => ({
+                ...prevState,
+                resources: filteredResources,
+                events: eventsData,
+            }));
+    }
+    if (filter === "Events With Out forms") {
+        const filteredResources = dataFull?.resources?.map(resource => ({
+            ...resource,
+            events: resource.events.filter((item) => item.bpmn_form === null)
+            }));
+            const eventsData = dataFull?.events.filter((item) => item.bpmn_form === null);
+            setDataValue((prevState) => ({
+                ...prevState,
+                resources: filteredResources,
+                events: eventsData,
+            }));
+    }
+    if (filter === "All forms") {
+        setDataValue(dataFull);
+    }
 
 
   }
@@ -163,8 +187,6 @@ const Faqs = ({ data }) => {
                 {item?.events ? (
                     <UncontrolledAccordion className='accordion-margin mt-2' defaultOpen='0'>
                         <Row>
-                            {console.log('✅ dataVAlue    ', dataVAlue?.events)
-                            }
                     {dataVAlue?.events.map((r, index) => {
                         return (
                             <Col lg='4' sm='4' key={index}>
@@ -291,6 +313,32 @@ const Faqs = ({ data }) => {
     })
   }
 
+  const handleSearchTerm = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  useEffect(() => {
+
+    if (searchTerm?.length > 0) {
+    const filteredResources = dataFull?.resources?.map(resource => ({
+        ...resource,
+        events: resource.events.filter((post) => {
+            return post.name.toLowerCase().includes(searchTerm.toLowerCase());
+            })
+        }));
+        const eventsData = dataFull?.events.filter((post) => {
+            return post.name.toLowerCase().includes(searchTerm.toLowerCase());
+            })
+        setDataValue((prevState) => ({
+            ...prevState, // Preserve other properties in the state
+            resources: filteredResources, // Update only the resources data
+            events: eventsData, // Update only the resources data
+        }));
+    } else {
+        setDataValue(dataFull)
+    }
+  }, [searchTerm]);
+
   return (
     <div id='faq-tabs'>
     <Row className="float-right">
@@ -299,6 +347,8 @@ const Faqs = ({ data }) => {
                 Search
             </Label>
             <Input type="text" id="basicInput"
+                value={searchTerm}
+                onChange={handleSearchTerm}
             />
         </Col>
         <Col className='mb-1' xl='4' md='6' sm='12'>
