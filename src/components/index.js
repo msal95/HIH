@@ -13,6 +13,7 @@ import WorkFlowsCard from "./WorkFlowsCard/WorkFlowsCard";
 import CreateNewProject from "./CreateNewProject/CreateNewProject";
 import MoreVerticalDropdown from "./MoreVerticalDropdown/MoreVerticalDropdown";
 import NoRecordFound from "./NoRecordFound/NoRecordFound";
+import CustomTreeOptions from "./CustomTreeOptions/CustomTreeOptions";
 // import VirtualizedListing from "./VirtualizedListing/VirtualizedListing";
 
 export default {
@@ -31,5 +32,6 @@ export default {
   CreateNewProject,
   MoreVerticalDropdown,
   NoRecordFound,
+  CustomTreeOptions,
   // VirtualizedListing,
 };

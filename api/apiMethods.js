@@ -24,7 +24,6 @@ export const createProjects = async (pData) => {
 };
 
 export const deleteProject = async (pId) => {
-  console.log("🚀 ~ file: apiMethods.js:21 ~ deleteProject ~ pId:", pId);
   return await API_URL.delete(`/api/project/${pId}`);
 };
 
@@ -91,7 +90,11 @@ export const createWorkflow = async (wData) => {
 };
 
 export const editWorkflow = async (wData) => {
-  return await API_URL.post(`/api/workflowManagement/update`, wData);
+  return await API_URL.post(`/api/workflowManagement/update/status`, wData);
+};
+
+export const editWorkflowName = async (wData, id) => {
+  return await API_URL.post(`/api/workflowManagement/update/name/${id}`, wData);
 };
 
 // Form builder json

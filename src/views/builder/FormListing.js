@@ -63,7 +63,12 @@ export default function FormListing() {
             toast.success(message);
             // fetchFormJson();
             const updatedData = formJson.filter((item) => item.id !== row?.id);
-            console.log('✅ updatedData    ', updatedData, "formJson", formJson)
+            console.log(
+              "✅ updatedData    ",
+              updatedData,
+              "formJson",
+              formJson
+            );
 
             setFormJson(updatedData);
           } else {
@@ -85,8 +90,11 @@ export default function FormListing() {
       navigate("/apps/view", { state: row });
     }
     if (action === "edit") {
-      console.log("✅ row    ", row);
-      navigate("/apps/editor", { state: row });
+      const params = {
+        row,
+        isEdit: true,
+      };
+      navigate("/apps/editor", { state: params });
     }
     if (action === "create") {
       console.log("✅ row    ", row);
