@@ -52,9 +52,10 @@ export default function IntegrationImport() {
       const validationErrors = data?.validation_errors;
       const response = data?.response;
       if (response === 200) {
-        setSubmittingSuccess(true)
+        setSubmittingSuccess(false)
+        setSubmitting(false);
+        setSubmittingClick(false);
         toast.success(message);
-
         setTimeout(() => {
             navigate('/apps/integration');
         }, 3000);
@@ -116,7 +117,7 @@ export default function IntegrationImport() {
                   <InputGroup className="mb-2">
                     <Input
                       placeholder="Integration name"
-                      className={errors.name ? "text-danger border-danger" : ""}
+                      className={(errors.name && touched?.name) ? "text-danger border-danger" : ""}
                       {...getFieldProps("name")}
                     />
                   </InputGroup>
@@ -129,7 +130,7 @@ export default function IntegrationImport() {
                       type="textarea"
                       {...getFieldProps("description")}
                       className={
-                        errors.description ? "text-danger border-danger" : ""
+                        (errors.description && touched?.description) ? "text-danger border-danger" : ""
                       }
                     />
                   </InputGroup>
