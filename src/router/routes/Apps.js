@@ -19,6 +19,7 @@ const Settings = lazy(() => import("../../views/settings"));
 const Kanban = lazy(() => import("../../views/apps/kanban"));
 const Calendar = lazy(() => import("../../views/apps/calendar"));
 const FormListing = lazy(() => import("../../views/builder/FormListing"));
+const FLowsBuilder = lazy(() => import("../../views/flows/FlowsBuilder"));
 
 const InvoiceAdd = lazy(() => import("../../views/apps/invoice/add"));
 const InvoiceList = lazy(() => import("../../views/apps/invoice/list"));
@@ -127,6 +128,14 @@ const AppRoutes = [
   {
     element: <WorkFlowsView />,
     path: "/apps/flows/:flowId",
+    meta: {
+      appLayout: true,
+      className: "email-application",
+    },
+  },
+  {
+    element: <FLowsBuilder />,
+    path: "/apps/flows-builder",
     meta: {
       appLayout: true,
       className: "email-application",
