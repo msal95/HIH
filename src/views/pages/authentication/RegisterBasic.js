@@ -82,7 +82,7 @@ const RegisterBasic = () => {
 
             <Formik
               initialValues={{ username: "", email: "", password: "" }}
-              // validationSchema={SignupValidationSchema}
+              validationSchema={SignupValidationSchema}
               onSubmit={onHandleSubmit}
             >
               {({
@@ -92,6 +92,7 @@ const RegisterBasic = () => {
                 handleChange,
                 handleBlur,
                 handleSubmit,
+                getFieldProps
                 // isSubmitting,
                 /* and other goodies */
               }) => (
@@ -99,15 +100,6 @@ const RegisterBasic = () => {
                   className="auth-register-form mt-2"
                   onSubmit={handleSubmit}
                 >
-                  {/* <Label className="form-label" for="register-username">
-                      Username
-                    </Label>
-                    <Input
-                      type="text"
-                      id="register-username"
-                      placeholder="johndoe"
-                      autoFocus
-                    /> */}
                   <InputField
                     label="Username"
                     type="text"
@@ -116,7 +108,7 @@ const RegisterBasic = () => {
                     onBlur={handleBlur}
                     value={values.username}
                     autoFocus
-                    placeholder="email@email.com"
+                    placeholder="Enter User Name"
                     errorType={errors.username && touched.username}
                     errorMessage={errors.username}
                   />
@@ -133,7 +125,7 @@ const RegisterBasic = () => {
                     errorMessage={errors.email}
                   />
 
-                  <InputField
+                  {/* <InputField
                     label="Password"
                     type="password"
                     name="password"
@@ -145,7 +137,11 @@ const RegisterBasic = () => {
                     className="input-group-merge"
                     errorType={errors.password && touched.password}
                     errorMessage={errors.password}
+                  /> */}
+                  <InputPasswordToggle className='mb-2' name="password" label='Password' htmlFor='basic-default-password'
+                    {...getFieldProps("password")}
                   />
+                  {errors.password && touched.password && <ErrorMessage message={errors.password} />}
                   <div className="form-check mb-1">
                     <Input type="checkbox" id="terms" />
                     <Label className="form-check-label" for="terms">

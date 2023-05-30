@@ -12,6 +12,7 @@ export default function FormsGenerated() {
     const [integrationWithForms, setIntegrationForms] = useState(null);
     const [hasForm, setHasForm] = useState(false);
     const [hasEvents, setHasEvents] = useState(false);
+    const [hasEventsError, setHasEventsError] = useState(false);
     const [integ_id, setInteg_id] = useState(null);
     const [submitting, setSubmitting] = useState(false);
     const [buttonHide, setButtonHide] = useState(true);
@@ -71,6 +72,7 @@ export default function FormsGenerated() {
             })
             setHasEvents(true);
         } else {
+            setHasEventsError(true)
             setHasForm(false);
         }
     };
@@ -108,9 +110,10 @@ export default function FormsGenerated() {
                                         ))
                                     }
                                 </select>
-                                {console.log('✅ hasForm    ', hasForm)
+                                {console.log('✅ hasForm    ', hasForm, "integrationWithForms", integrationWithForms)
                                 }
                                 {hasForm && <p className='text-danger'>Forms Created For This Integration</p>}
+                                {hasEventsError && <p className='text-danger'>No Event Available Of This Integration</p>}
                             </Col>
                             {hasEvents  && (!hasForm) && buttonHide && <Col className='mb-1 mt-2' xl='6' md='6' sm='12'>
                                 <Button.Ripple color='primary' onClick={handleGeneratedForms} disabled={submitting} >Generate Forms</Button.Ripple>
