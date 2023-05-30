@@ -34,8 +34,8 @@ export default function IntegrationImport() {
 
   const formik = useFormik({
     initialValues: {
-      name: "emmanuel",
-      description: "description",
+      name: "",
+      description: "",
     },
     validationSchema: integrationSchema,
     onSubmit: (data) => {

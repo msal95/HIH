@@ -56,7 +56,7 @@ const InputPasswordToggle = forwardRef((props, ref) => {
           ref={ref}
           invalid={invalid}
           type={inputVisibility === false ? 'password' : 'text'}
-          placeholder={placeholder ? placeholder : '············'}
+          placeholder={placeholder ? placeholder : 'Enter your password'}
           className={classnames({
             [inputClassName]: inputClassName
           })}

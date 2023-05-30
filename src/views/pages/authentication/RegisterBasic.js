@@ -82,7 +82,7 @@ const RegisterBasic = () => {
 
             <Formik
               initialValues={{ username: "", email: "", password: "" }}
-              // validationSchema={SignupValidationSchema}
+              validationSchema={SignupValidationSchema}
               onSubmit={onHandleSubmit}
             >
               {({
@@ -92,6 +92,7 @@ const RegisterBasic = () => {
                 handleChange,
                 handleBlur,
                 handleSubmit,
+                getFieldProps
                 // isSubmitting,
                 /* and other goodies */
               }) => (
@@ -138,8 +139,9 @@ const RegisterBasic = () => {
                     errorMessage={errors.password}
                   /> */}
                   <InputPasswordToggle className='mb-2' name="password" label='Password' htmlFor='basic-default-password'
-                    onChange={handleChange}
+                    {...getFieldProps("password")}
                   />
+                  {errors.password && touched.password && <ErrorMessage message={errors.password} />}
                   <div className="form-check mb-1">
                     <Input type="checkbox" id="terms" />
                     <Label className="form-check-label" for="terms">

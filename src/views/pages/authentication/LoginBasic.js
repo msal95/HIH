@@ -30,6 +30,7 @@ import { handleLogin } from "@store/authentication";
 import { AbilityContext } from "@src/utility/context/Can";
 import { toast } from "react-hot-toast";
 import { AuthLogin } from "../../../../api/ApiMethods/AuthApiEndPoint";
+import InputPasswordToggle from "@components/input-password-toggle";
 
 const ToastContent = ({ t, name, role }) => {
   return (
@@ -151,6 +152,7 @@ const LoginBasic = () => {
                 handleChange,
                 handleBlur,
                 handleSubmit,
+                getFieldProps
                 // isSubmitting,
                 /* and other goodies */
               }) => (
@@ -168,7 +170,7 @@ const LoginBasic = () => {
                     errorMessage={errors.email}
                   />
 
-                  <InputField
+                  {/* <InputField
                     label="Password"
                     type="password"
                     name="password"
@@ -179,8 +181,15 @@ const LoginBasic = () => {
                     className="input-group-merge"
                     errorType={errors.password && touched.password}
                     errorMessage={errors.password}
-                  />
+                  /> */}
 
+                <InputPasswordToggle className='mb-2' label='Password' htmlFor='basic-default-password'
+                        // onChange={handleChange}
+                        {...getFieldProps("password")}
+                    />
+                    {errors.password && touched.password && <ErrorMessage message={errors.password} />}
+                  {console.log('✅ errors    ', errors, "touched", touched)
+                  }
                   <div className="d-flex justify-content-between">
                     <div className="form-check mb-1">
                       <Input type="checkbox" id="remember-me" />
