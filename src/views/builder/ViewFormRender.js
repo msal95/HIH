@@ -8,10 +8,10 @@ import "./builder.css";
 import { formValueSave } from "../../../api/apiMethods";
 import { useLocation } from "react-router-dom";
 import { Card, CardBody, CardText, Col, Row } from "reactstrap";
+import { toast } from "react-hot-toast";
 
 export default function ViewFormRender(props) {
   const { form } = props;
-  console.log("🚀 ~ file: ViewFormRender.js:14 ~ ViewFormRender ~ form:", form);
 
   const location = useLocation();
 
@@ -19,55 +19,38 @@ export default function ViewFormRender(props) {
   const [formJson] = useState(location?.state?.json);
   const [stateFullData] = useState(location?.state);
 
+  console.log('✅ stateFullData    ', stateFullData)
+
+
   const handleGetFormJson = async (data, errors) => {
     const formValue = JSON.stringify(data);
 
     try {
       const formValueData = {
-        form_builders_id: formJson?.data?.id,
+        form_builders_id: stateFullData?.id,
         data: formValue,
-        name: "name builder",
+        name: stateFullData?.name,
         user_id: 1,
       };
       console.log("formValueData", formValueData);
       const response = await formValueSave(formValueData);
+
+        const message = response?.message;
+        const validationErrors = response?.validation_errors;
+        const res = response?.response;
+        if (res === 200) {
+          toast.success(message);
+        } else {
+          console.log("✅ element    ", message, validationErrors, response);
+          Object.keys(validationErrors).forEach((key) => {
+            toast.error(validationErrors[key]);
+          });
+        }
       console.log("Response:", response);
     } catch (error) {
       console.error(error);
     }
   };
-
-  // useEffect(() => {
-  //     const fetchFormJson = async () => {
-  //       const formQuery = await getEditorJsonById(1);
-  //       if (formQuery) {
-  //         setFormJson(formQuery);
-  //       }
-  //     };
-  //     fetchFormJson();
-  //   }, []);
-
-  // useEffect(() => {
-  //     if (formJson?.data?.json?.[0]) {
-  //       const container = document.querySelector('#form');
-  //       if (container && !formRender?.current) {
-  //         const formEditor = new Form({
-  //           container,
-  //         });
-  //         formEditor.importSchema(JSON.parse(formJson?.data?.json?.[0]));
-  //         formRender.current = formEditor;
-  //       }
-  //       formRender.current.on('submit', ({ data, errors }) => {
-  //         handleGetFormJson(data, errors)
-  //       });
-  //       return () => {
-  //         if (formRender.current) {
-  //           formRender.current.destroy();
-  //           formRender.current = null;
-  //         }
-  //       };
-  //     }
-  // }, [formJson?.data?.json?.[0]]);
 
   useEffect(() => {
     const container = document.querySelector("#form");
