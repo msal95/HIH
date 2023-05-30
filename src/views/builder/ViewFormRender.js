@@ -21,14 +21,6 @@ export default function ViewFormRender(props) {
 
   const handleGetFormJson = async (data, errors) => {
     const formValue = JSON.stringify(data);
-    console.log(
-      formValue,
-      "formValue",
-      "errors",
-      errors,
-      "formJson?.data",
-      formJson?.data
-    );
 
     try {
       const formValueData = {

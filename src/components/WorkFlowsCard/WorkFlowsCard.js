@@ -25,7 +25,11 @@ import nemtLogo from "@src/assets/images/icons/Nemt-logo.png";
 import webHook from "@src/assets/images/icons/Webhook.png";
 import sendGrid from "@src/assets/images/icons/social/sendgrid.png";
 import { toast } from "react-hot-toast";
-import { deleteWorkflow, editWorkflow } from "../../../api/apiMethods";
+import {
+  deleteWorkflow,
+  editWorkflow,
+  editWorkflowName,
+} from "../../../api/apiMethods";
 import "../../style/views/workFlows.scss";
 import DropDown from "../DropDown/DropDown";
 import MoreVerticalDropdown from "../MoreVerticalDropdown/MoreVerticalDropdown";
@@ -248,9 +252,9 @@ const WorkFlowsCard = (props) => {
     setIsEdit(true);
   };
 
-  const handleNavigation = (item)=>{
-    window.location.href=`http://127.0.0.1:8000/workflow-engine/builder/${item.id}`
-  }
+  const handleNavigation = (item) => {
+    window.location.href = `http://127.0.0.1:8000/workflow-engine/builder/${item.id}`;
+  };
 
   const handleEditWorkflow = async (e) => {
     e.preventDefault();
@@ -258,11 +262,10 @@ const WorkFlowsCard = (props) => {
     try {
       const projectData = {
         name: workflowName,
-        workflow_ids: [selectedItem.id],
         project_id: selectedItem.project_id,
         // parent_id: selectedNode.id,
       };
-      await editWorkflow(projectData).then((res) => {
+      await editWorkflowName(projectData, selectedItem.id).then((res) => {
         if (res.status === 200) {
           refetch();
           setIsLoader(false);

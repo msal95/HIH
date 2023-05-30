@@ -1,7 +1,13 @@
 import { Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ZapOff } from "react-feather";
 import { Button, Col, Form, Row } from "reactstrap";
+import { Form as BuilderForm } from "@bpmn-io/form-js";
+// import schema from './schema.json';
+
+import "@bpmn-io/form-js/dist/assets/form-js.css";
+import "@bpmn-io/form-js/dist/assets/form-js-editor.css";
+import { formValueSave } from "../../../api/apiMethods";
 
 // Local Imports
 import avatar from "@src/assets/images/icons/file-icons/Avtar.png";
@@ -14,6 +20,7 @@ import { SendGridValidationSchema } from "../../utility/validationSchemas/Creden
 import CreateNewProject from "../CreateNewProject/CreateNewProject";
 import CustomHeading from "../CustomHeading/CustomHeading";
 import InputField from "../InputField/InputField";
+// import "./builder.css";
 
 const authOptions = [
   { id: 1, name: "Auth 2.0", value: "auth 2.0" },
@@ -31,9 +38,70 @@ export default function SendGrid(props) {
     isNewProject = false,
     handleOnCreateNewProject,
     optionsData,
+    forms,
   } = props;
-
+  console.log("🚀 ~ file: SendGrid.js:36 ~ SendGrid ~ forms:", forms);
   const { id, name, data, type } = item ?? {};
+
+  const [formsTypeData, setFormsTypeData] = useState(forms);
+  const [selectedAuthType, setSelectedAuthType] = useState(null);
+
+  const formRender = useRef(null);
+  const [formJson, setSelectedFormJson] = useState(null);
+
+  const [stateFullData] = useState();
+
+  const handleGetFormJson = async (data, errors) => {
+    const formValue = JSON.stringify(data);
+
+    try {
+      const formValueData = {
+        form_builders_id: formJson?.data?.id,
+        data: formValue,
+        name: "name builder",
+        user_id: 1,
+      };
+      console.log("formValueData", formValueData);
+      const response = await formValueSave(formValueData);
+      console.log("Response:", response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!!selectedAuthType?.length) {
+      const container = document.querySelector("#form");
+      if (container && !formRender?.current) {
+        const formEditor = new BuilderForm({
+          container,
+        });
+        formEditor.importSchema(JSON.parse(formJson));
+        formRender.current = formEditor;
+      }
+      formRender.current.on("submit", ({ data, errors }) => {
+        handleGetFormJson(data, errors);
+      });
+    }
+    return () => {
+      if (formRender.current) {
+        formRender.current.destroy();
+        formRender.current = null;
+      }
+    };
+  }, [formJson]);
+
+  useEffect(() => {
+    if (selectedAuthType === "auth 2.0") {
+      setSelectedFormJson(formsTypeData[1]?.bpmn_form?.json);
+    } else if (selectedAuthType === "api key") {
+      setSelectedFormJson(formsTypeData[0]?.bpmn_form?.json);
+    } else if (selectedAuthType === "jwt") {
+      setSelectedFormJson(formsTypeData[1]?.bpmn_form?.json);
+    } else if (selectedAuthType === "bearer token") {
+      setSelectedFormJson(formsTypeData[1]?.bpmn_form?.json);
+    }
+  });
 
   return (
     <>
@@ -96,6 +164,7 @@ export default function SendGrid(props) {
                   name="authType"
                   onChange={(selectedOption) => {
                     handleChange("authType")(selectedOption.value);
+                    setSelectedAuthType(selectedOption.value);
                   }}
                   onBlur={handleBlur}
                   value={values.authType}
@@ -126,6 +195,8 @@ export default function SendGrid(props) {
                   errorMessage={errors.clientId}
                   placeholder="1890-hwi0"
                 />
+
+                <div id="form"></div>
 
                 <Button
                   color="primary"
