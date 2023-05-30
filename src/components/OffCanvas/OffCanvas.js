@@ -15,7 +15,6 @@ import {
   TabContent,
   TabPane,
 } from "reactstrap";
-import { CSSTransition } from "react-transition-group";
 import "../../style/components/offCanvasAnimation.scss";
 
 import NoRecordFound from "../NoRecordFound/NoRecordFound";
