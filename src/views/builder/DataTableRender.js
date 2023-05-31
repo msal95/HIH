@@ -195,7 +195,7 @@ const DataTableRender = ({
                   <MoreVertical size={15} />
                 </DropdownToggle>
                 <DropdownMenu>
-                  <DropdownItem
+                  {/* <DropdownItem
                     href="/"
                     onClick={(e) => {
                       e.preventDefault();
@@ -204,7 +204,7 @@ const DataTableRender = ({
                   >
                     <Edit className="me-50" size={15} />{" "}
                     <span className="align-middle">Create New</span>
-                  </DropdownItem>
+                  </DropdownItem> */}
                   <DropdownItem
                     href="/"
                     onClick={(e) => {
