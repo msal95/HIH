@@ -93,12 +93,23 @@ export const errorStyle = {
     color: "red",
     fontWeight: "400",
   },
+  errorMessageInline: {
+    fontSize: 12,
+    color: "red",
+    fontWeight: "400",
+    marginLeft:"4px"
+  },
 };
 
 export default function ErrorMessage({ message }) {
   return (
     <div style={errorStyle.errorContainer}>
-      <h3 style={errorStyle.errorMessage}>{message ?? `Field is Required`}</h3>
+      <h3 style={errorStyle.errorMessage}> {  message ?? `Field is Required`}</h3>
     </div>
+  );
+}
+export function ErrorMessageInline({ message }) {
+  return (
+      <span style={errorStyle.errorMessageInline}> {  message ?? `Field is Required`}</span>
   );
 }

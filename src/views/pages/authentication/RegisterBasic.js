@@ -101,7 +101,7 @@ const RegisterBasic = () => {
                   onSubmit={handleSubmit}
                 >
                   <InputField
-                    label="Username"
+                    label="Username *"
                     type="text"
                     name="username"
                     onChange={handleChange}
@@ -114,7 +114,7 @@ const RegisterBasic = () => {
                   />
 
                   <InputField
-                    label="Email"
+                    label="Email *"
                     type="email"
                     name="email"
                     onChange={handleChange}
@@ -138,7 +138,7 @@ const RegisterBasic = () => {
                     errorType={errors.password && touched.password}
                     errorMessage={errors.password}
                   /> */}
-                  <InputPasswordToggle className='mb-2' name="password" label='Password' htmlFor='basic-default-password'
+                  <InputPasswordToggle className='mb-2' name="password" label='Password *' htmlFor='basic-default-password'
                     {...getFieldProps("password")}
                   />
                   {errors.password && touched.password && <ErrorMessage message={errors.password} />}

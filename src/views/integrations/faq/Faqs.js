@@ -96,6 +96,7 @@ const Faqs = ({ data }) => {
     }
     if (action === 'View') {
         if (!(row?.bpmn_form === null)) {
+
             navigate("/apps/view", { state: row?.bpmn_form });
         } else {
             toast.error(`No Form Available of Event ${row?.name}`);
@@ -104,7 +105,11 @@ const Faqs = ({ data }) => {
     if (action === 'Edit') {
 
         if (!(row?.bpmn_form === null)) {
-            navigate("/apps/editor", { state: row?.bpmn_form });
+            const params = {
+                 row:row.bpmn_form,
+                isEdit: true,
+              };
+              navigate("/apps/editor", { state: params });
         } else {
             toast.error(`No Form Available of Event ${row?.name}`);
         }

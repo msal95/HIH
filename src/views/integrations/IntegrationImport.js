@@ -15,7 +15,7 @@ import { Form, FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import ErrorMessage from "../../utility/Utils";
+import ErrorMessage, { ErrorMessageInline } from "../../utility/Utils";
 
 export default function IntegrationImport() {
   const importQuery = useIntegrationImport();
@@ -25,11 +25,14 @@ export default function IntegrationImport() {
   const [submittingSuccess, setSubmittingSuccess] = useState(false);
   const [submittingClick, setSubmittingClick] = useState(false);
 
+  const [isFocused, setIsFocused] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
   const integrationSchema = Yup.object().shape({
-    // file: Yup.mixed().required("Integration Json File is required"),
-    // image: Yup.mixed().required("Integration image is required"),
-    description: Yup.string().required("Description is required"),
-    name: Yup.string().required("Integration name is required"),
+    file: Yup.mixed().required("Integration Json File is required"),
+    image: Yup.mixed().required("Integration image is required"),
+    description: Yup.string().required(" Required"),
+    name: Yup.string().required(" Required"),
   });
 
   const formik = useFormik({
@@ -95,6 +98,17 @@ export default function IntegrationImport() {
     // }
   };
 
+  const handleFocus = () => {
+    // setIsFocused(true);
+    // alert('focus');
+  };
+
+  const handleBlur = () => {
+    alert('blur');
+    // setIsFocused(false);
+    // setHasError(false); // Reset the error state when losing focus
+  };
+
   return (
     <div className="container-xxl overflow-auto">
       <h2 className="text-primary py-2">Integration Import</h2>
@@ -111,32 +125,29 @@ export default function IntegrationImport() {
                 onSubmit={handleSubmit}
               >
                 <Fragment>
-                  <Label for="col-cb" className="text-danger">
-                  {errors.name && touched?.name && <ErrorMessage message={errors.name} />}
-                  </Label>
+                  <Label for="col-cb">Name * {errors.name && touched?.name &&  <ErrorMessageInline message={errors.name}/>}</Label>
+                     {/* <div class="d-inline">{errors.name && touched?.name && <ErrorMessage message={errors.name} />}</div> */}
                   <InputGroup className="mb-2">
                     <Input
                       placeholder="Integration name"
-                      className={(errors.name && touched?.name) ? "text-danger border-danger" : ""}
+                      className={(errors.name && touched?.name) ? "" : ""}
                       {...getFieldProps("name")}
                     />
                   </InputGroup>
-                  <Label for="col-cb" className="text-danger">
-                    {errors.description && touched?.description && <ErrorMessage message={errors.description} />}
-                  </Label>
+                  <Label for="col-cb">Description * {errors.description && touched?.description && <ErrorMessageInline message={errors.description} />}</Label>
                   <InputGroup className="mb-2">
                     <InputGroupText>Description</InputGroupText>
                     <Input
                       type="textarea"
                       {...getFieldProps("description")}
                       className={
-                        (errors.description && touched?.description) ? "text-danger border-danger" : ""
+                        (errors.description && touched?.description) ? "" : ""
                       }
                     />
                   </InputGroup>
-                  <Label for="col-cb">Integration image</Label>
-                  <Label for="col-cb" className="text-danger">
-                    {console.log(errors.image && touched?.image, ">>>>>>>>>>>>>>>>")}
+                  <Label for="col-cb">Integration image *</Label>
+                  <Label for="col-cb" className="">
+                    {console.log(errors, values?.image, ">>>>>>>>>>>>>>>>")}
                     {(errors.image && touched?.image) && <ErrorMessage message={errors.image} />}
                   </Label>
                   <InputGroup className="mb-2">
@@ -146,13 +157,16 @@ export default function IntegrationImport() {
                       multiple={false}
                       accept="image/*"
                       onChange={handleChangeIcon}
-                      className={ (errors.image && touched.image) ? "text-danger border-danger" : ""
-                      }
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                      className={`form-control ${hasError && !isFocused ? 'bg-danger' : ''}`}
                     />
                   </InputGroup>
-                  <Label for="col-cb">Integration Json File</Label>
-                  <Label for="col-cb" className="text-danger">
-                  {(errors.file && touched?.file) && <ErrorMessage message={errors.file} />}
+                  <Label for="col-cb">Integration Json File *</Label>
+                  <Label for="col-cb" className="">
+                      <span className="p-1">
+                        {(errors.file && touched?.file) && <ErrorMessage message={errors.file} />}
+                      </span>
                   </Label>
                   <InputGroup>
                     <Input
@@ -161,7 +175,7 @@ export default function IntegrationImport() {
                       onChange={(event) =>
                         formik.setFieldValue("file", event.target.files[0])
                       }
-                      className={ (errors.file && touched.file) ? "text-danger border-danger" : ""
+                      className={ (errors.file && touched.file) ? "" : ""
                       }
                     />
                   </InputGroup>
