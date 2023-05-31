@@ -25,13 +25,15 @@ import "../../style/base/base.scss";
 import ApexAreaCharts from "./ApexAreaCharts"; //
 import TabsVerticalLeft from "./TabsVerticalLeft";
 import { tabsVerticalLeft } from "./TabSourceCode";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const WorkflowView = () => {
   // ** Context
   const [activeTab, setActiveTab] = useState("1");
 
   const { flowId } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const { colors } = useContext(ThemeColors),
     { skin } = useSkin(),
@@ -57,7 +59,13 @@ const WorkflowView = () => {
           <h2 className="text-primary py-2">Workflow View</h2>
         </div>
         <div className="d-flex">
-          <Button outline color="primary" onClick={handleNavigation}>
+          <Button
+            outline
+            color="primary"
+            onClick={() =>
+              navigate("/apps/flows-builder", { state: location?.state })
+            }
+          >
             Edit FLow
           </Button>
           <Button className="ms-2" color="primary">

@@ -97,6 +97,10 @@ export const editWorkflowName = async (wData, id) => {
   return await API_URL.post(`/api/workflowManagement/update/name/${id}`, wData);
 };
 
+// Workflow Engine APIs
+export const createWorkflowEngine = async (wData) => {
+  return await API_URL.post(`/api/workflow/save-update`, wData);
+};
 // Form builder json
 export const formJsonEditor = async (data) => {
   try {
