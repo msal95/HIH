@@ -168,7 +168,7 @@ const LoginBasic = () => {
               }) => (
                 <Form className="auth-login-form mt-2" onSubmit={handleSubmit}>
                   <InputField
-                    label="Email"
+                    label="Email *"
                     type="email"
                     name="email"
                     onChange={handleChange}
@@ -193,7 +193,7 @@ const LoginBasic = () => {
                     errorMessage={errors.password}
                   /> */}
 
-                <InputPasswordToggle className='mb-2' label='Password' htmlFor='basic-default-password'
+                <InputPasswordToggle className='mb-2' label='Password *'  htmlFor='basic-default-password'
                         // onChange={handleChange}
                         {...getFieldProps("password")}
                     />

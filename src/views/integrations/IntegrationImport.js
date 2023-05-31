@@ -111,6 +111,7 @@ export default function IntegrationImport() {
                 onSubmit={handleSubmit}
               >
                 <Fragment>
+                  <Label for="col-cb">name *</Label>
                   <Label for="col-cb" className="text-danger">
                   {errors.name && touched?.name && <ErrorMessage message={errors.name} />}
                   </Label>
@@ -121,6 +122,7 @@ export default function IntegrationImport() {
                       {...getFieldProps("name")}
                     />
                   </InputGroup>
+                  <Label for="col-cb">Description *</Label>
                   <Label for="col-cb" className="text-danger">
                     {errors.description && touched?.description && <ErrorMessage message={errors.description} />}
                   </Label>
@@ -134,7 +136,7 @@ export default function IntegrationImport() {
                       }
                     />
                   </InputGroup>
-                  <Label for="col-cb">Integration image</Label>
+                  <Label for="col-cb">Integration image *</Label>
                   <Label for="col-cb" className="text-danger">
                     {console.log(errors.image && touched?.image, ">>>>>>>>>>>>>>>>")}
                     {(errors.image && touched?.image) && <ErrorMessage message={errors.image} />}
@@ -150,7 +152,7 @@ export default function IntegrationImport() {
                       }
                     />
                   </InputGroup>
-                  <Label for="col-cb">Integration Json File</Label>
+                  <Label for="col-cb">Integration Json File *</Label>
                   <Label for="col-cb" className="text-danger">
                   {(errors.file && touched?.file) && <ErrorMessage message={errors.file} />}
                   </Label>
