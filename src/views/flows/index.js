@@ -63,7 +63,6 @@ const WorkFlows = () => {
   const [selectedItem, setSelectedItem] = useState();
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
-  console.log("🚀 ~ file: index.js:66 ~ WorkFlows ~ selectedTab:", selectedTab);
   const [isEdit, setIsEdit] = useState(false);
   const [isEditProject, setIsEditProject] = useState(false);
   const [isWorkFLow, setIsWorkFLow] = useState(false);
@@ -78,12 +77,7 @@ const WorkFlows = () => {
   const [selectedOption, setSelectedOption] = useState();
   const [isEditDetail, setIsEditDetail] = useState(false);
   const [isLoader, setIsLoader] = useState(false);
-  // console.log(
-  //   "🚀 ~ file: index.js:83 ~ WorkFlows ~ isEditDetail:",
-  //   isEditDetail
-  // );
   const [flowsData, setFlowsData] = useState();
-  console.log("🚀 ~ file: index.js:86 ~ WorkFlows ~ flowsData:", flowsData);
 
   let headerTitle;
 

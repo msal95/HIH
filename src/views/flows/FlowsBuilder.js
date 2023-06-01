@@ -1,122 +1,32 @@
 // ** React Imports
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // ** Local Imports
 import "@styles/react/apps/app-email.scss";
 import { Pause, Play } from "react-feather";
-import { useQuery } from "react-query";
+import { toast } from "react-hot-toast";
+import { useLocation } from "react-router-dom";
 import {
   Background,
   Controls,
-  Handle,
   MiniMap,
   ReactFlow,
   applyEdgeChanges,
   applyNodeChanges,
+  MarkerType,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { Button, Card, CardBody, CardHeader, Spinner } from "reactstrap";
-import {
-  createWorkflowEngine,
-  getIntegrationsList,
-} from "../../../api/apiMethods";
+import { createWorkflowEngine } from "../../../api/apiMethods";
 import CustomOffCanvas from "../../components/OffCanvas/OffCanvas";
-import { useLocation } from "react-router-dom";
-import { toast } from "react-hot-toast";
-import { CustomNodes } from "../../components/CustomNodes";
+import CustomNode from "./components/CustomNode";
 
-const nodesEdgesJson = {
-  nodes: [
-    {
-      id: "node-1",
-      type: "default",
-      position: {
-        x: 589.3596767929886,
-        y: 258.9307334449153,
-      },
-      data: {
-        label: "Twitter",
-      },
-      width: 150,
-      height: 39,
-      selected: false,
-      positionAbsolute: {
-        x: 589.3596767929886,
-        y: 258.9307334449153,
-      },
-      dragging: false,
-    },
-    {
-      id: "node-2",
-      type: "default",
-      position: {
-        x: 116.99595780215276,
-        y: 263.1157637896678,
-      },
-      data: {
-        label: "Gmail",
-      },
-      width: 150,
-      height: 39,
-    },
-    {
-      id: "node-3",
-      type: "default",
-      position: {
-        x: 181.86291193635492,
-        y: 41.26602348954947,
-      },
-      data: {
-        label: "SendGrid",
-      },
-      width: 150,
-      height: 39,
-      selected: false,
-      positionAbsolute: {
-        x: 181.86291193635492,
-        y: 41.26602348954947,
-      },
-      dragging: false,
-    },
-    {
-      id: "node-4",
-      type: "default",
-      position: {
-        x: 396.7521655186009,
-        y: 162.94417412706343,
-      },
-      data: {
-        label: "dadadsa",
-      },
-      width: 150,
-      height: 39,
-      selected: false,
-      positionAbsolute: {
-        x: 396.7521655186009,
-        y: 162.94417412706343,
-      },
-      dragging: false,
-    },
-  ],
-  edges: [
-    {
-      id: "edge-1",
-      source: "node-3",
-      target: "node-4",
-    },
-    {
-      id: "edge-2",
-      source: "node-4",
-      target: "node-2",
-    },
-    {
-      id: "edge-3",
-
-      source: "node-4",
-      target: "node-1",
-    },
-  ],
+const nodeTypes = {
+  node: CustomNode,
 };
+
+import { useGetIntegration } from "../../../api/config/integrationQueries";
+import CustomModal from "../../components/CustomModal/CustomModal";
 
 const FLowsBuilder = () => {
   // ** States
@@ -125,38 +35,65 @@ const FLowsBuilder = () => {
   const [active, setActive] = useState("1");
   const [canvasPlacement, setCanvasPlacement] = useState("end");
   const [canvasOpen, setCanvasOpen] = useState(false);
-  const [integrationList, setIntegrationsList] = useState();
   const [flowsJson, setFlowsJson] = useState(null);
-  console.log(
-    "🚀 ~ file: FlowsBuilder.js:129 ~ FLowsBuilder ~ flowsJson:",
-    flowsJson
-  );
   const [isOutput, setIsOutput] = useState(false);
   const [edgeOptions, setEdgeOptions] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
+  const [show, setShow] = useState(false);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  const [selectedNode, setSelectedNode] = useState(null);
+  console.log(
+    "🚀 ~ file: FlowsBuilder.js:173 ~ FLowsBuilder ~ selectedNode:",
+    selectedNode?.data?.events[0]?.params?.events
+    // selectedNode
+  );
+  const [isSelected, setIsSelected] = useState(false);
+
+  const integrationQuery = useGetIntegration();
+  const [integration, setIntegration] = useState([]);
+
+  useEffect(() => {
+    if (integrationQuery.isFetched && integrationQuery.data) {
+      setIntegration(integrationQuery.data);
+    }
+  }, [integrationQuery.isFetching]);
+
+  const onInit = (reactFlowInstance) => setReactFlowInstance(reactFlowInstance);
 
   const { state } = useLocation();
 
-  const {
-    isLoading: integrationLoader,
-    data: integrationData,
-    error: integrationError,
-    // refetch: integrationRefetch,
-    isFetching: integrationIsFetching,
-    isError: integrationIsError,
-  } = useQuery("integrationsList", () => getIntegrationsList());
+  const onClickDiscardModal = () => {
+    setShow(false);
+    // setIsActiveMainFolder(false);
+    // setIsActiveSubFolder(false);
+  };
+
+  const handleToggleModal = () => {
+    setShow((prevState) => !prevState);
+  };
 
   useEffect(() => {
-    if (!!integrationData?.data?.data?.integration?.length) {
-      setIntegrationsList(integrationData?.data?.data?.integration);
+    const node = nodes.filter((node) => {
+      if (node.selected) {
+        // console.log("If condition");
+        setShow(true);
+        return true;
+      }
+      return false;
+    });
+    if (node[0]) {
+      setSelectedNode(node[0]);
+      setIsSelected(true);
+      setShow(true);
+      // handleToggleModal();
+    } else {
+      console.log("Else Case");
+      setSelectedNode("");
+      setIsSelected(false);
     }
-  }, [integrationIsFetching]);
+  }, [nodes]);
 
   useEffect(() => {
-    // if (Object.values(nodesEdgesJson)?.length) {
-    //   setNodes(nodesEdgesJson.nodes);
-    //   setEdges(nodesEdgesJson.edges);
-    // }
     setEdgeOptions({
       animated: isOutput ? isOutput : false,
       style: {
@@ -180,21 +117,27 @@ const FLowsBuilder = () => {
     setIsOutput((prevState) => !prevState);
   };
 
-  //   const [isLoader, setIsLoader] = useState(false);
-
-  //   const { isLoading, data, error, refetch, isFetching, isError } = useQuery(
-  //     "projectsList",
-  //     () => getProjectLists()
-  //   );
   const addNewNode = (params) => {
     const newNode = {
-      id: `node-${nodes.length + 1}`,
-      type: "default",
+      id: `node-${params?.id}`,
+      type: "node",
       position: {
         x: (Math.random(0, 7) * window.innerWidth) / 3,
         y: (Math.random(0, 7) * window.innerHeight) / 3,
       },
-      data: { label: `${params?.name}`, image: params?.image },
+      data: {
+        label: `${params?.name}`,
+        image: params?.image,
+        events: [
+          {
+            intgId: params?.id,
+            eventId: 12,
+            form_builder_id: 12,
+            form_submission_id: 12,
+            params,
+          },
+        ],
+      },
     };
     toggleCanvasEnd();
 
@@ -298,10 +241,11 @@ const FLowsBuilder = () => {
             defaultEdgeOptions={edgeOptions}
             minZoom={0.2}
             maxZoom={4}
+            nodeTypes={nodeTypes}
+            onInit={onInit}
+            // onDrop={onDrop}
+            // onDragOver={onDragOver}
           >
-            <Handle type="source" position="right" />
-            <Handle type="target" position="left" />
-
             <MiniMap />
             <Controls />
             <Background variant="dots" gap={12} size={2} />
@@ -315,13 +259,33 @@ const FLowsBuilder = () => {
           toggleCanvasEnd={toggleCanvasEnd}
           active={active}
           toggleTabs={toggleTabs}
-          isLoading={integrationLoader}
-          data={integrationList}
-          error={integrationError}
-          isError={integrationIsError}
+          isLoading={integrationQuery?.isLoading}
+          data={integration}
+          error={integrationQuery?.error}
+          isError={integrationQuery?.isError}
           onAddNode={addNewNode}
         />
       </Card>
+      <CustomModal
+        toggleModal={handleToggleModal}
+        onDiscard={onClickDiscardModal}
+        show={show}
+        // modalClass={isWorkFLow ? "modal-fullscreen" : "modal-lg"}
+      >
+        <div className="p-1">
+          <h3>Hello WOrld</h3>
+          <div className="container row">
+            {selectedNode?.id}
+            {selectedNode?.data?.events[0]?.params?.events?.map((event) => {
+              console.log(
+                "🚀 ~ file: FlowsBuilder.js:278 ~ {selectedNode?.params?.events?.map ~ event:",
+                event
+              );
+              return <div className="col-md-4">{event.name}</div>;
+            })}
+          </div>
+        </div>
+      </CustomModal>
     </div>
   );
 };
