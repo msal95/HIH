@@ -288,7 +288,7 @@ const FLowsBuilder = () => {
           </div>
         )}
         <CardBody>
-          {/* <ReactFlow
+          <ReactFlow
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
@@ -305,8 +305,8 @@ const FLowsBuilder = () => {
             <MiniMap />
             <Controls />
             <Background variant="dots" gap={12} size={2} />
-          </ReactFlow> */}
-          <CustomNodes />
+          </ReactFlow>
+          {/* <CustomNodes /> */}
         </CardBody>
 
         <CustomOffCanvas
