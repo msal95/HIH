@@ -83,6 +83,7 @@ const WorkFlows = () => {
   //   isEditDetail
   // );
   const [flowsData, setFlowsData] = useState();
+  console.log("🚀 ~ file: index.js:86 ~ WorkFlows ~ flowsData:", flowsData);
 
   let headerTitle;
 
@@ -120,6 +121,10 @@ const WorkFlows = () => {
     isFetching: isWorkflowFetching,
     isRefetching,
   } = useQuery("workFLowsLists", async () => await getWorkflowLists());
+  console.log(
+    "🚀 ~ file: index.js:124 ~ WorkFlows ~ workflowData:",
+    workflowData
+  );
 
   let searchedFrom;
 
