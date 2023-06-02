@@ -65,6 +65,7 @@ const Credentials = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [isNewProject, setIsNewProject] = useState(false);
   const [integrationList, setIntegrationsList] = useState();
+  const [allIntegrations, setAllIntegrations] = useState();
   const [locationOptions, setLocationOptions] = useState(locationData);
 
   // API Call
@@ -109,6 +110,7 @@ const Credentials = () => {
   useEffect(() => {
     if (!!integrationData?.data?.data?.integration?.length) {
       setIntegrationsList(integrationData?.data?.data?.integration);
+      setAllIntegrations(integrationData?.data?.data?.integration);
     }
   }, [integrationIsFetching]);
 
@@ -125,14 +127,12 @@ const Credentials = () => {
 
   useEffect(() => {
     if (searchedList.length) {
-      const searchedData = integrationData?.data?.integration?.filter(
-        (post) => {
-          return post.name.toLowerCase().includes(searchedList.toLowerCase());
-        }
-      );
+      const searchedData = allIntegrations?.filter((post) => {
+        return post.name.toLowerCase().includes(searchedList.toLowerCase());
+      });
       setIntegrationsList(searchedData);
     } else {
-      setIntegrationsList(integrationData?.data?.integration);
+      setIntegrationsList(allIntegrations);
     }
   }, [searchedList]);
 
@@ -303,7 +303,7 @@ const Credentials = () => {
           </InputGroup>
 
           <div className="row">
-            {integrationIsFetching && (
+            {integrationLoader && (
               <div className="container-xxl d-flex justify-content-center align-items-center">
                 <Spinner type="grow" color="primary" />
               </div>
@@ -380,7 +380,7 @@ const Credentials = () => {
 
   return (
     <>
-      <div className="row container-xxl overflow-auto">
+      <div className="row container-fluid overflow-auto">
         <Col className="col-12">
           <div className="row">
             <div className="content-header-left col-md-9 col-12 mb-2">
