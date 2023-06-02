@@ -38,6 +38,10 @@ const FLowsBuilder = () => {
   const [canvasPlacement, setCanvasPlacement] = useState("end");
   const [canvasOpen, setCanvasOpen] = useState(false);
   const [flowsJson, setFlowsJson] = useState(null);
+  console.log(
+    "🚀 ~ file: FlowsBuilder.js:41 ~ FLowsBuilder ~ flowsJson:",
+    flowsJson
+  );
   const [isOutput, setIsOutput] = useState(false);
   const [edgeOptions, setEdgeOptions] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
@@ -260,6 +264,10 @@ const FLowsBuilder = () => {
         nodesEdgesJson: json,
       };
       await createWorkflowEngine(wrokflowData).then((res) => {
+        console.log(
+          "🚀 ~ file: FlowsBuilder.js:263 ~ awaitcreateWorkflowEngine ~ res:",
+          res
+        );
         if (res.status === 200) {
           toast.success(res.data.message);
           setIsLoader(false);
