@@ -6,12 +6,14 @@ import {
   MiniMap,
   Position,
   ReactFlow,
+  useStore,
 } from "reactflow";
 import "reactflow/dist/style.css";
 
 import ResizeableNode from "./ResizeableNode";
 import ResizeableNodeSelected from "./ResizeableNodeSelected";
 import CustomResizerNode from "./CustomResizerNode";
+import { useState } from "react";
 
 const nodeTypes = {
   ResizeableNode,

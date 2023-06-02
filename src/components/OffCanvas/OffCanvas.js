@@ -36,18 +36,18 @@ export default function CustomOffCanvas(props) {
   } = props;
   const [query, setQuery] = useState("");
 
-  let list = data;
+  let list = data?.integrations;
 
   useEffect(() => {
     if (query?.length) {
-      const searchedData = data.filter((post) => {
+      const searchedData = data?.integrations?.filter((post) => {
         return post.name.toLowerCase().includes(query.toLowerCase());
       });
       list = searchedData;
       // setIntegrationData(searchedData);
     } else {
       // setIntegrationData(data);
-      list = data;
+      list = data?.integrations;
     }
   }, [query]);
 
