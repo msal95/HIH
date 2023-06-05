@@ -29,6 +29,7 @@ const style = {
 };
 
 function CustomNode({ data, selected }) {
+  console.log("🚀 ~ file: CustomNode.js:32 ~ CustomNode ~ selected:", selected);
   const customTitle = { ...style.title };
   customTitle.backgroundColor = "#08c9bd";
 

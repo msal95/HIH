@@ -1,5 +1,5 @@
 // ** React Imports
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // ** Local Imports
 import "@styles/react/apps/app-email.scss";
@@ -27,6 +27,8 @@ const nodeTypes = {
 
 import { useGetIntegration } from "../../../api/config/integrationQueries";
 import CustomModal from "../../components/CustomModal/CustomModal";
+import Divider from "../../components/Divider/Divider";
+import ViewFormRender from "../builder/ViewFormRender";
 
 const FLowsBuilder = () => {
   // ** States
@@ -36,21 +38,59 @@ const FLowsBuilder = () => {
   const [canvasPlacement, setCanvasPlacement] = useState("end");
   const [canvasOpen, setCanvasOpen] = useState(false);
   const [flowsJson, setFlowsJson] = useState(null);
+  console.log(
+    "🚀 ~ file: FlowsBuilder.js:41 ~ FLowsBuilder ~ flowsJson:",
+    flowsJson
+  );
   const [isOutput, setIsOutput] = useState(false);
   const [edgeOptions, setEdgeOptions] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
   const [show, setShow] = useState(false);
-  const [reactFlowInstance, setReactFlowInstance] = useState(null);
+  // const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
-  console.log(
-    "🚀 ~ file: FlowsBuilder.js:173 ~ FLowsBuilder ~ selectedNode:",
-    selectedNode?.data?.events[0]?.params?.events
-    // selectedNode
-  );
+  const [isSelectedEvent, setIsSelectedEvent] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [submittedEventResponse, setSubmittedEventResponse] = useState(null);
   const [isSelected, setIsSelected] = useState(false);
-
   const integrationQuery = useGetIntegration();
   const [integration, setIntegration] = useState([]);
+  const [formJson, setSelectedFormJson] = useState(null);
+  const [updatedNode, setUpdatedNode] = useState([]);
+
+  useEffect(() => {
+    if (submittedEventResponse !== null) {
+      const selectedNodeFiltered = nodes?.filter(
+        (node) => node?.id === submittedEventResponse?.selectedNode_id
+      );
+
+      const selectedNodeIndex = nodes?.findIndex(
+        (node) => node?.id === submittedEventResponse?.selectedNode_id
+      );
+
+      const events = {
+        intgId: submittedEventResponse?.intgId,
+        eventId: submittedEventResponse?.eventId,
+        form_builder_id: submittedEventResponse?.form_builder_id,
+        form_submitted_id: submittedEventResponse?.id,
+      };
+
+      const updatedData = selectedNodeFiltered.map((obj) => {
+        const { events, ...rest } = obj.data;
+        return { ...obj, data: { ...rest } };
+      });
+
+      const newNode = { ...updatedData[0], ...{ events } };
+
+      setUpdatedNode((prevData) => {
+        const updatedData = [...prevData];
+        updatedData[selectedNodeIndex] = newNode;
+        return updatedData;
+      });
+
+      setShow(false);
+      setSelectedNode(null);
+    }
+  }, [submittedEventResponse]);
 
   useEffect(() => {
     if (integrationQuery.isFetched && integrationQuery.data) {
@@ -58,14 +98,16 @@ const FLowsBuilder = () => {
     }
   }, [integrationQuery.isFetching]);
 
-  const onInit = (reactFlowInstance) => setReactFlowInstance(reactFlowInstance);
+  // const onInit = (reactFlowInstance) => setReactFlowInstance(reactFlowInstance);
 
   const { state } = useLocation();
 
   const onClickDiscardModal = () => {
     setShow(false);
-    // setIsActiveMainFolder(false);
-    // setIsActiveSubFolder(false);
+    setIsSelected(false);
+    setSelectedNode(null);
+    setIsSelectedEvent(false);
+    setSelectedEvent(null);
   };
 
   const handleToggleModal = () => {
@@ -74,22 +116,21 @@ const FLowsBuilder = () => {
 
   useEffect(() => {
     const node = nodes.filter((node) => {
-      if (node.selected) {
-        // console.log("If condition");
-        setShow(true);
+      if (!!node.selected) {
+        // setShow(true);
         return true;
       }
       return false;
     });
-    if (node[0]) {
+    if (node[0]?.selected) {
       setSelectedNode(node[0]);
       setIsSelected(true);
       setShow(true);
       // handleToggleModal();
     } else {
-      console.log("Else Case");
-      setSelectedNode("");
+      setSelectedNode(null);
       setIsSelected(false);
+      setShow(false);
     }
   }, [nodes]);
 
@@ -119,7 +160,7 @@ const FLowsBuilder = () => {
 
   const addNewNode = (params) => {
     const newNode = {
-      id: `node-${params?.id}`,
+      id: `node-${nodes?.length + 1}`,
       type: "node",
       position: {
         x: (Math.random(0, 7) * window.innerWidth) / 3,
@@ -128,20 +169,15 @@ const FLowsBuilder = () => {
       data: {
         label: `${params?.name}`,
         image: params?.image,
-        events: [
-          {
-            intgId: params?.id,
-            eventId: 12,
-            form_builder_id: 12,
-            form_submission_id: 12,
-            params,
-          },
-        ],
+        intgId: params?.id,
+        events: params?.events,
       },
     };
+
     toggleCanvasEnd();
 
     setNodes((prevElements) => [...prevElements, newNode]);
+    setUpdatedNode((prevElements) => [...prevElements, newNode]);
   };
 
   const onConnect = (params) => {
@@ -166,8 +202,59 @@ const FLowsBuilder = () => {
     [setEdges]
   );
 
+  const handleEventsForm = (data) => {
+    setIsSelectedEvent(true);
+    setShow(true);
+    setSelectedEvent(data);
+    setSelectedFormJson(data?.bpmn_form?.json);
+  };
+
+  const handleEventsData = () => {
+    return (
+      <div>
+        <h5>Selected Events Data</h5>
+        <ViewFormRender
+          form={formJson}
+          selectedEvent={selectedEvent?.bpmn_form}
+          setSubmittedEventResponse={setSubmittedEventResponse}
+          onClickDiscardModal={onClickDiscardModal}
+          selectedNode={selectedNode}
+        />
+      </div>
+    );
+  };
+
+  // const onDragOver = (event) => {
+  //   event.preventDefault();
+  //   event.dataTransfer.dropEffect = "move";
+  // };
+
+  // const onDrop = (event) => {
+  //   console.log("🚀 ~ file: FlowsBuilder.js:241 ~ onDrop ~ event:", event);
+  //   event.preventDefault();
+  //   const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
+
+  //   const type = event.dataTransfer.getData("application/reactflow");
+  //   console.log("🚀 ~ file: FlowsBuilder.js:245 ~ onDrop ~ type:", type);
+  //   const label = event.dataTransfer.getData("label");
+  //   console.log("🚀 ~ file: FlowsBuilder.js:246 ~ onDrop ~ label:", label);
+  //   console.log(reactFlowInstance, "reactIns");
+  //   const position = reactFlowInstance.project({
+  //     x: event.clientX - reactFlowBounds.left,
+  //     y: event.clientY - reactFlowBounds.top,
+  //   });
+  //   const newNode = {
+  //     id: getId(),
+  //     type,
+  //     position,
+  //     data: { heading: "Send Message", content: label },
+  //   };
+  //   setNodes((es) => es.concat(newNode));
+  //   setSelectedNode(newNode.id);
+  // };
+
   const handleOnSave = async () => {
-    const json = JSON.stringify({ nodes, edges }, null, 2);
+    const json = JSON.stringify({ updatedNode, edges }, null, 2);
 
     setIsLoader(true);
     try {
@@ -177,6 +264,10 @@ const FLowsBuilder = () => {
         nodesEdgesJson: json,
       };
       await createWorkflowEngine(wrokflowData).then((res) => {
+        console.log(
+          "🚀 ~ file: FlowsBuilder.js:263 ~ awaitcreateWorkflowEngine ~ res:",
+          res
+        );
         if (res.status === 200) {
           toast.success(res.data.message);
           setIsLoader(false);
@@ -242,7 +333,7 @@ const FLowsBuilder = () => {
             minZoom={0.2}
             maxZoom={4}
             nodeTypes={nodeTypes}
-            onInit={onInit}
+            // onInit={onInit}
             // onDrop={onDrop}
             // onDragOver={onDragOver}
           >
@@ -270,20 +361,42 @@ const FLowsBuilder = () => {
         toggleModal={handleToggleModal}
         onDiscard={onClickDiscardModal}
         show={show}
-        // modalClass={isWorkFLow ? "modal-fullscreen" : "modal-lg"}
+        modalClass={"modal-lg"}
       >
         <div className="p-1">
-          <h3>Hello WOrld</h3>
-          <div className="container row">
-            {selectedNode?.id}
-            {selectedNode?.data?.events[0]?.params?.events?.map((event) => {
-              console.log(
-                "🚀 ~ file: FlowsBuilder.js:278 ~ {selectedNode?.params?.events?.map ~ event:",
-                event
-              );
-              return <div className="col-md-4">{event.name}</div>;
-            })}
-          </div>
+          {/* <h3>Hello WOrld</h3> */}
+          {!isSelectedEvent ? (
+            <>
+              <div className="d-flex justify-content-between align-items-center mb-1">
+                <Button outline color="primary" onClick={onClickDiscardModal}>
+                  Go Back
+                </Button>
+                <h3>Integration: {selectedNode?.data?.label}</h3>
+              </div>
+              <Divider />
+              <div className="container row">
+                {!selectedNode?.data?.events[0]?.params?.events?.length && (
+                  <h3 className="d-flex align-items-center justify-content-center p-2">
+                    No Events Available for this integration
+                  </h3>
+                )}
+                {selectedNode?.data?.events?.map((event) => {
+                  return (
+                    <div className="col-md-4">
+                      <h5
+                        onClick={() => handleEventsForm(event)}
+                        className="cursor-pointer border-bottom-1 border-secondary"
+                      >
+                        {event.name}
+                      </h5>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          ) : (
+            handleEventsData()
+          )}
         </div>
       </CustomModal>
     </div>
