@@ -10,3 +10,6 @@ export const formBuilderKey = {
 export const getModelKey = {
     getModel: 'getModel',
 };
+export const userKey = {
+    user: 'user',
+};
