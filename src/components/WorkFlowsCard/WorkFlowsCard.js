@@ -252,10 +252,6 @@ const WorkFlowsCard = (props) => {
     setIsEdit(true);
   };
 
-  const handleNavigation = (item) => {
-    window.location.href = `http://127.0.0.1:8000/workflow-engine/builder/${item.id}`;
-  };
-
   const handleEditWorkflow = async (e) => {
     e.preventDefault();
     setIsLoader(true);
@@ -537,7 +533,9 @@ const WorkFlowsCard = (props) => {
                         />
                       </FormGroup>
                       <MoreVerticalDropdown
-                        handleView={() => navigate(`/apps/flows/${item.id}`)}
+                        handleView={() =>
+                          navigate(`/apps/flows/${item.id}`, { state: item })
+                        }
                         handleEdit={() => onPressEditWorkflowName(item)}
                         handleDelete={() => onHandleDelete(item)}
                       />

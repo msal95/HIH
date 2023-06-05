@@ -34,26 +34,20 @@ export default function CustomOffCanvas(props) {
     isError,
     onAddNode,
   } = props;
-  console.log("🚀 ~ file: OffCanvas.js:35 ~ CustomOffCanvas ~ data:", data);
   const [query, setQuery] = useState("");
-  const [integrationData, setIntegrationData] = useState(data);
-  console.log(
-    "🚀 ~ file: OffCanvas.js:38 ~ CustomOffCanvas ~ integrationData:",
-    integrationData
-  );
 
-  let list = data;
+  let list = data?.integrations;
 
   useEffect(() => {
     if (query?.length) {
-      const searchedData = data.filter((post) => {
+      const searchedData = data?.integrations?.filter((post) => {
         return post.name.toLowerCase().includes(query.toLowerCase());
       });
       list = searchedData;
       // setIntegrationData(searchedData);
     } else {
       // setIntegrationData(data);
-      list = data;
+      list = data?.integrations;
     }
   }, [query]);
 
@@ -61,13 +55,13 @@ export default function CustomOffCanvas(props) {
     setQuery(event.target.value);
   };
 
-  if (isLoading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center">
-        <Spinner type="grow" color="primary" />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="d-flex justify-content-center align-items-center">
+  //       <Spinner type="grow" color="primary" />
+  //     </div>
+  //   );
+  // }
 
   return (
     <Offcanvas
@@ -131,6 +125,11 @@ export default function CustomOffCanvas(props) {
         </Nav>
         <TabContent activeTab={active}>
           <TabPane tabId="1">
+            {isLoading && (
+              <div className="d-flex justify-content-center align-items-center">
+                <Spinner type="grow" color="primary" />
+              </div>
+            )}
             <InputGroup className="input-group-merge  ">
               <InputGroupText
               // className="round"
@@ -145,7 +144,7 @@ export default function CustomOffCanvas(props) {
               />
             </InputGroup>
             <div className="row">
-              {!integrationData?.length && !!query?.length && (
+              {!list?.length && !!query?.length && (
                 <NoRecordFound searchTerm={query} />
               )}
 
@@ -161,11 +160,11 @@ export default function CustomOffCanvas(props) {
                       width="56px"
                       height="56px"
                       onClick={() => onAddNode(item)}
-                      className="pointer-icon"
+                      className="cursor-pointer"
                     />
                     <h3
-                      className="icon-title mt-1"
-                      // onClick={() => onClickSendGridCredential(item)}
+                      className="icon-title mt-1 cursor-pointer"
+                      onClick={() => onAddNode(item)}
                     >
                       {/* {item?.name} */}
                       {item.name?.length > 6

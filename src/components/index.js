@@ -14,6 +14,7 @@ import CreateNewProject from "./CreateNewProject/CreateNewProject";
 import MoreVerticalDropdown from "./MoreVerticalDropdown/MoreVerticalDropdown";
 import NoRecordFound from "./NoRecordFound/NoRecordFound";
 import CustomTreeOptions from "./CustomTreeOptions/CustomTreeOptions";
+import { CustomNodes } from "./CustomNodes";
 // import VirtualizedListing from "./VirtualizedListing/VirtualizedListing";
 
 export default {
@@ -33,5 +34,6 @@ export default {
   MoreVerticalDropdown,
   NoRecordFound,
   CustomTreeOptions,
+  CustomNodes,
   // VirtualizedListing,
 };

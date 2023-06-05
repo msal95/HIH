@@ -243,7 +243,7 @@ export default function Editor() {
                       color="primary"
                       className="mb-2 me-1"
                       outline
-                      onClick={handleGetFormJson}
+                      onClick={() => {}}
                       disabled={!(name !== "" && model !== "Select one model")}
                     >
                       Preview

@@ -51,10 +51,6 @@ export default function SendGrid(props) {
 
   const [stateFullData] = useState();
 
-  const handleAlert = () => {
-    alert("test");
-  };
-
   const handleGetFormJson = async (data, errors) => {
     const formValue = JSON.stringify(data);
     alert("Testing");
