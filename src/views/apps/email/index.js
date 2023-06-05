@@ -1,16 +1,16 @@
 // ** React Imports
-import { useParams } from 'react-router-dom'
-import { Fragment, useEffect, useState } from 'react'
+import { useParams } from "react-router-dom";
+import { Fragment, useEffect, useState } from "react";
 
 // ** Email App Component Imports
-import Mails from './Mails'
-import Sidebar from './Sidebar'
+import Mails from "./Mails";
+import Sidebar from "./Sidebar";
 
 // ** Third Party Components
-import classnames from 'classnames'
+import classnames from "classnames";
 
 // ** Store & Actions
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 import {
   getMails,
   selectMail,
@@ -19,33 +19,40 @@ import {
   selectAllMail,
   updateMailLabel,
   resetSelectedMail,
-  selectCurrentMail
-} from './store'
+  selectCurrentMail,
+} from "./store";
 
 // ** Styles
-import '@styles/react/apps/app-email.scss'
+import "@styles/react/apps/app-email.scss";
 
 const EmailApp = () => {
   // ** States
-  const [query, setQuery] = useState('')
-  const [openMail, setOpenMail] = useState(false)
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [composeOpen, setComposeOpen] = useState(false)
+  const [query, setQuery] = useState("");
+  const [openMail, setOpenMail] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [composeOpen, setComposeOpen] = useState(false);
 
   // ** Toggle Compose Function
-  const toggleCompose = () => setComposeOpen(!composeOpen)
+  const toggleCompose = () => setComposeOpen(!composeOpen);
 
   // ** Store Variables
-  const dispatch = useDispatch()
-  const store = useSelector(state => state.email)
+  const dispatch = useDispatch();
+  const store = useSelector((state) => state.email);
+  console.log("🚀 ~ file: index.js:41 ~ EmailApp ~ store:", store);
 
   // ** Vars
-  const params = useParams()
+  const params = useParams();
 
   // ** UseEffect: GET initial data on Mount
   useEffect(() => {
-    dispatch(getMails({ q: query || '', folder: params.folder || 'inbox', label: params.label || '' }))
-  }, [query, params.folder, params.label])
+    dispatch(
+      getMails({
+        q: query || "",
+        folder: params.folder || "inbox",
+        label: params.label || "",
+      })
+    );
+  }, [query, params.folder, params.label]);
 
   return (
     <Fragment>
@@ -59,11 +66,11 @@ const EmailApp = () => {
         setSidebarOpen={setSidebarOpen}
         resetSelectedMail={resetSelectedMail}
       />
-      <div className='content-right'>
-        <div className='content-body'>
+      <div className="content-right">
+        <div className="content-body">
           <div
-            className={classnames('body-content-overlay', {
-              show: sidebarOpen
+            className={classnames("body-content-overlay", {
+              show: sidebarOpen,
             })}
             onClick={() => setSidebarOpen(false)}
           ></div>
@@ -89,7 +96,7 @@ const EmailApp = () => {
         </div>
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
-export default EmailApp
+export default EmailApp;

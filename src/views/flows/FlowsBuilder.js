@@ -14,6 +14,10 @@ import {
   applyEdgeChanges,
   applyNodeChanges,
   MarkerType,
+  getIncomers,
+  getOutgoers,
+  getConnectedEdges,
+  useNodeId,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { Button, Card, CardBody, CardHeader, Spinner } from "reactstrap";
@@ -29,17 +33,19 @@ import { useGetIntegration } from "../../../api/config/integrationQueries";
 import CustomModal from "../../components/CustomModal/CustomModal";
 import Divider from "../../components/Divider/Divider";
 import ViewFormRender from "../builder/ViewFormRender";
+import { useDispatch, useSelector } from "react-redux";
+import { addData, discardSelectedItem } from "./store";
 
 const FLowsBuilder = () => {
-  // ** States
   const [nodes, setNodes] = useState([]);
+  console.log("🚀 ~ file: FlowsBuilder.js:43 ~ FLowsBuilder ~ nodes:", nodes);
   const [edges, setEdges] = useState([]);
   const [active, setActive] = useState("1");
   const [canvasPlacement, setCanvasPlacement] = useState("end");
   const [canvasOpen, setCanvasOpen] = useState(false);
   const [flowsJson, setFlowsJson] = useState(null);
   console.log(
-    "🚀 ~ file: FlowsBuilder.js:41 ~ FLowsBuilder ~ flowsJson:",
+    "🚀 ~ file: FlowsBuilder.js:47 ~ FLowsBuilder ~ flowsJson:",
     flowsJson
   );
   const [isOutput, setIsOutput] = useState(false);
@@ -56,6 +62,7 @@ const FLowsBuilder = () => {
   const [integration, setIntegration] = useState([]);
   const [formJson, setSelectedFormJson] = useState(null);
   const [updatedNode, setUpdatedNode] = useState([]);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (submittedEventResponse !== null) {
@@ -102,12 +109,19 @@ const FLowsBuilder = () => {
 
   const { state } = useLocation();
 
+  const dispatch = useDispatch();
+  const store = useSelector((state) => state.flowsBuilder);
+  console.log("🚀 ~ file: FlowsBuilder.js:114 ~ FLowsBuilder ~ store:", store);
+
+  const { selectedItem } = store;
+
   const onClickDiscardModal = () => {
     setShow(false);
     setIsSelected(false);
     setSelectedNode(null);
     setIsSelectedEvent(false);
     setSelectedEvent(null);
+    dispatch(discardSelectedItem());
   };
 
   const handleToggleModal = () => {
@@ -115,15 +129,15 @@ const FLowsBuilder = () => {
   };
 
   useEffect(() => {
-    const node = nodes.filter((node) => {
-      if (!!node.selected) {
-        // setShow(true);
-        return true;
-      }
-      return false;
-    });
-    if (node[0]?.selected) {
-      setSelectedNode(node[0]);
+    // const node = nodes?.filter((node) => {
+    //   if (!!node.selected) {
+    //     // setShow(true);
+    //     return true;
+    //   }
+    //   return false;
+    // });
+    if (Object.keys(selectedItem)?.length) {
+      setSelectedNode(selectedItem);
       setIsSelected(true);
       setShow(true);
       // handleToggleModal();
@@ -132,7 +146,7 @@ const FLowsBuilder = () => {
       setIsSelected(false);
       setShow(false);
     }
-  }, [nodes]);
+  }, [selectedItem]);
 
   useEffect(() => {
     setEdgeOptions({
@@ -142,6 +156,40 @@ const FLowsBuilder = () => {
       },
     });
   }, [isOutput]);
+
+  useEffect(() => {
+    setCount((count) => count + 1);
+    if (store?.data?.length) {
+      setNodes(store?.data);
+    }
+  }, [store?.data]);
+
+  // const onNodesDelete = useCallback(
+  //   (deleted) => {
+  //     setEdges(
+  //       deleted.reduce((acc, node) => {
+  //         const incomers = getIncomers(node, nodes, edges);
+  //         const outgoers = getOutgoers(node, nodes, edges);
+  //         const connectedEdges = getConnectedEdges([node], edges);
+
+  //         const remainingEdges = acc.filter(
+  //           (edge) => !connectedEdges.includes(edge)
+  //         );
+
+  //         const createdEdges = incomers.flatMap(({ id: source }) =>
+  //           outgoers.map(({ id: target }) => ({
+  //             id: `${source}->${target}`,
+  //             source,
+  //             target,
+  //           }))
+  //         );
+
+  //         return [...remainingEdges, ...createdEdges];
+  //       }, edges)
+  //     );
+  //   },
+  //   [nodes, edges]
+  // );
 
   const toggleCanvasEnd = () => {
     setCanvasPlacement("end");
@@ -175,6 +223,8 @@ const FLowsBuilder = () => {
     };
 
     toggleCanvasEnd();
+
+    dispatch(addData(newNode));
 
     setNodes((prevElements) => [...prevElements, newNode]);
     setUpdatedNode((prevElements) => [...prevElements, newNode]);
@@ -332,6 +382,7 @@ const FLowsBuilder = () => {
             defaultEdgeOptions={edgeOptions}
             minZoom={0.2}
             maxZoom={4}
+            // onNodesDelete={onNodesDelete}
             nodeTypes={nodeTypes}
             // onInit={onInit}
             // onDrop={onDrop}
