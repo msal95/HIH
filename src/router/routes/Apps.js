@@ -8,6 +8,7 @@ import Integration from "../../views/integrations/Integration";
 import EventAndResources from "../../views/integrations/EventAndResources";
 import FormsGenerated from "../../views/builder/FormsGenerated";
 import IntegrationImport from "../../views/integrations/IntegrationImport";
+import ProfileUpdate from "../../views/profile/ProfileUpdate";
 
 const Chat = lazy(() => import("../../views/apps/chat"));
 const Todo = lazy(() => import("../../views/apps/todo"));
@@ -48,6 +49,14 @@ const AppRoutes = [
   {
     element: <Editor />,
     path: "/apps/editor",
+    meta: {
+      appLayout: true,
+      className: "email-application",
+    },
+  },
+  {
+    element: <ProfileUpdate />,
+    path: "/apps/profile",
     meta: {
       appLayout: true,
       className: "email-application",

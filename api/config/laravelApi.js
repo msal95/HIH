@@ -23,6 +23,9 @@ function laravelApi() {
       delete: `${home}/integration/event/with/form`,
       post: `${home}/import-export/integration/import`,
     },
+    user: {
+        updateProfile: `${home}/auth/profile-update`,
+    },
     formBuilder: {
       get: `${home}/form-builder/get-models`,
       getRelatedModel: `${home}/form-builder/get-models-related`,
