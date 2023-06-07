@@ -476,7 +476,14 @@ const WorkFlowsCard = (props) => {
                           />
                         </Form>
                       ) : (
-                        <p className="workflow-title">{item?.name}</p>
+                        <p
+                          className="workflow-title cursor-pointer"
+                          onClick={() =>
+                            navigate(`/apps/flows/${item.id}`, { state: item })
+                          }
+                        >
+                          {item?.name}
+                        </p>
                       )}
                       <div className="d-flex align-items-center">
                         {nodesData?.map((item, index) => {

@@ -17,6 +17,7 @@ export default function ViewFormRender(props) {
     setSubmittedEventResponse,
     onClickDiscardModal,
     selectedNode,
+    submission_id,
   } = props;
   const location = useLocation();
 
@@ -30,6 +31,7 @@ export default function ViewFormRender(props) {
     try {
       const formValueData = {
         form_builders_id: stateFullData?.id,
+        submission_id,
         data: formValue,
         name: stateFullData?.name,
         user_id: 1,

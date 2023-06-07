@@ -38,7 +38,6 @@ import { addData, discardSelectedItem } from "./store";
 
 const FLowsBuilder = () => {
   const [nodes, setNodes] = useState([]);
-  console.log("🚀 ~ file: FlowsBuilder.js:43 ~ FLowsBuilder ~ nodes:", nodes);
   const [edges, setEdges] = useState([]);
   const [active, setActive] = useState("1");
   const [canvasPlacement, setCanvasPlacement] = useState("end");
@@ -62,7 +61,23 @@ const FLowsBuilder = () => {
   const [integration, setIntegration] = useState([]);
   const [formJson, setSelectedFormJson] = useState(null);
   const [updatedNode, setUpdatedNode] = useState([]);
-  const [count, setCount] = useState(0);
+  // const [submittedFormId, setSubmittedFormId] = useState(null);
+  // console.log(
+  //   "🚀 ~ file: FlowsBuilder.js:70 ~ FLowsBuilder ~ submittedFormId:",
+  //   submittedFormId
+  // );
+
+  // useEffect(() => {
+  //   if (selectedNode !== null) {
+  //     const selectedResponse = updatedNode?.filter(
+  //       (item) => item?.id === selectedNode?.id
+  //     );
+  //     console.log(
+  //       "🚀 ~ file: FlowsBuilder.js:73 ~ useEffect ~ selectedResponse:",
+  //       selectedResponse
+  //     );
+  //   }
+  // }, [selectedNode]);
 
   useEffect(() => {
     if (submittedEventResponse !== null) {
@@ -96,6 +111,7 @@ const FLowsBuilder = () => {
 
       setShow(false);
       setSelectedNode(null);
+      // setSubmittedEventResponse(null);
     }
   }, [submittedEventResponse]);
 
@@ -111,7 +127,6 @@ const FLowsBuilder = () => {
 
   const dispatch = useDispatch();
   const store = useSelector((state) => state.flowsBuilder);
-  console.log("🚀 ~ file: FlowsBuilder.js:114 ~ FLowsBuilder ~ store:", store);
 
   const { selectedItem } = store;
 
@@ -129,18 +144,10 @@ const FLowsBuilder = () => {
   };
 
   useEffect(() => {
-    // const node = nodes?.filter((node) => {
-    //   if (!!node.selected) {
-    //     // setShow(true);
-    //     return true;
-    //   }
-    //   return false;
-    // });
     if (Object.keys(selectedItem)?.length) {
       setSelectedNode(selectedItem);
       setIsSelected(true);
       setShow(true);
-      // handleToggleModal();
     } else {
       setSelectedNode(null);
       setIsSelected(false);
@@ -158,9 +165,10 @@ const FLowsBuilder = () => {
   }, [isOutput]);
 
   useEffect(() => {
-    setCount((count) => count + 1);
     if (store?.data?.length) {
       setNodes(store?.data);
+    } else {
+      setNodes([]);
     }
   }, [store?.data]);
 
@@ -260,12 +268,32 @@ const FLowsBuilder = () => {
   };
 
   const handleEventsData = () => {
+    const selectedId = updatedNode?.filter(
+      (item) => item?.id === selectedNode?.id
+    );
+
+    let submittedFormId;
+
+    if (!!selectedId[0]?.events) {
+      submittedFormId = selectedId[0]?.events?.form_submitted_id;
+    } else {
+      submittedFormId = null;
+    }
+    console.log(
+      "🚀 ~ file: FlowsBuilder.js:282 ~ handleEventsData ~ submittedFormId:",
+      submittedFormId
+    );
+    console.log(
+      "🚀 ~ file: FlowsBuilder.js:274 ~ handleEventsData ~ selectedId:",
+      selectedId
+    );
     return (
       <div>
         <h5>Selected Events Data</h5>
         <ViewFormRender
           form={formJson}
           selectedEvent={selectedEvent?.bpmn_form}
+          submission_id={submittedFormId ?? null}
           setSubmittedEventResponse={setSubmittedEventResponse}
           onClickDiscardModal={onClickDiscardModal}
           selectedNode={selectedNode}
@@ -433,7 +461,7 @@ const FLowsBuilder = () => {
                 )}
                 {selectedNode?.data?.events?.map((event) => {
                   return (
-                    <div className="col-md-4">
+                    <div className="col-md-4" key={event.id}>
                       <h5
                         onClick={() => handleEventsForm(event)}
                         className="cursor-pointer border-bottom-1 border-secondary"

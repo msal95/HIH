@@ -1,17 +1,15 @@
+import PropTypes from "prop-types";
 import React, { useState } from "react";
 import {
   ChevronDown,
   ChevronUp,
-  Folder,
   FolderMinus,
   FolderPlus,
   Layers,
   Plus,
 } from "react-feather";
 import { Collapse, ListGroup, ListGroupItem } from "reactstrap";
-import PropTypes from "prop-types";
 import MoreVerticalDropdown from "../../components/MoreVerticalDropdown/MoreVerticalDropdown";
-import polygon from "@src/assets/images/icons/polygon.png";
 function TreeNode(props) {
   const {
     node,
@@ -42,19 +40,11 @@ function TreeNode(props) {
             selectedTab?.name === node?.name && "bg-primary text-light"
           }`}
           style={{
-            width: "fit-content",
+            width: "100%",
             padding: selectedTab?.name === node?.name && "5px",
           }}
         >
           <div onClick={() => handleActiveTab(node)} className="cursor-pointer">
-            {/* <img
-              src={polygon}
-              alt="Polygon icon"
-              className="me-1"
-              width="10px"
-              height="7px"
-              onClick={handleToggle}
-            /> */}
             {isOpen ? (
               <ChevronUp onClick={handleToggle} size={18} className="me-1" />
             ) : (
@@ -102,8 +92,6 @@ function TreeNode(props) {
             width: "fit-content",
             padding: selectedTab?.name === node?.name && "5px",
           }}
-          // onMouseEnter={() => handleOnMouseEnter(node)}
-          // onMouseLeave={handleOnMouseLeave}
           onClick={() => handleActiveTabSubFolders(node)}
         >
           <div className="d-flex">
@@ -150,9 +138,6 @@ function TreeNode(props) {
               />
             </div>
           </div>
-          {/* {hoverItem && hoverItem.uuid === node.uuid && ( */}
-
-          {/* )} */}
         </div>
       )}
       {node.tree.length > 0 && (
