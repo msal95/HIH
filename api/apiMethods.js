@@ -101,6 +101,12 @@ export const editWorkflowName = async (wData, id) => {
 export const createWorkflowEngine = async (wData) => {
   return await API_URL.post(`/api/workflow/save-update`, wData);
 };
+
+export const runWorkflowEngine = async (wData) => {
+  return await API_URL.get(
+    `/api/execute-graph/?workflow_id=${wData?.workflow_id}`
+  );
+};
 // Form builder json
 export const formJsonEditor = async (data) => {
   try {

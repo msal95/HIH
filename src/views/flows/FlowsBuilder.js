@@ -21,7 +21,10 @@ import {
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { Button, Card, CardBody, CardHeader, Spinner } from "reactstrap";
-import { createWorkflowEngine } from "../../../api/apiMethods";
+import {
+  createWorkflowEngine,
+  runWorkflowEngine,
+} from "../../../api/apiMethods";
 import CustomOffCanvas from "../../components/OffCanvas/OffCanvas";
 import CustomNode from "./components/CustomNode";
 
@@ -359,6 +362,35 @@ const FLowsBuilder = () => {
     setFlowsJson(json);
   };
 
+  const handleRunWorkflow = async () => {
+    setIsLoader(true);
+    try {
+      const workflowData = {
+        workflow_id: state?.id,
+      };
+      await runWorkflowEngine(workflowData).then((res) => {
+        console.log(
+          "🚀 ~ file: FlowsBuilder.js:368 ~ awaitrunWorkflowEngine ~ res:",
+          res
+        );
+        if (res.status === 200) {
+          toast.success("Workflow started Successfully.");
+
+          setIsLoader(false);
+        } else {
+          toast.error(res.data.message);
+        }
+      });
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.js:342 ~ handleCreateProject ~ error:",
+        error
+      );
+      toast.error(error?.response?.data?.message);
+      setIsLoader(false);
+    }
+  };
+
   const connectionLineStyle = { stroke: "red" };
 
   return (
@@ -373,13 +405,13 @@ const FLowsBuilder = () => {
               <Play
                 size={22}
                 className="me-1 cursor-pointer"
-                onClick={handleOutputOfNodes}
+                onClick={handleRunWorkflow}
               />
             ) : (
               <Pause
                 size={22}
                 className="me-1 cursor-pointer"
-                onClick={handleOutputOfNodes}
+                onClick={handleRunWorkflow}
               />
             )}
             <div style={{ width: "12rem" }}>
