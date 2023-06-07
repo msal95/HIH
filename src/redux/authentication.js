@@ -27,6 +27,17 @@ export const authSlice = createSlice({
       localStorage.setItem(config.storageTokenKeyName, JSON.stringify(action.payload.accessToken))
       localStorage.setItem(config.storageRefreshTokenKeyName, JSON.stringify(action.payload.refreshToken))
     },
+    handleUpdateProfile: (state, action) => {
+      state.userData = action.payload
+      console.log('✅ action.payload    ', action.payload)
+
+    //   state[config.storageTokenKeyName] = action.payload[config.storageTokenKeyName]
+    //   state[config.storageRefreshTokenKeyName] = action.payload[config.storageRefreshTokenKeyName]
+    //   localStorage.setItem('userData', JSON.stringify(action.payload))
+    //   localStorage.setItem('myToken', action.payload.accessToken)\
+    //   localStorage.setItem(config.storageTokenKeyName, JSON.stringify(action.payload.accessToken))
+    //   localStorage.setItem(config.storageRefreshTokenKeyName, JSON.stringify(action.payload.refreshToken))
+    },
     handleLogout: state => {
       state.userData = {}
       state[config.storageTokenKeyName] = null
@@ -39,6 +50,6 @@ export const authSlice = createSlice({
   }
 })
 
-export const { handleLogin, handleLogout } = authSlice.actions
+export const { handleLogin, handleLogout, handleUpdateProfile } = authSlice.actions
 
 export default authSlice.reducer
