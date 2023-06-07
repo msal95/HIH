@@ -16,7 +16,7 @@ const style = {
     boxShadow: "0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)",
     border: "0px solid #bbb",
     fontSize: "10pt",
-    borderRadius: "10px",
+    // borderRadius: "10px",
   },
   selected: {
     boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
@@ -25,8 +25,8 @@ const style = {
     position: "relative",
     padding: "8px 32px",
     flexGrow: 1,
-    backgroundColor: "#eee",
-    borderRadius: "10px",
+    // backgroundColor: "#eee",
+    // borderRadius: "10px",
   },
   contentWrapper: {
     padding: "8px 0px",
@@ -49,10 +49,9 @@ function CustomNode({ data, selected }) {
   };
 
   const customTitle = { ...style.title };
-  customTitle.backgroundColor = "#08c9bd";
+  // customTitle.backgroundColor = "#08c9bd";
 
   const nodeId = useNodeId();
-  console.log("🚀 ~ file: CustomNode.js:49 ~ CustomNode ~ nodeId:", nodeId);
 
   const handleEdit = (nodeId) => {
     console.log("🚀 ~ file: CustomNode.js:47 ~ handleEdit ~ id:", nodeId);
@@ -70,7 +69,20 @@ function CustomNode({ data, selected }) {
 
     const newData = selectedData.map((item) => {
       if (item.id) {
-        return { ...item, id: `node-${store?.data?.length + 1}` };
+        return {
+          ...item,
+          id: `node-${store?.data?.length + 1}`,
+          position: {
+            x: (Math.random(0, 9) * window.innerWidth) / 3,
+            y: (Math.random(0, 9) * window.innerHeight) / 3,
+          },
+          data: {
+            label: `${item?.data?.label}(Copy)`,
+            image: item?.data?.image,
+            intgId: item?.data?.intgId,
+            events: item?.data?.events,
+          },
+        };
       }
     });
     dispatch(addData(newData[0]));
@@ -97,11 +109,11 @@ function CustomNode({ data, selected }) {
           padding: 5,
         }}
       >
-        <Edit2
+        {/* <Edit2
           size={16}
           className="me-1  cursor-pointer"
           onClick={handleEdit}
-        />
+        /> */}
         <Trash2
           size={16}
           className="me-1 cursor-pointer"
@@ -119,9 +131,25 @@ function CustomNode({ data, selected }) {
         onMouseLeave={handleOnMouseLeave}
         onClick={handleSelectedNode}
       >
-        {/* <div style={{ ...style.body, ...(selected ? style.selected : []) }}> */}
-        <div style={customTitle}>{data?.label}</div>
-        {/* </div> */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            background: "#fff",
+            padding: 5,
+            border: "1px solid #333",
+          }}
+        >
+          <img
+            src={data?.image}
+            height={30}
+            width={30}
+            alt="Logo"
+            // className="me-1"
+          />
+          <div style={customTitle}>{data?.label}</div>
+        </div>
         <Handle type="source" position={Position.Right} id="b" />
         <Handle type="target" position={Position.Left} id="a" />
       </div>

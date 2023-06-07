@@ -52,6 +52,10 @@ export default function CreateNewProject(props) {
           handleSubmit,
           setFieldValue,
         }) => {
+          console.log(
+            "🚀 ~ file: CreateNewProject.js:55 ~ CreateNewProject ~ values:",
+            values?.location
+          );
           return (
             <Form className="auth-login-form mt-2" onSubmit={handleSubmit}>
               {isLoading && (

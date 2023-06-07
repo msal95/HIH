@@ -45,26 +45,4 @@ function TreeView(props) {
   );
 }
 
-TreeView.propTypes = {
-  handleActiveTabSubFolders: PropTypes.func.isRequired,
-  handleActiveTabFolders: PropTypes.func.isRequired,
-  handleToggleCreateFolderModal: PropTypes.func.isRequired,
-  handleCreateProject: PropTypes.func.isRequired,
-  handleToggleCreateSubFolderModal: PropTypes.func.isRequired,
-  handleDeleteFolder: PropTypes.func.isRequired,
-  handleDeleteProject: PropTypes.func.isRequired,
-  handleEditFolderModal: PropTypes.func.isRequired,
-  handleEditProjectModal: PropTypes.func.isRequired,
-  handleActiveTab: PropTypes.func.isRequired,
-
-  // optionalArray: PropTypes.array,
-  // optionalBigInt: PropTypes.bigint,
-  // optionalBool: PropTypes.bool,
-  // optionalFunc: PropTypes.func,
-  // optionalNumber: PropTypes.number,
-  // optionalObject: PropTypes.object,
-  // optionalString: PropTypes.string,
-  // optionalSymbol: PropTypes.symbol,
-};
-
 export default TreeView;

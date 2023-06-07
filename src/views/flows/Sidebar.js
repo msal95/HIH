@@ -1,33 +1,11 @@
 // ** React Imports
 import classnames from "classnames";
-import { useState } from "react";
 import PropTypes from "prop-types";
-import {
-  Edit3,
-  Folder,
-  FolderMinus,
-  FolderPlus,
-  Layers,
-  MoreVertical,
-  Plus,
-  Trash2,
-} from "react-feather";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import {
-  Collapse,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  ListGroup,
-  ListGroupItem,
-  Spinner,
-  UncontrolledDropdown,
-} from "reactstrap";
+import { Plus } from "react-feather";
+import { Spinner } from "reactstrap";
 
 // Local Imports
-import polygon from "@src/assets/images/icons/polygon.png";
 import "../../style/views/Login/authentication.scss";
-import MoreVerticalDropdown from "../../components/MoreVerticalDropdown/MoreVerticalDropdown";
 import TreeView from "./TreeView";
 
 const Sidebar = (props) => {
@@ -35,7 +13,6 @@ const Sidebar = (props) => {
   const {
     sidebarOpen,
     handleActiveTab,
-    handleAlert,
     selectedTab,
     projects,
     setIsProjects,

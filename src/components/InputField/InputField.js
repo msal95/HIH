@@ -21,6 +21,7 @@ import Select, { components } from "react-select";
 import "../../style/views/Login/authentication.scss";
 import ErrorMessage from "../../utility/Utils";
 import polygon from "@src/assets/images/icons/polygon.png";
+import TreeNode from "./TreeNode";
 
 export default function InputField(props) {
   const {
@@ -146,42 +147,42 @@ export default function InputField(props) {
     //     );
     //   });
     // }
-    console.log("🚀 ~ file: InputField.js:47 ~ OptionComponent ~ data:", data);
-    if (data?.type === "button") {
-      return (
-        <div className="container__option-selector px-1">
-          <div className="d-flex align-items-center">
-            <img
-              src={polygon}
-              alt="Polygon icon"
-              className="me-1"
-              width="10px"
-              height="7px"
-            />
-            <Layers size={16} className="me-1" color="#131313" />
-            <span className="container__option-heading">NEMT Automat</span>
-          </div>
-          <div className="d-flex align-items-center">
-            <MoreHorizontal size={16} className="me-1" color="#131313" />
-            <Plus
-              className="font-medium-1 me-50 container__add-project-button-icon"
-              onClick={handleOnCreateNewProject}
-            />
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <components.Option {...props}>
-          <div className="d-flex ms-2">
-            {data?.is_project && (
-              <Layers size={16} className="me-1" color="#131313" />
-            )}
-            <p className="text-black">{data.name}</p>
-          </div>
-        </components.Option>
-      );
-    }
+    // console.log("🚀 ~ file: InputField.js:47 ~ OptionComponent ~ data:", data);
+    // if (data?.type === "button") {
+    //   return (
+    //     <div className="container__option-selector px-1">
+    //       <div className="d-flex align-items-center">
+    //         <img
+    //           src={polygon}
+    //           alt="Polygon icon"
+    //           className="me-1"
+    //           width="10px"
+    //           height="7px"
+    //         />
+    //         <Layers size={16} className="me-1" color="#131313" />
+    //         <span className="container__option-heading">NEMT Automat</span>
+    //       </div>
+    //       <div className="d-flex align-items-center">
+    //         <MoreHorizontal size={16} className="me-1" color="#131313" />
+    //         <Plus
+    //           className="font-medium-1 me-50 container__add-project-button-icon"
+    //           onClick={handleOnCreateNewProject}
+    //         />
+    //       </div>
+    //     </div>
+    //   );
+    // } else {
+    //   return (
+    //     <components.Option {...props}>
+    //       <div className="d-flex ms-2">
+    //         {data?.is_project && (
+    //           <Layers size={16} className="me-1" color="#131313" />
+    //         )}
+    //         <p className="text-black">{data.name}</p>
+    //       </div>
+    //     </components.Option>
+    //   );
+    // }
   };
 
   // ** Renders Icon Based On Visibility
@@ -250,11 +251,10 @@ export default function InputField(props) {
           getOptionValue={(option) => option.id}
           getOptionLabel={(option) => option.name}
           name={name}
-          // isOptionSelected={value}
           onChange={onChange}
           onBlur={onBlur}
           components={{
-            Option: OptionComponent,
+            Option: TreeNode,
           }}
         />
       )}
