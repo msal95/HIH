@@ -23,6 +23,174 @@ import ErrorMessage from "../../utility/Utils";
 import polygon from "@src/assets/images/icons/polygon.png";
 import TreeNode from "./TreeNode";
 
+// const data = [
+//   { name: "card", value: 89519 },
+//   { name: "array", value: 49024 },
+//   { name: "grocery", value: 90170 },
+//   { name: "input", value: 56963 },
+// ];
+
+// const withCategoryData = [
+//   { category: "calculate", name: "card", value: 89519 },
+//   { category: "calculate", name: "array", value: 49024 },
+//   { category: "lavender", name: "grocery", value: 90170 },
+//   { category: "lavender", name: "input", value: 56963 },
+// ];
+
+const data = [
+  {
+    is_project: "true",
+    id: 5,
+    name: "p1",
+    created_at: "2023-05-22T12:31:43.000000Z",
+    updated_at: "2023-05-24T08:04:41.000000Z",
+    tree: [
+      {
+        id: 12,
+        name: "f3",
+        uuid: "2309c793-44db-45e2-9368-be5ca3b33a94",
+        project_id: 5,
+        created_at: "2023-05-23T12:58:17.000000Z",
+        updated_at: "2023-05-23T12:58:17.000000Z",
+        tree: [],
+      },
+      {
+        id: 13,
+        name: "f4",
+        uuid: "7e9ed6ca-437d-40c7-aa4f-7e4a42629878",
+        project_id: 5,
+        created_at: "2023-05-23T12:59:17.000000Z",
+        updated_at: "2023-05-23T12:59:17.000000Z",
+        tree: [],
+      },
+      {
+        id: 14,
+        name: "f5",
+        uuid: "664b0b92-7feb-4d58-9b81-7dc0784bdcc4",
+        project_id: 5,
+        created_at: "2023-05-23T13:02:14.000000Z",
+        updated_at: "2023-05-23T13:02:14.000000Z",
+        tree: [],
+      },
+      {
+        id: 29,
+        name: "1122",
+        uuid: "dbf30113-ae52-4f48-9345-040d6c6c8689",
+        project_id: 5,
+        created_at: "2023-05-29T12:35:32.000000Z",
+        updated_at: "2023-05-29T12:35:32.000000Z",
+        tree: [],
+      },
+      {
+        id: 30,
+        name: "11221",
+        uuid: "434a66fe-2bc5-4602-8660-6723a1a30725",
+        project_id: 5,
+        created_at: "2023-05-29T12:36:37.000000Z",
+        updated_at: "2023-05-29T12:36:37.000000Z",
+        tree: [
+          {
+            id: 55,
+            name: "s12",
+            uuid: "e3b57367-c95f-429d-a2bf-c153976cbbd4",
+            project_id: 5,
+            created_at: "2023-06-06T11:10:38.000000Z",
+            updated_at: "2023-06-06T11:10:38.000000Z",
+            tree: [
+              {
+                id: 56,
+                name: "s13",
+                uuid: "f9f7dbfa-007c-4fac-a09c-d431faaec982",
+                project_id: 5,
+                created_at: "2023-06-06T11:10:55.000000Z",
+                updated_at: "2023-06-06T11:10:55.000000Z",
+                tree: [
+                  {
+                    id: 57,
+                    name: "S14",
+                    uuid: "dcbb972e-1280-4dd8-a77f-aca590f28c70",
+                    project_id: 5,
+                    created_at: "2023-06-06T11:11:12.000000Z",
+                    updated_at: "2023-06-06T11:11:12.000000Z",
+                    tree: [
+                      {
+                        id: 58,
+                        name: "s15",
+                        uuid: "c0c98371-7b51-430a-b90a-2ac4295adc5f",
+                        project_id: 5,
+                        created_at: "2023-06-06T11:11:33.000000Z",
+                        updated_at: "2023-06-06T11:11:33.000000Z",
+                        tree: [],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    is_project: "true",
+    id: 8,
+    name: "P3",
+    created_at: "2023-05-23T15:22:11.000000Z",
+    updated_at: "2023-05-23T15:22:11.000000Z",
+    tree: [],
+  },
+  {
+    is_project: "true",
+    id: 9,
+    name: "test",
+    created_at: "2023-05-25T08:18:59.000000Z",
+    updated_at: "2023-05-25T08:18:59.000000Z",
+    tree: [],
+  },
+  {
+    is_project: "true",
+    id: 10,
+    name: "test 1",
+    created_at: "2023-05-25T08:23:22.000000Z",
+    updated_at: "2023-05-25T08:23:22.000000Z",
+    tree: [],
+  },
+  {
+    is_project: "true",
+    id: 18,
+    name: "p2",
+    created_at: "2023-05-31T11:05:15.000000Z",
+    updated_at: "2023-05-31T11:05:15.000000Z",
+    tree: [],
+  },
+];
+
+const options = data.map((item) => ({
+  label: item.name,
+  value: item.id.toString(),
+}));
+
+const groupedOptions = [
+  {
+    label: "Projects",
+    options: options.filter((option) =>
+      data.find(
+        (item) =>
+          item.id.toString() === option.value && item.is_project === "true"
+      )
+    ),
+  },
+  {
+    label: "Other Options",
+    options: options.filter((option) =>
+      data.find(
+        (item) =>
+          item.id.toString() === option.value && item.is_project !== "true"
+      )
+    ),
+  },
+];
 export default function InputField(props) {
   const {
     label,
@@ -41,6 +209,165 @@ export default function InputField(props) {
     isRequired,
     handleOnCreateNewProject,
   } = props;
+  // console.log(
+  //   "🚀 ~ file: InputField.js:44 ~ InputField ~ optionsData:",
+  //   JSON.stringify(optionsData)
+  // );
+
+  const [selectedOption, setSelectedOption] = useState(null);
+  console.log(
+    "🚀 ~ file: InputField.js:73 ~ InputField ~ selectedOption:",
+    selectedOption
+  );
+
+  const handleChange = (selected) => {
+    setSelectedOption(selected);
+  };
+
+  // const data = [
+  //   {
+  //     is_project: "true",
+  //     id: 5,
+  //     name: "p1",
+  //     created_at: "2023-05-22T12:31:43.000000Z",
+  //     updated_at: "2023-05-24T08:04:41.000000Z",
+  //     tree: [
+  //       {
+  //         id: 12,
+  //         name: "f3",
+  //         uuid: "2309c793-44db-45e2-9368-be5ca3b33a94",
+  //         project_id: 5,
+  //         created_at: "2023-05-23T12:58:17.000000Z",
+  //         updated_at: "2023-05-23T12:58:17.000000Z",
+  //         tree: [],
+  //       },
+  //       {
+  //         id: 13,
+  //         name: "f4",
+  //         uuid: "7e9ed6ca-437d-40c7-aa4f-7e4a42629878",
+  //         project_id: 5,
+  //         created_at: "2023-05-23T12:59:17.000000Z",
+  //         updated_at: "2023-05-23T12:59:17.000000Z",
+  //         tree: [],
+  //       },
+  //       {
+  //         id: 14,
+  //         name: "f5",
+  //         uuid: "664b0b92-7feb-4d58-9b81-7dc0784bdcc4",
+  //         project_id: 5,
+  //         created_at: "2023-05-23T13:02:14.000000Z",
+  //         updated_at: "2023-05-23T13:02:14.000000Z",
+  //         tree: [],
+  //       },
+  //       {
+  //         id: 29,
+  //         name: "1122",
+  //         uuid: "dbf30113-ae52-4f48-9345-040d6c6c8689",
+  //         project_id: 5,
+  //         created_at: "2023-05-29T12:35:32.000000Z",
+  //         updated_at: "2023-05-29T12:35:32.000000Z",
+  //         tree: [],
+  //       },
+  //       {
+  //         id: 30,
+  //         name: "11221",
+  //         uuid: "434a66fe-2bc5-4602-8660-6723a1a30725",
+  //         project_id: 5,
+  //         created_at: "2023-05-29T12:36:37.000000Z",
+  //         updated_at: "2023-05-29T12:36:37.000000Z",
+  //         tree: [
+  //           {
+  //             id: 55,
+  //             name: "s12",
+  //             uuid: "e3b57367-c95f-429d-a2bf-c153976cbbd4",
+  //             project_id: 5,
+  //             created_at: "2023-06-06T11:10:38.000000Z",
+  //             updated_at: "2023-06-06T11:10:38.000000Z",
+  //             tree: [
+  //               {
+  //                 id: 56,
+  //                 name: "s13",
+  //                 uuid: "f9f7dbfa-007c-4fac-a09c-d431faaec982",
+  //                 project_id: 5,
+  //                 created_at: "2023-06-06T11:10:55.000000Z",
+  //                 updated_at: "2023-06-06T11:10:55.000000Z",
+  //                 tree: [
+  //                   {
+  //                     id: 57,
+  //                     name: "S14",
+  //                     uuid: "dcbb972e-1280-4dd8-a77f-aca590f28c70",
+  //                     project_id: 5,
+  //                     created_at: "2023-06-06T11:11:12.000000Z",
+  //                     updated_at: "2023-06-06T11:11:12.000000Z",
+  //                     tree: [
+  //                       {
+  //                         id: 58,
+  //                         name: "s15",
+  //                         uuid: "c0c98371-7b51-430a-b90a-2ac4295adc5f",
+  //                         project_id: 5,
+  //                         created_at: "2023-06-06T11:11:33.000000Z",
+  //                         updated_at: "2023-06-06T11:11:33.000000Z",
+  //                         tree: [],
+  //                       },
+  //                     ],
+  //                   },
+  //                 ],
+  //               },
+  //             ],
+  //           },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     is_project: "true",
+  //     id: 8,
+  //     name: "P3",
+  //     created_at: "2023-05-23T15:22:11.000000Z",
+  //     updated_at: "2023-05-23T15:22:11.000000Z",
+  //     tree: [],
+  //   },
+  //   {
+  //     is_project: "true",
+  //     id: 9,
+  //     name: "test",
+  //     created_at: "2023-05-25T08:18:59.000000Z",
+  //     updated_at: "2023-05-25T08:18:59.000000Z",
+  //     tree: [],
+  //   },
+  //   {
+  //     is_project: "true",
+  //     id: 10,
+  //     name: "test 1",
+  //     created_at: "2023-05-25T08:23:22.000000Z",
+  //     updated_at: "2023-05-25T08:23:22.000000Z",
+  //     tree: [],
+  //   },
+  //   {
+  //     is_project: "true",
+  //     id: 18,
+  //     name: "p2",
+  //     created_at: "2023-05-31T11:05:15.000000Z",
+  //     updated_at: "2023-05-31T11:05:15.000000Z",
+  //     tree: [],
+  //   },
+  // ];
+
+  const renderOptions = (data) => {
+    return data?.map((item) => {
+      console.log(
+        "🚀 ~ file: InputField.js:180 ~ returndata.map ~ item:",
+        item
+      );
+      return {
+        value: item.id,
+        label: item.name,
+        data: renderOptions(item.tree),
+      };
+    });
+  };
+
+  // const options = renderOptions(optionsData);
 
   const [inputVisibility, setInputVisibility] = useState(false);
   console.log("🚀 ~ file: InputField.js:29 ~ InputField ~ type:", type);
@@ -243,20 +570,36 @@ export default function InputField(props) {
         //     <option value={item?.id}>{item?.name}</option>
         //   ))}
         // </Input>
+        // <Select
+        //   value={selectedOption}
+        //   onChange={handleChange}
+        //   options={options}
+        //   isClearable
+        //   isSearchable
+        //   closeMenuOnSelect={false}
+        //   placeholder="Select an option"
+        //   className="react-select-container"
+        //   classNamePrefix="react-select"
+        // />
         <Select
-          className="react-select text-black-50"
-          classNamePrefix="select"
-          defaultValue={value}
-          options={optionsData}
-          getOptionValue={(option) => option.id}
-          getOptionLabel={(option) => option.name}
-          name={name}
-          onChange={onChange}
-          onBlur={onBlur}
-          components={{
-            Option: TreeNode,
-          }}
+          options={groupedOptions}
+          value={selectedOption}
+          onChange={handleChange}
         />
+        // <Select
+        //   className="react-select text-black-50"
+        //   classNamePrefix="select"
+        //   defaultValue={value}
+        //   options={optionsData}
+        //   getOptionValue={(option) => option.id}
+        //   getOptionLabel={(option) => option.name}
+        //   name={name}
+        //   onChange={onChange}
+        //   onBlur={onBlur}
+        //   components={{
+        //     Option: TreeNode,
+        //   }}
+        // />
       )}
       {errorType && <ErrorMessage message={errorMessage} />}
     </Row>
