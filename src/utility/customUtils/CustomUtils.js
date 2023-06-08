@@ -71,3 +71,25 @@ export const triggerData = [
     // arrowIcon:
   },
 ];
+
+
+const UserData = {
+    async saveItem(key, value) {
+    try {
+    const jsonValue = JSON.stringify(value);
+    await localStorage.setItem(key, jsonValue);
+    } catch (error) {
+    console.log('localStorage Error: ' + error.message);
+    }
+    },
+    async getItem(key) {
+        try {
+            const jsonValue = await localStorage.getItem(key);
+        return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (error) {
+            console.log('localStorage Error: ' + error.message);
+        }
+    },
+    };
+
+export default UserData;

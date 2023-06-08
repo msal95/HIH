@@ -9,6 +9,7 @@ import EventAndResources from "../../views/integrations/EventAndResources";
 import FormsGenerated from "../../views/builder/FormsGenerated";
 import IntegrationImport from "../../views/integrations/IntegrationImport";
 import ProfileUpdate from "../../views/profile/ProfileUpdate";
+import UpdateProfile from "../../views/profile/UpdateProfile";
 
 const Chat = lazy(() => import("../../views/apps/chat"));
 const Todo = lazy(() => import("../../views/apps/todo"));
@@ -55,7 +56,8 @@ const AppRoutes = [
     },
   },
   {
-    element: <ProfileUpdate />,
+    // element: <ProfileUpdate />,
+    element: <UpdateProfile />,
     path: "/apps/profile",
     meta: {
       appLayout: true,
