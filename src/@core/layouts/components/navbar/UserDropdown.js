@@ -40,20 +40,15 @@ const UserDropdown = () => {
   // ** Store Vars
   const dispatch = useDispatch();
 
-  const [userDataL, setUserDataL] = useState(null);
+  const selector = useSelector((select) => select?.auth?.userData);
 
-  //   UserData?.getItem('userData').then((data) => {
-  //     console.log("🚀 ~ file: UserDropdown.js:32 ~ UserData?.getItem ~ data:", data.name)
-  //     setUserDataL(data?.name);
-  //   });
+  const [userDataL, setUserDataL] = useState({});
 
-  //   const fun = async () => {
-  //     const newData = UserData?.getItem("userData");
-  //     //     console.log("🚀 ~ file: UserDropdown.js:32 ~ UserData?.getItem ~ data:", data.name)
-  //     setUserDataL(newData);
-  //   };
-
-  //   console.log('✅ userDataL    ', userDataL)
+  useEffect(() => {
+    // Retrieve data from local storage
+    const data = UserData.getItem("userData");
+    setUserDataL(data);
+  }, [selector]);
 
   // ** Selector to access the user data from the Redux store
   const userDatass = useSelector((state) => state?.auth?.userData);
@@ -61,15 +56,9 @@ const UserDropdown = () => {
   // ** State
   const [userData, setUserData] = useState(null);
 
-  //** ComponentDidMount
-  useEffect(() => {
-    //   if (isUserLoggedIn() !== null) {
-    //     setUserData(JSON.parse(localStorage.getItem('userData')))
-    //   }
-  }, [userDatass]);
-
   //** Vars
-  const userAvatar = (userDatass && userDatass?.profile_photo_path) || defaultAvatar;
+  const userAvatar =
+    (userDatass && userDatass?.profile_photo_path) || defaultAvatar;
   return (
     <UncontrolledDropdown tag="li" className="dropdown-user nav-item">
       <DropdownToggle
@@ -80,7 +69,8 @@ const UserDropdown = () => {
       >
         <div className="user-nav d-sm-flex d-none">
           <span className="user-name fw-bold">
-            {(userDatass && userDatass?.name) || "Emmanuel"}
+            {(!!Object?.keys(userDataL)?.length && userDataL?.name) ||
+              "Emmanuel"}
           </span>
           {/* <span className='user-status'>{(userData && userData.role) || 'Admin'}</span> */}
         </div>

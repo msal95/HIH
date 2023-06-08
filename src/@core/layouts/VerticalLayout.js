@@ -211,7 +211,7 @@ const VerticalLayout = (props) => {
       ></div>
       {/* Vertical Nav Menu Overlay */}
 
-      {themeConfig.layout.customizer === true ? (
+      {/* {themeConfig.layout.customizer === true ? (
         <Customizer
           skin={skin}
           isRtl={isRtl}
@@ -234,7 +234,7 @@ const VerticalLayout = (props) => {
           setContentWidth={setContentWidth}
           setMenuCollapsed={setMenuCollapsed}
         />
-      ) : null}
+      ) : null} */}
       <footer
         className={classnames(
           `footer footer-light ${footerClasses[footerType] || "footer-static"}`,
