@@ -89,6 +89,7 @@ const WorkFlowsCard = (props) => {
   const navigate = useNavigate();
 
   const [selectedRows, setSelectedRows] = useState([]);
+
   const [isEdit, setIsEdit] = useState(false);
   const [statusList, setStatusList] = useState({});
   const [workflowsList, setWorkFlowsList] = useState();
@@ -163,6 +164,10 @@ const WorkFlowsCard = (props) => {
   };
 
   const handleWorkFLowName = (event) => {
+    console.log(
+      "🚀 ~ file: WorkFlowsCard.js:172 ~ handleWorkFLowName ~ event.target.value:",
+      event.target.value
+    );
     setWorkflowName(event.target.value);
   };
 
@@ -176,8 +181,8 @@ const WorkFlowsCard = (props) => {
     setIsLoader(true);
     try {
       const projectData = {
-        is_active: !!selectedRows?.length ? item : !item.status,
-        workflow_ids: !!selectedRows?.length ? selectedRows : [item.id],
+        is_active: !!item.id ? !item.status : item,
+        workflow_ids: !!item.id ? [item.id] : selectedRows,
         project_id: selectedTab.id,
       };
       await editWorkflow(projectData).then((res) => {
