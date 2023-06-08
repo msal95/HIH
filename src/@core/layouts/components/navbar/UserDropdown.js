@@ -74,8 +74,7 @@ const UserDropdown = () => {
     }, [userDatass])
 
   //** Vars
-  const userAvatar = (userData && userData.avatar) || defaultAvatar;
-
+  const userAvatar = (userDatass && userDatass?.profile_photo_path) || defaultAvatar;
   return (
     <UncontrolledDropdown tag="li" className="dropdown-user nav-item">
       <DropdownToggle

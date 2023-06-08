@@ -25,6 +25,7 @@ function laravelApi() {
     },
     user: {
         updateProfile: `${home}/auth/profile-update`,
+        updatePassword: `${home}/auth/password-update`,
     },
     formBuilder: {
       get: `${home}/form-builder/get-models`,

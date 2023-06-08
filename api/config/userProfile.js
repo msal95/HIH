@@ -22,4 +22,23 @@ export function useUpdateProfile() {
         }
     );
 }
+export function useUpdatePassword() {
+    const queryClient = useQueryClient();
+    return useMutation(
+        (data) =>
+            axios
+                .post(laravelApi.user?.updatePassword, data, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                })
+                .then((result) => result.data),
+        {
+            onSuccess: () => {
+                // Additional logic to update the query
+                queryClient.refetchQueries(userKey.user);
+            },
+        }
+    );
+}
 
