@@ -24,6 +24,7 @@ export default function ProfileUpdate() {
 
     const integrationSchema = Yup.object().shape({
       name: Yup.string().required(" Required"),
+      email: Yup.string().required(" Required"),
     });
 
     const formik = useFormik({
@@ -34,7 +35,6 @@ export default function ProfileUpdate() {
       validationSchema: integrationSchema,
       onSubmit: (data) => {
           setSubmittingClick(true);
-        console.log("✅ data   >>>>>>>>>>>>>>>>>>>>>> ", data);
         userQuery.mutate(data);
       },
     });
@@ -122,7 +122,7 @@ export default function ProfileUpdate() {
                      {/* <div class="d-inline">{errors.name && touched?.name && <ErrorMessage message={errors.name} />}</div> */}
                   <InputGroup className="mb-2">
                     <Input
-                      placeholder="Integration name"
+                      placeholder="User Name"
                       className={(errors.name && touched?.name) ? "" : ""}
                       {...getFieldProps("name")}
                     />
@@ -131,7 +131,7 @@ export default function ProfileUpdate() {
                      {/* <div class="d-inline">{errors.name && touched?.name && <ErrorMessage message={errors.name} />}</div> */}
                   <InputGroup className="mb-2">
                     <Input
-                      placeholder="Integration name"
+                      placeholder="User Email"
                       className={(errors.email && touched?.email) ? "" : ""}
                       {...getFieldProps("email")}
                     />

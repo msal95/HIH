@@ -22,21 +22,15 @@ export const authSlice = createSlice({
       state.userData = action.payload
       state[config.storageTokenKeyName] = action.payload[config.storageTokenKeyName]
       state[config.storageRefreshTokenKeyName] = action.payload[config.storageRefreshTokenKeyName]
-      localStorage.setItem('userData', JSON.stringify(action.payload))
-      localStorage.setItem('myToken', action.payload.accessToken)
       localStorage.setItem(config.storageTokenKeyName, JSON.stringify(action.payload.accessToken))
       localStorage.setItem(config.storageRefreshTokenKeyName, JSON.stringify(action.payload.refreshToken))
+      localStorage.setItem('userData', JSON.stringify(action.payload))
+      localStorage.setItem('myToken', action.payload.accessToken)
     },
     handleUpdateProfile: (state, action) => {
+        console.log("🚀 ~ file: authentication.js:45 ~ action:", action)
       state.userData = action.payload
-      console.log('✅ action.payload    ', action.payload)
-
-    //   state[config.storageTokenKeyName] = action.payload[config.storageTokenKeyName]
-    //   state[config.storageRefreshTokenKeyName] = action.payload[config.storageRefreshTokenKeyName]
-    //   localStorage.setItem('userData', JSON.stringify(action.payload))
-    //   localStorage.setItem('myToken', action.payload.accessToken)\
-    //   localStorage.setItem(config.storageTokenKeyName, JSON.stringify(action.payload.accessToken))
-    //   localStorage.setItem(config.storageRefreshTokenKeyName, JSON.stringify(action.payload.refreshToken))
+      localStorage.setItem('userData', JSON.stringify(action.payload?.data))
     },
     handleLogout: state => {
       state.userData = {}
@@ -44,6 +38,7 @@ export const authSlice = createSlice({
       state[config.storageRefreshTokenKeyName] = null
       // ** Remove user, accessToken & refreshToken from localStorage
       localStorage.removeItem('userData')
+      localStorage.removeItem('myToken')
       localStorage.removeItem(config.storageTokenKeyName)
       localStorage.removeItem(config.storageRefreshTokenKeyName)
     }
