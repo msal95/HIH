@@ -45,8 +45,24 @@ export default function ProfileUpdate() {
 
   // ** State
   const [userData, setUserData] = useState(null)
+  console.log("🚀 ~ file: ProfileUpdate.js:48 ~ ProfileUpdate ~ userData:", userData?.profile_photo_path)
 
   //** ComponentDidMount
+  const [avatar, setAvatar] = useState(userData?.avatar ? data?.avatar : '')
+
+  const onChange = e => {
+    const reader = new FileReader(),
+      files = e.target.files
+    reader.onload = function () {
+      setAvatar(reader.result)
+    }
+    reader.readAsDataURL(files[0])
+    if (!e.target.files || e.target.files.length === 0) {
+        return;
+      }
+      const file = e.target.files[0];
+      formik.setFieldValue("image", file);
+  }
   useEffect(() => {
     // if (isUserLoggedIn() !== null) {
       setUserData(JSON.parse(localStorage.getItem('userData')))
@@ -57,6 +73,7 @@ export default function ProfileUpdate() {
         formik.setFieldValue("name", userData?.name ?? "");
         formik.setFieldValue("email", userData?.email ?? "");
         formik.setFieldValue("user_id", userData?.id ?? "");
+        setAvatar(userData?.profile_photo_path);
 
   }, [userData])
 
@@ -89,19 +106,6 @@ export default function ProfileUpdate() {
         toast.error(message);
       }
     }, [userQuery.isSuccess, userQuery.isError]);
-
-    // const handleChangeIcon = (e) => {
-    //   if (!e.target.files || e.target.files.length === 0) {
-    //     return;
-    //   }
-    //   const file = e.target.files[0];
-    //   formik.setFieldValue("image", file);
-
-    //   // if (values?.file?.name) {
-    //   //     alert('json')
-    //   // }
-    // };
-
   return (
     <div className="container-xxl overflow-auto">
       <h2 className="text-primary py-2">Profile Update</h2>
@@ -118,6 +122,31 @@ export default function ProfileUpdate() {
                 // onSubmit={handleSubmit}
               >
                 <Fragment>
+                <div className='d-flex'>
+                    <div className='me-25'>
+                    <img className='rounded me-50' src={avatar} alt='Generic placeholder image' height='100' width='100' />
+                    </div>
+                    <div className='d-flex align-items-end mt-75 ms-1'>
+                    <div>
+                        <Button tag={Label} className='mb-75 me-75' size='sm' color='primary'>
+                        Upload
+                        {/* <Input type='file' name="image" id="image" onChange={onChange} hidden accept='image/*' /> */}
+                        <Input
+                            type="file"
+                            name="image"
+                            multiple={false}
+                            accept="image/*"
+                            hidden
+                            onChange={onChange}
+                            />
+                        </Button>
+                        <Button className='mb-75' color='secondary' size='sm' outline >
+                        Reset
+                        </Button>
+                        <p className='mb-0'>Allowed JPG, GIF or PNG. Max size of 800kB</p>
+                    </div>
+                    </div>
+                </div>
                   <Label for="col-cb">Name * {errors.name && touched?.name &&  <ErrorMessageInline message={errors.name}/>}</Label>
                      {/* <div class="d-inline">{errors.name && touched?.name && <ErrorMessage message={errors.name} />}</div> */}
                   <InputGroup className="mb-2">

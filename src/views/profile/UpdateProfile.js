@@ -6,19 +6,15 @@ import axios from "axios";
 
 // ** Reactstrap Imports
 import { Row, Col, TabContent, TabPane } from "reactstrap";
-
 // ** Demo Components
 import Tabs from "./Tabs";
 import Breadcrumbs from "@components/breadcrumbs";
-// import BillingTabContent from "./BillingTabContent";
-// import AccountTabContent from "./AccountTabContent";
-// import SecurityTabContent from "./SecurityTabContent";
-// import ConnectionsTabContent from "./ConnectionsTabContent";
-// import NotificationsTabContent from "./NotificationsTabContent";
 
 // ** Styles
 import "@styles/react/libs/flatpickr/flatpickr.scss";
 import "@styles/react/pages/page-account-settings.scss";
+import SecurityTabContent from "./SecurityTabContent";
+import ProfileUpdate from "./ProfileUpdate";
 
 const UpdateProfile = () => {
   // ** States
@@ -49,19 +45,19 @@ const UpdateProfile = () => {
 
             <TabContent activeTab={activeTab}>
               <TabPane tabId="1">
-                <AccountTabContent data={data.general} />
+                <ProfileUpdate />
               </TabPane>
               <TabPane tabId="2">
                 <SecurityTabContent />
               </TabPane>
               <TabPane tabId="3">
-                <BillingTabContent />
+                {/* <BillingTabContent /> */}
               </TabPane>
               <TabPane tabId="4">
-                <NotificationsTabContent />
+                {/* <NotificationsTabContent /> */}
               </TabPane>
               <TabPane tabId="5">
-                <ConnectionsTabContent />
+                {/* <ConnectionsTabContent /> */}
               </TabPane>
             </TabContent>
           </Col>
