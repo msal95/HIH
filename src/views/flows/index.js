@@ -78,13 +78,14 @@ const WorkFlows = () => {
   const [isEditDetail, setIsEditDetail] = useState(false);
   const [isLoader, setIsLoader] = useState(false);
   const [flowsData, setFlowsData] = useState();
+  const [customSelectedOption, setCustomSelectedOption] = useState(null);
 
   let headerTitle;
 
   if (isEdit) {
-    headerTitle = "Edit Folder";
+    headerTitle = "Update Folder";
   } else if (isEditProject) {
-    headerTitle = "Edit Project";
+    headerTitle = "Update Project";
   } else if (isWorkFLow) {
     headerTitle = "Create Workflows";
   } else if (isProjects) {
@@ -125,8 +126,9 @@ const WorkFlows = () => {
   }
 
   useEffect(() => {
-    // setWorkFlowsList(data?.data?.data);
-    setFlowsData(workflowData?.data?.data);
+    if (!!workflowData?.data?.data?.length) {
+      setFlowsData(workflowData?.data?.data);
+    }
   }, [isWorkflowFetching]);
 
   useEffect(() => {
@@ -170,10 +172,6 @@ const WorkFlows = () => {
   };
 
   const handleActiveTabSubFolders = (node) => {
-    console.log(
-      "🚀 ~ file: index.js:180 ~ handleActiveTabSubFolders ~ node:",
-      node
-    );
     setSelectedTab(node);
     setSelectedNode(node);
     setIsActiveSubFolder(true);
@@ -191,6 +189,7 @@ const WorkFlows = () => {
     setIsWorkFLow(false);
     setSelectedItem(null);
     setIsEditDetail(false);
+    setCustomSelectedOption(null);
     // setIsActiveMainFolder(false);
     // setIsActiveSubFolder(false);
   };
@@ -199,12 +198,13 @@ const WorkFlows = () => {
     setShow((prevState) => !prevState);
   };
 
-  const onHandleCreateWorkFLows = () => {
+  const onHandleCreateWorkFLows = (node) => {
     setIsWorkFLow((prevState) => !prevState);
+    setCustomSelectedOption(node);
     setShow(true);
     setIsEditDetail(false);
-    setIsActiveSubFolder(false);
-    setIsActiveMainFolder(true);
+    // setIsActiveSubFolder(false);
+    // setIsActiveMainFolder(true);
   };
 
   const handleCreateWorkflow = async (values) => {
@@ -212,7 +212,10 @@ const WorkFlows = () => {
     try {
       const projectData = {
         name: values.projectName,
-        project_id: values?.location ?? selectedNode.id,
+        project_id: isActiveMainFolder
+          ? selectedNode?.id
+          : selectedNode.project_id,
+        folder_id: isActiveSubFolder ? selectedNode.id : null,
       };
       await createWorkflow(projectData).then((res) => {
         if (res.data.code === 201) {
@@ -248,6 +251,7 @@ const WorkFlows = () => {
     handleToggleModal();
     setSelectedNode(node);
     setSelectedItem(node);
+    setCustomSelectedOption(node);
     setSelectedTab(node);
     setIsProjects(false);
     setIsActiveMainFolder(true);
@@ -261,7 +265,7 @@ const WorkFlows = () => {
     try {
       const projectData = {
         name: values.projectName,
-        project_id: values?.location ?? selectedNode.id,
+        project_id: selectedNode.id,
       };
       await createFolder(projectData).then((res) => {
         if (res.status === 201) {
@@ -270,6 +274,7 @@ const WorkFlows = () => {
           setIsLoader(false);
           handleToggleModal();
           toast.success("New Folder Added Successfully.");
+          setCustomSelectedOption(null);
         }
       });
     } catch (error) {
@@ -286,6 +291,7 @@ const WorkFlows = () => {
     handleToggleModal();
     setSelectedNode(node);
     setSelectedTab(node);
+    setCustomSelectedOption(node);
     // setSelectedItem(null);
     setIsProjects(false);
     setIsActiveMainFolder(false);
@@ -309,6 +315,7 @@ const WorkFlows = () => {
           refetch();
           setIsLoader(false);
           toast.success("New Sub Folder Added Successfully.");
+          setCustomSelectedOption(null);
           // setIsNewProject(false);
           // setSelectedNode(null);
           handleToggleModal();
@@ -331,6 +338,7 @@ const WorkFlows = () => {
     );
     setSelectedNode(node);
     setSelectedItem(node);
+    setCustomSelectedOption(node);
     handleToggleModal();
     setIsEdit(true);
     setIsEditProject(false);
@@ -353,6 +361,7 @@ const WorkFlows = () => {
   const handleEditProjectModal = (node) => {
     setSelectedNode(node);
     setSelectedItem(node);
+    setCustomSelectedOption(node);
     handleToggleModal();
     setIsEditProject(true);
     setIsProjects(false);
@@ -376,6 +385,7 @@ const WorkFlows = () => {
           setIsLoader(false);
           handleToggleModal();
           setIsEditProject(false);
+          setCustomSelectedOption(null);
         }
       });
     } catch (error) {
@@ -414,6 +424,7 @@ const WorkFlows = () => {
           setIsLoader(false);
           handleToggleModal();
           setIsEdit(false);
+          setCustomSelectedOption(null);
         }
       });
     } catch (error) {
@@ -620,6 +631,8 @@ const WorkFlows = () => {
         isLoading={isLoading}
         setIsProjects={setIsProjects}
         setIsActiveMainFolder={setIsActiveMainFolder}
+        setCustomSelectedOption={setCustomSelectedOption}
+        customSelectedOption={customSelectedOption}
       />
       <div className="content-right overflow-auto h-100">
         <div className="content-body">
@@ -672,7 +685,7 @@ const WorkFlows = () => {
                     <DropdownMenu end>
                       <DropdownItem
                         className="w-100"
-                        onClick={onHandleCreateWorkFLows}
+                        onClick={() => onHandleCreateWorkFLows(selectedNode)}
                       >
                         Flows
                       </DropdownItem>
@@ -685,8 +698,8 @@ const WorkFlows = () => {
                       <DropdownItem
                         className="w-100"
                         onClick={() => {
-                          setIsActiveMainFolder(true);
-                          setIsActiveSubFolder(false);
+                          // setIsActiveMainFolder(true);
+                          // setIsActiveSubFolder(false);
                           handleToggleCreateFolderModal(selectedNode);
                         }}
                       >
@@ -830,10 +843,17 @@ const WorkFlows = () => {
             data={selectedItem}
             projects={projects}
             title={headerTitle}
-            isWorkFLow={isActiveMainFolder}
+            isWorkFLow={isActiveMainFolder || isActiveSubFolder}
             selectedTab={selectedTab}
             isEditDetail={isEditDetail}
             isLoading={isLoader}
+            setCustomSelectedOption={setCustomSelectedOption}
+            customSelectedOption={customSelectedOption}
+            isActiveMainFolder={isActiveMainFolder}
+            setIsActiveMainFolder={setIsActiveMainFolder}
+            setIsActiveSubFolder={setIsActiveSubFolder}
+            isProjects={isProjects}
+            setSelectedNode={setSelectedNode}
           />
         </div>
       </CustomModal>

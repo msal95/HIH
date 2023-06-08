@@ -66,7 +66,8 @@ const Credentials = () => {
   const [isNewProject, setIsNewProject] = useState(false);
   const [integrationList, setIntegrationsList] = useState();
   const [allIntegrations, setAllIntegrations] = useState();
-  const [locationOptions, setLocationOptions] = useState(locationData);
+  const [locationOptions, setLocationOptions] = useState();
+  const [customSelectedOption, setCustomSelectedOption] = useState(null);
 
   // API Call
   const { isLoading, data, error, refetch, isFetching, isError } = useQuery(
@@ -87,7 +88,7 @@ const Credentials = () => {
     if (projectsList?.data?.data?.length) {
       const newOptions = locationData.concat(projectsList?.data?.data);
 
-      setLocationOptions(newOptions);
+      setLocationOptions(projectsList?.data?.data);
     }
   }, [isProjectRefetching]);
 
@@ -278,6 +279,8 @@ const Credentials = () => {
           handleOnCreateNewProject={handleOnCreateNewProject}
           optionsData={locationOptions}
           forms={integrationData?.data?.data?.auth}
+          customSelectedOption={customSelectedOption}
+          setCustomSelectedOption={setCustomSelectedOption}
         />
       );
     }

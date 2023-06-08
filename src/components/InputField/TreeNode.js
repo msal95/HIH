@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React, { useState } from "react";
 import {
   ChevronDown,
@@ -6,10 +5,8 @@ import {
   FolderMinus,
   FolderPlus,
   Layers,
-  Plus,
 } from "react-feather";
 import { Collapse, ListGroup, ListGroupItem } from "reactstrap";
-import MoreVerticalDropdown from "../../components/MoreVerticalDropdown/MoreVerticalDropdown";
 function TreeNode(props) {
   const { node, handleChange } = props;
 
@@ -52,13 +49,13 @@ function TreeNode(props) {
             {isOpen ? (
               <FolderMinus
                 size={18}
-                className="me-1 curser-pointer"
+                className="me-1 cursor-pointer"
                 onClick={handleToggle}
               />
             ) : (
               <FolderPlus
                 size={18}
-                className="me-1 curser-pointer"
+                className="me-1 cursor-pointer"
                 onClick={handleToggle}
               />
             )}

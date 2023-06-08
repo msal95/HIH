@@ -33,14 +33,19 @@ export default function SendGrid(props) {
   const {
     isEdit,
     onPressNewProject,
-    onPressCredentials,
     item,
     isNewProject = false,
     handleOnCreateNewProject,
     optionsData,
     forms,
+    customSelectedOption,
+    setCustomSelectedOption,
   } = props;
-  console.log("🚀 ~ file: SendGrid.js:36 ~ SendGrid ~ forms:", forms);
+  console.log(
+    "🚀 ~ file: SendGrid.js:44 ~ SendGrid ~ optionsData:",
+    optionsData
+  );
+
   const { id, name, data, type } = item ?? {};
 
   const [formsTypeData, setFormsTypeData] = useState(forms);
@@ -159,6 +164,8 @@ export default function SendGrid(props) {
                   errorType={errors.location && touched.location}
                   errorMessage={errors.location}
                   handleOnCreateNewProject={handleOnCreateNewProject}
+                  customSelectedOption={customSelectedOption}
+                  setCustomSelectedOption={setCustomSelectedOption}
                 />
                 <InputField
                   label="Authentication type"
