@@ -16,6 +16,12 @@ export default function CreateNewProject(props) {
     selectedTab,
     isEditDetail,
     isLoading = false,
+    setCustomSelectedOption,
+    customSelectedOption,
+    setIsActiveMainFolder,
+    setIsActiveSubFolder,
+    isProjects,
+    setSelectedNode,
   } = props;
 
   // if (isLoading) {
@@ -75,7 +81,7 @@ export default function CreateNewProject(props) {
                 errorMessage={errors.projectName}
                 isRequired
               />
-              {isWorkFLow ? (
+              {isWorkFLow && (
                 <InputField
                   label="Location"
                   name="location"
@@ -89,8 +95,14 @@ export default function CreateNewProject(props) {
                   errorType={errors.location && touched.location}
                   errorMessage={errors.location}
                   isRequired
+                  setCustomSelectedOption={setCustomSelectedOption}
+                  customSelectedOption={customSelectedOption}
+                  setIsActiveMainFolder={setIsActiveMainFolder}
+                  setIsActiveSubFolder={setIsActiveSubFolder}
+                  setSelectedNode={setSelectedNode}
                 />
-              ) : (
+              )}
+              {isProjects && (
                 <InputField
                   label="Description"
                   type="textarea"
@@ -103,7 +115,6 @@ export default function CreateNewProject(props) {
                   errorMessage={errors.description}
                 />
               )}
-
               <div className="d-flex float-end">
                 <Button
                   color="primary"

@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React, { useState } from "react";
 import {
   ChevronDown,
@@ -19,8 +18,6 @@ function TreeNode(props) {
     handleEditProjectModal,
     handleDeleteProject,
     handleActiveTabSubFolders,
-    // handleOnMouseEnter,
-    // handleOnMouseLeave,
     handleToggleCreateSubFolderModal,
     handleEditFolderModal,
     handleDeleteFolder,
@@ -43,6 +40,7 @@ function TreeNode(props) {
             width: "100%",
             padding: selectedTab?.name === node?.name && "5px",
           }}
+          onClick={() => handleActiveTab(node)}
         >
           <div onClick={() => handleActiveTab(node)} className="cursor-pointer">
             {isOpen ? (
@@ -68,7 +66,7 @@ function TreeNode(props) {
           <div className="d-flex align-items-center">
             <Plus
               size={16}
-              color={selectedTab?.name === node?.name ? "#fff" : "#131313"}
+              color={selectedTab?.uuid === node?.uuid ? "#fff" : "#131313"}
               className="me-50 container__add-project-button-icon"
               onClick={() => {
                 handleToggleCreateFolderModal(node);
@@ -85,12 +83,12 @@ function TreeNode(props) {
       ) : (
         <div
           className={`d-flex justify-content-between ${
-            selectedTab?.name === node?.name &&
+            selectedTab?.uuid === node?.uuid &&
             "bg-primary text-light rounded-2"
           }`}
           style={{
             width: "fit-content",
-            padding: selectedTab?.name === node?.name && "5px",
+            padding: selectedTab?.uuid === node?.uuid && "5px",
           }}
           onClick={() => handleActiveTabSubFolders(node)}
         >
@@ -99,14 +97,14 @@ function TreeNode(props) {
               <FolderMinus
                 size={18}
                 className="me-1 curser-pointer"
-                color={selectedTab?.name === node?.name ? "#fff" : "#131313"}
+                color={selectedTab?.uuid === node?.uuid ? "#fff" : "#131313"}
                 onClick={handleToggle}
               />
             ) : (
               <FolderPlus
                 size={18}
                 className="me-1 curser-pointer"
-                color={selectedTab?.name === node?.name ? "#fff" : "#131313"}
+                color={selectedTab?.uuid === node?.uuid ? "#fff" : "#131313"}
                 onClick={handleToggle}
               />
             )}
@@ -124,7 +122,7 @@ function TreeNode(props) {
             <div className="d-flex align-items-center">
               <Plus
                 size={16}
-                color={selectedTab?.name === node?.name ? "#fff" : "#131313"}
+                color={selectedTab?.uuid === node?.uuid ? "#fff" : "#131313"}
                 className="cursor-pointer me-1"
                 onClick={() => handleToggleCreateSubFolderModal(node)}
               />
@@ -133,7 +131,7 @@ function TreeNode(props) {
                 handleEdit={() => handleEditFolderModal(node)}
                 handleDelete={() => handleDeleteFolder(node.id)}
                 iconColor={
-                  selectedTab?.name === node?.name ? "#fff" : "#131313"
+                  selectedTab?.uuid === node?.uuid ? "#fff" : "#131313"
                 }
               />
             </div>
@@ -172,27 +170,5 @@ function TreeNode(props) {
     </>
   );
 }
-
-TreeNode.propTypes = {
-  handleActiveTabSubFolders: PropTypes.func.isRequired,
-  handleActiveTabFolders: PropTypes.func.isRequired,
-  handleToggleCreateFolderModal: PropTypes.func.isRequired,
-  handleCreateProject: PropTypes.func.isRequired,
-  handleToggleCreateSubFolderModal: PropTypes.func.isRequired,
-  handleDeleteFolder: PropTypes.func.isRequired,
-  handleDeleteProject: PropTypes.func.isRequired,
-  handleEditFolderModal: PropTypes.func.isRequired,
-  handleEditProjectModal: PropTypes.func.isRequired,
-  handleActiveTab: PropTypes.func.isRequired,
-
-  // optionalArray: PropTypes.array,
-  // optionalBigInt: PropTypes.bigint,
-  // optionalBool: PropTypes.bool,
-  // optionalFunc: PropTypes.func,
-  // optionalNumber: PropTypes.number,
-  // optionalObject: PropTypes.object,
-  // optionalString: PropTypes.string,
-  // optionalSymbol: PropTypes.symbol,
-};
 
 export default TreeNode;

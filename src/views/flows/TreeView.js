@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React from "react";
 import { ListGroup, ListGroupItem } from "reactstrap";
 import TreeNode from "./TreeNode";
@@ -12,12 +11,9 @@ function TreeView(props) {
     handleEditProjectModal,
     handleDeleteProject,
     handleActiveTabSubFolders,
-    // handleOnMouseEnter,
-    // handleOnMouseLeave,
     handleToggleCreateSubFolderModal,
     handleEditFolderModal,
     handleDeleteFolder,
-    handleAlert,
   } = props;
 
   return (
@@ -32,39 +28,14 @@ function TreeView(props) {
             handleEditProjectModal={handleEditProjectModal}
             handleDeleteProject={handleDeleteProject}
             handleActiveTabSubFolders={handleActiveTabSubFolders}
-            // handleOnMouseEnter={handleOnMouseEnter}
-            // handleOnMouseLeave={handleOnMouseLeave}
             handleToggleCreateSubFolderModal={handleToggleCreateSubFolderModal}
             handleEditFolderModal={handleEditFolderModal}
             handleDeleteFolder={handleDeleteFolder}
-            handleAlert={handleAlert}
           />
         </ListGroupItem>
       ))}
     </ListGroup>
   );
 }
-
-TreeView.propTypes = {
-  handleActiveTabSubFolders: PropTypes.func.isRequired,
-  handleActiveTabFolders: PropTypes.func.isRequired,
-  handleToggleCreateFolderModal: PropTypes.func.isRequired,
-  handleCreateProject: PropTypes.func.isRequired,
-  handleToggleCreateSubFolderModal: PropTypes.func.isRequired,
-  handleDeleteFolder: PropTypes.func.isRequired,
-  handleDeleteProject: PropTypes.func.isRequired,
-  handleEditFolderModal: PropTypes.func.isRequired,
-  handleEditProjectModal: PropTypes.func.isRequired,
-  handleActiveTab: PropTypes.func.isRequired,
-
-  // optionalArray: PropTypes.array,
-  // optionalBigInt: PropTypes.bigint,
-  // optionalBool: PropTypes.bool,
-  // optionalFunc: PropTypes.func,
-  // optionalNumber: PropTypes.number,
-  // optionalObject: PropTypes.object,
-  // optionalString: PropTypes.string,
-  // optionalSymbol: PropTypes.symbol,
-};
 
 export default TreeView;

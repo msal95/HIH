@@ -41,37 +41,32 @@ const UserDropdown = () => {
   const dispatch = useDispatch();
 
   const [userDataL, setUserDataL] = useState(null);
-  console.log("🚀 ~ file: UserDropdown.js:44 ~ UserDropdown ~ userDataL:", userDataL)
 
   //   UserData?.getItem('userData').then((data) => {
   //     console.log("🚀 ~ file: UserDropdown.js:32 ~ UserData?.getItem ~ data:", data.name)
   //     setUserDataL(data?.name);
   //   });
 
-//   const fun = async () => {
-//     const newData = UserData?.getItem("userData");
-//     //     console.log("🚀 ~ file: UserDropdown.js:32 ~ UserData?.getItem ~ data:", data.name)
-//     setUserDataL(newData);
-//   };
+  //   const fun = async () => {
+  //     const newData = UserData?.getItem("userData");
+  //     //     console.log("🚀 ~ file: UserDropdown.js:32 ~ UserData?.getItem ~ data:", data.name)
+  //     setUserDataL(newData);
+  //   };
 
   //   console.log('✅ userDataL    ', userDataL)
 
   // ** Selector to access the user data from the Redux store
   const userDatass = useSelector((state) => state?.auth?.userData);
 
-  console.log(
-    "🚀 ~ file: UserDropdown.js:30 ~ UserDropdown ~ userDatass:",
-    userDatass?.name
-  );
   // ** State
   const [userData, setUserData] = useState(null);
 
   //** ComponentDidMount
-    useEffect(() => {
+  useEffect(() => {
     //   if (isUserLoggedIn() !== null) {
     //     setUserData(JSON.parse(localStorage.getItem('userData')))
     //   }
-    }, [userDatass])
+  }, [userDatass]);
 
   //** Vars
   const userAvatar = (userDatass && userDatass?.profile_photo_path) || defaultAvatar;

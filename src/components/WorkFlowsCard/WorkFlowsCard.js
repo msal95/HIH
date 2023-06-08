@@ -80,19 +80,17 @@ const WorkFlowsCard = (props) => {
     setFlowsData,
     flowsData,
   } = props;
-
-  // const { isLoading, data, error, refetch, isError, isFetching } = useQuery(
-  //   "workFLowsLists",
-  //   async () => await getWorkflowLists()
+  // console.log(
+  //   "🚀 ~ file: WorkFlowsCard.js:83 ~ WorkFlowsCard ~ flowsData:",
+  //   flowsData
   // );
 
   const navigate = useNavigate();
 
   const [selectedRows, setSelectedRows] = useState([]);
-
   const [isEdit, setIsEdit] = useState(false);
-  const [statusList, setStatusList] = useState({});
   const [workflowsList, setWorkFlowsList] = useState();
+  const [selectedWorkflowList, setSelectedWorkflowList] = useState();
   const [isLoader, setIsLoader] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedItem, setSelectedItem] = useState();
@@ -126,20 +124,20 @@ const WorkFlowsCard = (props) => {
 
   useEffect(() => {
     if (!!data?.length) {
-      // setFlowsData(data);
       if (isActiveMainFolder) {
         const filteredProjectsWorkflows = data?.filter(
           (item) => item.project_id === selectedTab.id
         );
         setWorkFlowsList(filteredProjectsWorkflows);
-        setFlowsData(filteredProjectsWorkflows);
+        setSelectedWorkflowList(filteredProjectsWorkflows);
         setCount(2);
       } else if (isActiveSubFolder) {
         const filteredProjectsWorkflows = data?.filter(
           (item) => item.folder_id === selectedTab.id
         );
+
         setWorkFlowsList(filteredProjectsWorkflows);
-        setFlowsData(filteredProjectsWorkflows);
+        setSelectedWorkflowList(filteredProjectsWorkflows);
         setCount(2);
       }
     }
@@ -152,7 +150,7 @@ const WorkFlowsCard = (props) => {
 
   useEffect(() => {
     if (count > 1) {
-      const searchedData = flowsData?.filter((post) => {
+      const searchedData = selectedWorkflowList?.filter((post) => {
         return post?.name.toLowerCase().includes(searchTerm.toLowerCase());
       });
       setWorkFlowsList(searchedData);
@@ -164,19 +162,15 @@ const WorkFlowsCard = (props) => {
   };
 
   const handleWorkFLowName = (event) => {
-    console.log(
-      "🚀 ~ file: WorkFlowsCard.js:172 ~ handleWorkFLowName ~ event.target.value:",
-      event.target.value
-    );
     setWorkflowName(event.target.value);
   };
 
   const handleCheckboxChange = async (item, itemId) => {
-    setStatusList((prevStatusList) => ({
-      ...prevStatusList,
+    // setStatusList((prevStatusList) => ({
+    //   ...prevStatusList,
 
-      [itemId]: !prevStatusList[itemId],
-    }));
+    //   [itemId]: !prevStatusList[itemId],
+    // }));
 
     setIsLoader(true);
     try {
@@ -204,11 +198,6 @@ const WorkFlowsCard = (props) => {
   };
 
   const onHandleDelete = async (data) => {
-    console.log(
-      "🚀 ~ file: WorkFlowsCard.js:195 ~ onHandleDelete ~ data:",
-      data
-    );
-
     return MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -252,6 +241,10 @@ const WorkFlowsCard = (props) => {
   };
 
   const onPressEditWorkflowName = (item) => {
+    console.log(
+      "🚀 ~ file: WorkFlowsCard.js:244 ~ onPressEditWorkflowName ~ item:",
+      item
+    );
     setSelectedItem(item);
     setWorkflowName(item?.name);
     setIsEdit(true);
@@ -329,7 +322,7 @@ const WorkFlowsCard = (props) => {
     }
   };
 
-  const allSelected = selectedRows?.length === workflowsList?.length;
+  const allSelected = selectedRows?.length === selectedWorkflowList?.length;
 
   if (isError) {
     return (

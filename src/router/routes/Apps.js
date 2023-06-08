@@ -56,8 +56,8 @@ const AppRoutes = [
     },
   },
   {
-    // element: <ProfileUpdate />,
-    element: <UpdateProfile />,
+    element: <ProfileUpdate />,
+    // element: <UpdateProfile />,
     path: "/apps/profile",
     meta: {
       appLayout: true,
