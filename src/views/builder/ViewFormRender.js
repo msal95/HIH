@@ -72,7 +72,14 @@ export default function ViewFormRender(props) {
       formRender.current = formEditor;
     }
     formRender.current.on("submit", ({ data, errors }) => {
-      handleGetFormJson(data, errors);
+        const keys = Object.keys(errors);
+
+        if (keys.length > 0) {
+        const firstKey = keys[0];
+        console.log("The first key is:", firstKey);
+        } else {
+        handleGetFormJson(data, errors);
+        }
     });
     return () => {
       if (formRender.current) {
@@ -90,10 +97,9 @@ useEffect(() => {
     for (const mutation of mutationsList) {
       if (mutation.type === 'childList' || mutation.type === 'characterData') {
         // DOM has changed, do something
-        console.log('DOM changed');
+        // console.log('DOM changed');
         const labels = document.querySelectorAll('label');
         labels.forEach(label => {
-          console.log("🚀 ~ file: ViewFormRender.js:100 ~ useEffect ~ label:", label.textContent);
           if (label.textContent === 'hidden') {
             const parentDiv = label.parentNode;
             parentDiv.style.display = 'none';

@@ -193,9 +193,9 @@ const passwordQuery = useUpdatePassword();
                 <Button type='submit' className='me-1' color='primary'>
                   Save changes
                 </Button>
-                <Button type='reset' color='secondary' outline>
+                {/* <Button type='reset' color='secondary' outline>
                   Cancel
-                </Button>
+                </Button> */}
               </Col>
             </Row>
           </Form>
