@@ -57,8 +57,12 @@ export default function SendGrid(props) {
   const [stateFullData] = useState();
 
   const handleGetFormJson = async (data, errors) => {
+    console.log(
+      "🚀 ~ file: SendGrid.js:60 ~ handleGetFormJson ~ errors:",
+      errors
+    );
     const formValue = JSON.stringify(data);
-    alert("Testing");
+    // alert("Testing");
 
     try {
       const formValueData = {
@@ -180,7 +184,10 @@ export default function SendGrid(props) {
                   isOption
                   errorType={errors.authType && touched.authType}
                   errorMessage={errors.authType}
+                  isSelectorOption
                 />
+
+                <div id="form"></div>
                 <InputField
                   label="Authorization URL"
                   name="authUrl"
@@ -203,8 +210,6 @@ export default function SendGrid(props) {
                   errorMessage={errors.clientId}
                   placeholder="1890-hwi0"
                 />
-
-                <div id="form"></div>
 
                 <Button
                   color="primary"

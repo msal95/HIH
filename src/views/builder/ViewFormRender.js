@@ -19,6 +19,7 @@ export default function ViewFormRender(props) {
     selectedNode,
     submission_id,
   } = props;
+  console.log("🚀 ~ file: ViewFormRender.js:22 ~ ViewFormRender ~ form:", form);
   const location = useLocation();
 
   const formRender = useRef(null);
@@ -89,8 +90,7 @@ export default function ViewFormRender(props) {
     };
   }, [formJson]);
 
-
-const targetNodeRef = useRef(null);
+  const targetNodeRef = useRef(null);
 
 useEffect(() => {
   const callback = (mutationsList, observer) => {
@@ -114,10 +114,10 @@ useEffect(() => {
     observer.observe(targetNodeRef.current, { attributes: true, childList: true, subtree: true });
   }
 
-  return () => {
-    observer.disconnect();
-  };
-}, []);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
   return (
     <div className="container-xxl overflow-auto mt-4" ref={targetNodeRef}>
       <Row>

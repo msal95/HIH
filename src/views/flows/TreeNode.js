@@ -40,7 +40,7 @@ function TreeNode(props) {
             width: "100%",
             padding: selectedTab?.name === node?.name && "5px",
           }}
-          onClick={() => handleActiveTab(node)}
+          // onClick={() => handleActiveTab(node)}
         >
           <div onClick={() => handleActiveTab(node)} className="cursor-pointer">
             {isOpen ? (

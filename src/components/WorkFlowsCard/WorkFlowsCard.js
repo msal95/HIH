@@ -126,14 +126,14 @@ const WorkFlowsCard = (props) => {
     if (!!data?.length) {
       if (isActiveMainFolder) {
         const filteredProjectsWorkflows = data?.filter(
-          (item) => item.project_id === selectedTab.id
+          (item) => item.project_id === selectedTab?.id
         );
         setWorkFlowsList(filteredProjectsWorkflows);
         setSelectedWorkflowList(filteredProjectsWorkflows);
         setCount(2);
       } else if (isActiveSubFolder) {
         const filteredProjectsWorkflows = data?.filter(
-          (item) => item.folder_id === selectedTab.id
+          (item) => item.folder_id === selectedTab?.id
         );
 
         setWorkFlowsList(filteredProjectsWorkflows);
