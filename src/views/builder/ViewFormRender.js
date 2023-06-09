@@ -19,6 +19,7 @@ export default function ViewFormRender(props) {
     selectedNode,
     submission_id,
   } = props;
+    console.log("🚀 ~ file: ViewFormRender.js:22 ~ ViewFormRender ~ selectedEvent:", selectedEvent)
   console.log("🚀 ~ file: ViewFormRender.js:22 ~ ViewFormRender ~ form:", form);
   const location = useLocation();
 
