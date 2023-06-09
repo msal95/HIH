@@ -20,13 +20,16 @@ import { SendGridValidationSchema } from "../../utility/validationSchemas/Creden
 import CreateNewProject from "../CreateNewProject/CreateNewProject";
 import CustomHeading from "../CustomHeading/CustomHeading";
 import InputField from "../InputField/InputField";
+import ViewFormRender from "../../views/builder/ViewFormRender";
 // import "./builder.css";
 
 const authOptions = [
-  { id: 1, name: "Auth 2.0", value: "auth 2.0" },
-  { id: 2, name: "Api key", value: "api key" },
-  { id: 3, name: "JWT", value: "jwt" },
-  { id: 4, name: "Bearer token", value: "bearer token" },
+  { id: 1, name: "No Auth", value: "No Auth" },
+  { id: 2, name: "API Key", value: "API Key" },
+  { id: 3, name: "OAuth 2.0", value: "OAuth 2.0" },
+  { id: 4, name: "Bearer Token", value: "Bearer Token" },
+  { id: 5, name: "Auth 1.0", value: "Auth 1.0" },
+  { id: 6, name: "JWT", value: "JWT" },
 ];
 
 export default function SendGrid(props) {
@@ -41,26 +44,19 @@ export default function SendGrid(props) {
     customSelectedOption,
     setCustomSelectedOption,
   } = props;
-  console.log(
-    "🚀 ~ file: SendGrid.js:44 ~ SendGrid ~ optionsData:",
-    optionsData
-  );
 
   const { id, name, data, type } = item ?? {};
 
   const [formsTypeData, setFormsTypeData] = useState(forms);
+  const [selectAuth, setSelectAuth] = useState(null);
   const [selectedAuthType, setSelectedAuthType] = useState(null);
+  const [hasForm, setHasForm] = useState(false);
+  const [hasFormJson, setFormJson] = useState(null);
 
-  const formRender = useRef(null);
+//   const formRender = useRef(null);
   const [formJson, setSelectedFormJson] = useState(null);
 
-  const [stateFullData] = useState();
-
   const handleGetFormJson = async (data, errors) => {
-    console.log(
-      "🚀 ~ file: SendGrid.js:60 ~ handleGetFormJson ~ errors:",
-      errors
-    );
     const formValue = JSON.stringify(data);
     // alert("Testing");
 
@@ -71,47 +67,23 @@ export default function SendGrid(props) {
         name: "name builder",
         user_id: 1,
       };
-      console.log("formValueData", formValueData);
       const response = await formValueSave(formValueData);
-      console.log("Response:", response);
     } catch (error) {
-      console.error(error);
     }
   };
+useEffect(() => {
+    const filtered = formsTypeData.filter((item) => item?.name === selectedAuthType);
+        console.log("🚀 ~ file: SendGrid.js:111 ~ useEffect ~ filtered: ", filtered)
+        setSelectAuth(filtered[0]);
+        console.log('✅ bpmn_form  ???????????????  ', filtered[0]?.bpmn_form)
+        if (!(filtered[0]?.bpmn_form === null)) {
+            setHasForm(true);
+            setFormJson(filtered[0]?.bpmn_form?.json)
+        } else {
+            setHasForm(false);
+        }
 
-  useEffect(() => {
-    if (!!selectedAuthType?.length) {
-      const container = document.querySelector("#form");
-      if (container && !formRender?.current) {
-        const formEditor = new BuilderForm({
-          container,
-        });
-        formEditor.importSchema(JSON.parse(formJson));
-        formRender.current = formEditor;
-      }
-      formRender.current.on("submit", ({ data, errors }) => {
-        handleGetFormJson(data, errors);
-      });
-    }
-    return () => {
-      if (formRender.current) {
-        formRender.current.destroy();
-        formRender.current = null;
-      }
-    };
-  }, [formJson]);
-
-  useEffect(() => {
-    if (selectedAuthType === "auth 2.0") {
-      setSelectedFormJson(formsTypeData[1]?.bpmn_form?.json);
-    } else if (selectedAuthType === "api key") {
-      setSelectedFormJson(formsTypeData[0]?.bpmn_form?.json);
-    } else if (selectedAuthType === "jwt") {
-      setSelectedFormJson(formsTypeData[1]?.bpmn_form?.json);
-    } else if (selectedAuthType === "bearer token") {
-      setSelectedFormJson(formsTypeData[1]?.bpmn_form?.json);
-    }
-  });
+}, [selectedAuthType]);
 
   return (
     <>
@@ -186,8 +158,7 @@ export default function SendGrid(props) {
                   errorMessage={errors.authType}
                   isSelectorOption
                 />
-
-                <div id="form"></div>
+                {hasForm  && <ViewFormRender form={hasFormJson} selectedEvent={selectAuth}/>}
                 <InputField
                   label="Authorization URL"
                   name="authUrl"

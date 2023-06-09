@@ -160,7 +160,7 @@ export default function ProfileUpdate() {
                             onChange={onChange}
                           />
                         </Button>
-                        <Button
+                        {/* <Button
                           type="reset"
                           className="mb-75"
                           color="secondary"
@@ -168,7 +168,7 @@ export default function ProfileUpdate() {
                           outline
                         >
                           Reset
-                        </Button>
+                        </Button> */}
                         <p className="mb-0">
                           Allowed JPG, GIF or PNG. Max size of 800kB
                         </p>
