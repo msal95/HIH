@@ -23,6 +23,15 @@ export default function CreateNewProject(props) {
     isProjects,
     setSelectedNode,
   } = props;
+  console.log(
+    "🚀 ~ file: CreateNewProject.js:26 ~ CreateNewProject ~ isProjects:",
+    "isProjects:",
+    isProjects,
+    "isEditDetail: ",
+    isEditDetail,
+    "isWorkFLow: ",
+    isWorkFLow
+  );
 
   // if (isLoading) {
   //   return (

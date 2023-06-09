@@ -7,6 +7,7 @@ import Avatar from "@components/avatar";
 
 // ** Utils
 import { isUserLoggedIn } from "@utils";
+// console.log("🚀 ~ file: UserDropdown.js:10 ~ isUserLoggedIn:", isUserLoggedIn);
 
 // ** Store & Actions
 import { useDispatch, useSelector } from "react-redux";

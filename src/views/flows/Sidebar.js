@@ -71,24 +71,17 @@ const Sidebar = (props) => {
                   className="cursor-pointer"
                 />
               </div>
-              {/* <PerfectScrollbar
-                className="sidebar-menu-list"
-                options={{ wheelPropagation: true }}
-              > */}
+
               {isLoading ? (
                 <div className="d-flex justify-content-center align-items-center">
                   <Spinner type="grow" color="primary" />
                 </div>
-              ) : // )}
-              !projects?.length ? (
+              ) : !projects?.length ? (
                 <h3 className="d-flex align-items-center justify-content-center p-2">
                   No Projects and folders exist
                 </h3>
               ) : (
                 <>
-                  {/* <ListGroup tag="div" className="list-group-messages">
-                    {renderTree(projects)}
-                  </ListGroup> */}
                   <TreeView
                     data={projects}
                     handleActiveTab={handleActiveTabFolders}
@@ -99,8 +92,6 @@ const Sidebar = (props) => {
                     handleEditProjectModal={handleEditProjectModal}
                     handleDeleteProject={handleDeleteProject}
                     handleActiveTabSubFolders={handleActiveTabSubFolders}
-                    // handleOnMouseEnter={handleOnMouseEnter}
-                    // handleOnMouseLeave={handleOnMouseLeave}
                     handleToggleCreateSubFolderModal={
                       handleToggleCreateSubFolderModal
                     }
@@ -109,35 +100,12 @@ const Sidebar = (props) => {
                   />
                 </>
               )}
-              {/* </PerfectScrollbar> */}
             </div>
           </div>
         </div>
       </div>
     </>
   );
-};
-
-Sidebar.propTypes = {
-  handleActiveTabSubFolders: PropTypes.func.isRequired,
-  handleActiveTabFolders: PropTypes.func.isRequired,
-  handleToggleCreateFolderModal: PropTypes.func.isRequired,
-  handleCreateProject: PropTypes.func.isRequired,
-  handleToggleCreateSubFolderModal: PropTypes.func.isRequired,
-  handleDeleteFolder: PropTypes.func.isRequired,
-  handleDeleteProject: PropTypes.func.isRequired,
-  handleEditFolderModal: PropTypes.func.isRequired,
-  handleEditProjectModal: PropTypes.func.isRequired,
-  handleActiveTab: PropTypes.func.isRequired,
-
-  // optionalArray: PropTypes.array,
-  // optionalBigInt: PropTypes.bigint,
-  // optionalBool: PropTypes.bool,
-  // optionalFunc: PropTypes.func,
-  // optionalNumber: PropTypes.number,
-  // optionalObject: PropTypes.object,
-  // optionalString: PropTypes.string,
-  // optionalSymbol: PropTypes.symbol,
 };
 
 export default Sidebar;

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ChevronDown, Eye, EyeOff } from "react-feather";
 import { Input, InputGroup, InputGroupText, Label, Row } from "reactstrap";
+import Select, { components } from "react-select";
 
 // Local Imports
 import "../../style/views/Login/authentication.scss";
@@ -18,6 +19,40 @@ const style = {
     color: "#b9b9c3 !important",
   },
 };
+
+const OptionComponent = ({ data, ...props }) => {
+  // console.log("🚀 ~ file: InputField.js:47 ~ OptionComponent ~ data:", data);
+  // if (data?.type === "button") {
+  //   return (
+  //     <div className="container__option-selector px-1">
+  //       <img
+  //         src={polygon}
+  //         alt="Polygon icon"
+  //         className="me-1"
+  //         width="10px"
+  //         height="7px"
+  //       />
+  //       <Layers size={16} className="me-1" color="#131313" />
+  //       <span className="container__option-heading">NEMT Automat</span>
+  //       <MoreHorizontal size={16} className="me-1" color="#131313" />
+  //       <Plus
+  //         className="font-medium-1 me-50 container__add-project-button-icon"
+  //         onClick={handleOnCreateNewProject}
+  //       />
+  //     </div>
+  //   );
+  // } else {
+  return (
+    <components.Option {...props}>
+      <div className="d-flex ms-2">
+        {/* <Folder size={16} className="me-1" color="#131313" /> */}
+        {data.name}
+      </div>
+    </components.Option>
+  );
+  // }
+};
+
 export default function InputField(props) {
   const {
     label,
@@ -39,10 +74,15 @@ export default function InputField(props) {
     setIsActiveMainFolder,
     setIsActiveSubFolder,
     setSelectedNode,
+    isSelectorOption = false,
   } = props;
 
   const [inputVisibility, setInputVisibility] = useState(false);
   const [toggleSelect, setToggleSelect] = useState(false);
+  console.log(
+    "🚀 ~ file: InputField.js:82 ~ InputField ~ toggleSelect:",
+    toggleSelect
+  );
 
   const handleToggleSelect = () => {
     setToggleSelect((prevState) => !prevState);
@@ -67,17 +107,19 @@ export default function InputField(props) {
   };
 
   const handleChange = (selected) => {
+    handleToggleSelect();
     setCustomSelectedOption(selected);
-    setSelectedNode(selected);
-    if (selected?.is_project) {
-      setIsActiveMainFolder(true);
-      setIsActiveSubFolder(false);
-    } else if (!selected?.is_project) {
-      setIsActiveSubFolder(true);
-      setIsActiveMainFolder(false);
+    if (!isSelectorOption) {
+      setSelectedNode(selected);
+      if (selected?.is_project) {
+        setIsActiveMainFolder(true);
+        setIsActiveSubFolder(false);
+      } else if (!selected?.is_project) {
+        setIsActiveSubFolder(true);
+        setIsActiveMainFolder(false);
+      }
     }
     onChange(selected);
-    handleToggleSelect();
   };
 
   return (
@@ -112,26 +154,46 @@ export default function InputField(props) {
         </InputGroup>
       ) : (
         <div>
-          <div
-            className="d-flex align-items-center justify-content-between"
-            onClick={handleToggleSelect}
-            style={style.container}
-          >
-            <p style={style.text} className="p-0 m-0">
-              {!!customSelectedOption?.name
-                ? customSelectedOption?.name
-                : `Select an option`}
-            </p>
-            <ChevronDown size={16} />
-          </div>
-
-          {toggleSelect && (
-            <div className="">
-              <TreeView data={optionsData} handleChange={handleChange} />
-            </div>
+          {!isSelectorOption ? (
+            <>
+              {" "}
+              <div
+                className="d-flex align-items-center justify-content-between"
+                onClick={handleToggleSelect}
+                style={style.container}
+              >
+                <p style={style.text} className="p-0 m-0">
+                  {!!customSelectedOption?.name
+                    ? customSelectedOption?.name
+                    : `Select an option`}
+                </p>
+                <ChevronDown size={16} />
+              </div>
+              {toggleSelect && (
+                <div className="">
+                  <TreeView data={optionsData} handleChange={handleChange} />
+                </div>
+              )}
+            </>
+          ) : (
+            <Select
+              className="react-select text-black-50"
+              classNamePrefix="select"
+              defaultValue={value}
+              options={optionsData}
+              getOptionValue={(option) => option.id}
+              getOptionLabel={(option) => option.name}
+              name={name}
+              onChange={onChange}
+              onBlur={onBlur}
+              components={{
+                Option: OptionComponent,
+              }}
+            />
           )}
         </div>
       )}
+
       {errorType && <ErrorMessage message={errorMessage} />}
     </Row>
   );
