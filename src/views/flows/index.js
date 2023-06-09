@@ -65,15 +65,27 @@ const WorkFlows = () => {
   const [selectedTab, setSelectedTab] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isEditProject, setIsEditProject] = useState(false);
+  console.log(
+    "🚀 ~ file: index.js:68 ~ WorkFlows ~ isEditProject:",
+    isEditProject
+  );
   const [isWorkFLow, setIsWorkFLow] = useState(false);
   const [isProjects, setIsProjects] = useState(true);
   const [projects, setProjects] = useState([]);
   const [folders, setFolders] = useState([]);
   const [isActiveMainFolder, setIsActiveMainFolder] = useState(false);
+  console.log(
+    "🚀 ~ file: index.js:77 ~ WorkFlows ~ isActiveMainFolder:",
+    isActiveMainFolder
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [searchedFromProjects, setSearchedFromProjects] = useState();
   const [searchedFromFolders, setSearchedFromFolders] = useState([]);
   const [isActiveSubFolder, setIsActiveSubFolder] = useState(false);
+  console.log(
+    "🚀 ~ file: index.js:81 ~ WorkFlows ~ isActiveSubFolder:",
+    isActiveSubFolder
+  );
   const [selectedOption, setSelectedOption] = useState();
   const [isEditDetail, setIsEditDetail] = useState(false);
   const [isLoader, setIsLoader] = useState(false);
@@ -160,7 +172,7 @@ const WorkFlows = () => {
     setIsActiveMainFolder(true);
     setIsProjects(false);
     setIsActiveSubFolder(false);
-    setIsEditDetail(false);
+    // setIsEditDetail(false);
     setSelectedOption("Sort");
     if (!!node?.is_project) {
       const selectedProjectIndex = projects.findIndex(
@@ -178,10 +190,6 @@ const WorkFlows = () => {
     setIsProjects(false);
     setIsActiveMainFolder(false);
     // setIsEditDetail(false);
-  };
-
-  const handleAlert = () => {
-    alert(123);
   };
 
   const onClickDiscardModal = () => {
@@ -332,10 +340,6 @@ const WorkFlows = () => {
   };
 
   const handleEditFolderModal = (node) => {
-    console.log(
-      "🚀 ~ file: index.js:319 ~ handleEditFolderModal ~ isEditDetail:",
-      isEditDetail
-    );
     setSelectedNode(node);
     setSelectedItem(node);
     setCustomSelectedOption(node);
@@ -359,12 +363,17 @@ const WorkFlows = () => {
   };
 
   const handleEditProjectModal = (node) => {
+    console.log(
+      "🚀 ~ file: index.js:366 ~ handleEditProjectModal ~ node:",
+      node
+    );
     setSelectedNode(node);
     setSelectedItem(node);
-    setCustomSelectedOption(node);
+    // setCustomSelectedOption(node);
     handleToggleModal();
     setIsEditProject(true);
-    setIsProjects(false);
+    setIsActiveMainFolder(false);
+    setIsProjects(true);
     setIsEdit(false);
     setIsEditDetail(true);
   };
@@ -386,6 +395,8 @@ const WorkFlows = () => {
           handleToggleModal();
           setIsEditProject(false);
           setCustomSelectedOption(null);
+          setIsActiveMainFolder(true);
+          handleActiveTabFolders(selectedNode);
         }
       });
     } catch (error) {
@@ -605,17 +616,11 @@ const WorkFlows = () => {
     );
   }
 
-  // let mainTitle
-  // if(isActiveMainFolder){
-  //   tit
-  // }
-
   return (
     <div className="content-area-wrapper">
       <Sidebar
         handleActiveTab={handleActiveTab}
         handleActiveTabSubFolders={handleActiveTabSubFolders}
-        handleAlert={handleAlert}
         handleActiveTabFolders={handleActiveTabFolders}
         handleCreateProject={handleToggleCreateProjectModal}
         handleToggleCreateFolderModal={handleToggleCreateFolderModal}

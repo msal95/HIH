@@ -217,6 +217,7 @@ const Credentials = () => {
     setIsSendGridData(false);
     setIsEdit(false);
     setIsNewProject(false);
+    setCustomSelectedOption(null);
   };
 
   const onClickSendGridCredential = (item) => {

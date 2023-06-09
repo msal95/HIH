@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 
 // ** Local Imports
 import "@styles/react/apps/app-email.scss";
-import { Pause, Play } from "react-feather";
+import { Copy, Pause, Play } from "react-feather";
 import { toast } from "react-hot-toast";
 import { useLocation } from "react-router-dom";
 import {
@@ -23,6 +23,7 @@ import "reactflow/dist/style.css";
 import { Button, Card, CardBody, CardHeader, Spinner } from "reactstrap";
 import {
   createWorkflowEngine,
+  generateWebhook,
   runWorkflowEngine,
 } from "../../../api/apiMethods";
 import CustomOffCanvas from "../../components/OffCanvas/OffCanvas";
@@ -38,6 +39,8 @@ import Divider from "../../components/Divider/Divider";
 import ViewFormRender from "../builder/ViewFormRender";
 import { useDispatch, useSelector } from "react-redux";
 import { addData, discardSelectedItem } from "./store";
+import CopyToClipboard from "react-copy-to-clipboard";
+import Avatar from "../components/avatar";
 
 const FLowsBuilder = () => {
   const [nodes, setNodes] = useState([]);
@@ -46,10 +49,10 @@ const FLowsBuilder = () => {
   const [canvasPlacement, setCanvasPlacement] = useState("end");
   const [canvasOpen, setCanvasOpen] = useState(false);
   const [flowsJson, setFlowsJson] = useState(null);
-  console.log(
-    "🚀 ~ file: FlowsBuilder.js:47 ~ FLowsBuilder ~ flowsJson:",
-    flowsJson
-  );
+  // console.log(
+  //   "🚀 ~ file: FlowsBuilder.js:47 ~ FLowsBuilder ~ flowsJson:",
+  //   flowsJson
+  // );
   const [isOutput, setIsOutput] = useState(false);
   const [edgeOptions, setEdgeOptions] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
@@ -64,23 +67,8 @@ const FLowsBuilder = () => {
   const [integration, setIntegration] = useState([]);
   const [formJson, setSelectedFormJson] = useState(null);
   const [updatedNode, setUpdatedNode] = useState([]);
-  // const [submittedFormId, setSubmittedFormId] = useState(null);
-  // console.log(
-  //   "🚀 ~ file: FlowsBuilder.js:70 ~ FLowsBuilder ~ submittedFormId:",
-  //   submittedFormId
-  // );
-
-  // useEffect(() => {
-  //   if (selectedNode !== null) {
-  //     const selectedResponse = updatedNode?.filter(
-  //       (item) => item?.id === selectedNode?.id
-  //     );
-  //     console.log(
-  //       "🚀 ~ file: FlowsBuilder.js:73 ~ useEffect ~ selectedResponse:",
-  //       selectedResponse
-  //     );
-  //   }
-  // }, [selectedNode]);
+  const [generatedWebhookUrl, setGeneratedWebhookUrl] =
+    useState("zfvhbzfjvbhzkjhbzj");
 
   useEffect(() => {
     if (submittedEventResponse !== null) {
@@ -241,6 +229,19 @@ const FLowsBuilder = () => {
     setUpdatedNode((prevElements) => [...prevElements, newNode]);
   };
 
+  const handleCopyUrl = () => {
+    toast.success(() => (
+      <div className="d-flex">
+        <div className="d-flex flex-column">
+          <h6 className="toast-title">Icon Name Copied! 📋</h6>
+          <span role="img" aria-label="toast-text">
+            {generatedWebhookUrl}
+          </span>
+        </div>
+      </div>
+    ));
+  };
+
   const onConnect = (params) => {
     const { source, target } = params;
     const newEdge = {
@@ -282,14 +283,7 @@ const FLowsBuilder = () => {
     } else {
       submittedFormId = null;
     }
-    console.log(
-      "🚀 ~ file: FlowsBuilder.js:282 ~ handleEventsData ~ submittedFormId:",
-      submittedFormId
-    );
-    console.log(
-      "🚀 ~ file: FlowsBuilder.js:274 ~ handleEventsData ~ selectedId:",
-      selectedId
-    );
+
     return (
       <div>
         <h5>Selected Events Data</h5>
@@ -390,6 +384,35 @@ const FLowsBuilder = () => {
       setIsLoader(false);
     }
   };
+  const handleGenerateWebHook = async () => {
+    setIsLoader(true);
+    try {
+      const workflowData = {
+        workflow_id: state?.id,
+      };
+      await generateWebhook(workflowData).then((res) => {
+        console.log(
+          "🚀 ~ file: FlowsBuilder.js:394 ~ awaitgenerateWebhook ~ res:",
+          res
+        );
+
+        if (res.data.response === 200) {
+          toast.success(res.data.message);
+          setGeneratedWebhookUrl(res?.data.data);
+          setIsLoader(false);
+        } else {
+          toast.error(res.data.message);
+        }
+      });
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.js:342 ~ handleCreateProject ~ error:",
+        error
+      );
+      toast.error(error?.data?.message);
+      setIsLoader(false);
+    }
+  };
 
   const connectionLineStyle = { stroke: "red" };
 
@@ -415,7 +438,30 @@ const FLowsBuilder = () => {
               />
             )}
             <div style={{ width: "12rem" }}>
-              <Button block color="primary" onClick={toggleCanvasEnd}>
+              {/* <Button block color="primary" onClick={handleGenerateWebHook}>
+                Copy 
+              </Button> */}
+              <CopyToClipboard text={generatedWebhookUrl}>
+                <Copy size={16} onClick={handleCopyUrl} />
+              </CopyToClipboard>
+            </div>
+            <div style={{ width: "12rem" }}>
+              <Button
+                block
+                className="ms-1"
+                color="primary"
+                onClick={handleGenerateWebHook}
+              >
+                Generate Webhook
+              </Button>
+            </div>
+            <div style={{ width: "12rem" }}>
+              <Button
+                block
+                className="ms-1"
+                color="primary"
+                onClick={toggleCanvasEnd}
+              >
                 Create Node
               </Button>
             </div>

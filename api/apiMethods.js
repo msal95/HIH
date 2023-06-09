@@ -107,6 +107,12 @@ export const runWorkflowEngine = async (wData) => {
     `/api/execute-graph/?workflow_id=${wData?.workflow_id}`
   );
 };
+
+export const generateWebhook = async (wData) => {
+  return await API_URL.post(`/api/workflow/generated-webhook`, {
+    workflow_id: wData?.workflow_id,
+  });
+};
 // Form builder json
 export const formJsonEditor = async (data) => {
   try {
@@ -151,6 +157,7 @@ export const getEditorAllForm = async () => {
   }
 };
 export const formValueSave = async (data) => {
+  console.log("🚀 ~ file: apiMethods.js:154 ~ formValueSave ~ data:", data);
   try {
     const response = await API_URL_LOCAL.post(
       "/api/form-builder/form-value-save/",
