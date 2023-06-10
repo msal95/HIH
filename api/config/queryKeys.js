@@ -13,3 +13,6 @@ export const getModelKey = {
 export const userKey = {
     user: 'user',
 };
+export const authType = {
+    authKey: 'authKey',
+};

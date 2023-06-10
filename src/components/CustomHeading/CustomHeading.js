@@ -15,11 +15,6 @@ export default function CustomHeading(props) {
     subImage,
     isIcon = false,
   } = props;
-
-  console.log(
-    "🚀 ~ file: CustomHeading.js:17 ~ CustomHeading ~ isIcon:",
-    isIcon
-  );
   return (
     <>
       <div className="d-flex px-1 justify-content-center align-content-center">

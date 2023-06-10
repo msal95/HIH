@@ -19,13 +19,12 @@ export default function ViewFormRender(props) {
     selectedNode,
     submission_id,
   } = props;
-    console.log("🚀 ~ file: ViewFormRender.js:22 ~ ViewFormRender ~ selectedEvent:", selectedEvent)
-  console.log("🚀 ~ file: ViewFormRender.js:22 ~ ViewFormRender ~ form:", form);
   const location = useLocation();
 
   const formRender = useRef(null);
-  const [formJson] = useState(form ?? location?.state?.json);
-  const [stateFullData] = useState(selectedEvent ?? location?.state);
+  const [formJson, setFormJson] = useState(form ?? location?.state?.json);
+  const [stateFullData, setStateFullData] = useState(selectedEvent ?? location?.state);
+
 
   const handleGetFormJson = async (data, errors) => {
     const formValue = JSON.stringify(data);
@@ -60,9 +59,14 @@ export default function ViewFormRender(props) {
         });
       }
     } catch (error) {
-      console.error(error);
     }
   };
+
+  useEffect(() => {
+    setFormJson(form ?? location?.state?.json)
+    setStateFullData(selectedEvent ?? location?.state)
+  }, [form]);
+
 
   useEffect(() => {
     const container = document.querySelector("#form");
@@ -77,8 +81,7 @@ export default function ViewFormRender(props) {
         const keys = Object.keys(errors);
 
         if (keys.length > 0) {
-        const firstKey = keys[0];
-        console.log("The first key is:", firstKey);
+        // const firstKey = keys[0];
         } else {
         handleGetFormJson(data, errors);
         }
