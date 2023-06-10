@@ -19,6 +19,7 @@ export default function ViewFormRender(props) {
     selectedNode,
     submission_id,
   } = props;
+    console.log("🚀 ~ file: ViewFormRender.js:22 ~ ViewFormRender ~ selectedEvent:", selectedEvent)
   console.log("🚀 ~ file: ViewFormRender.js:22 ~ ViewFormRender ~ form:", form);
   const location = useLocation();
 
@@ -73,7 +74,14 @@ export default function ViewFormRender(props) {
       formRender.current = formEditor;
     }
     formRender.current.on("submit", ({ data, errors }) => {
-      handleGetFormJson(data, errors);
+        const keys = Object.keys(errors);
+
+        if (keys.length > 0) {
+        const firstKey = keys[0];
+        console.log("The first key is:", firstKey);
+        } else {
+        handleGetFormJson(data, errors);
+        }
     });
     return () => {
       if (formRender.current) {
@@ -85,38 +93,27 @@ export default function ViewFormRender(props) {
 
   const targetNodeRef = useRef(null);
 
-  useEffect(() => {
-    const callback = (mutationsList, observer) => {
-      for (const mutation of mutationsList) {
-        if (
-          mutation.type === "childList" ||
-          mutation.type === "characterData"
-        ) {
-          // DOM has changed, do something
-          console.log("DOM changed");
-          const labels = document.querySelectorAll("label");
-          labels.forEach((label) => {
-            console.log(
-              "🚀 ~ file: ViewFormRender.js:100 ~ useEffect ~ label:",
-              label.textContent
-            );
-            if (label.textContent === "hidden") {
-              const parentDiv = label.parentNode;
-              parentDiv.style.display = "none";
-              parentDiv.className = "bg-danger"; // Note: It should be className, not class
-            }
-          });
-        }
+useEffect(() => {
+  const callback = (mutationsList, observer) => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'childList' || mutation.type === 'characterData') {
+        // DOM has changed, do something
+        // console.log('DOM changed');
+        const labels = document.querySelectorAll('label');
+        labels.forEach(label => {
+          if (label.textContent === 'hidden') {
+            const parentDiv = label.parentNode;
+            parentDiv.style.display = 'none';
+            parentDiv.className = 'bg-danger'; // Note: It should be className, not class
+          }
+        });
       }
-    };
-    const observer = new MutationObserver(callback);
-    if (targetNodeRef.current) {
-      observer.observe(targetNodeRef.current, {
-        attributes: true,
-        childList: true,
-        subtree: true,
-      });
     }
+  };
+  const observer = new MutationObserver(callback);
+  if (targetNodeRef.current) {
+    observer.observe(targetNodeRef.current, { attributes: true, childList: true, subtree: true });
+  }
 
     return () => {
       observer.disconnect();

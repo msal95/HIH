@@ -31,6 +31,7 @@ import NoRecordFound from "../../components/NoRecordFound/NoRecordFound";
 import SendGrid from "../../components/SendGrid/SendGrid";
 import "../../style/base/base.scss";
 import CredentialsFilter from "./CredentialsFilter";
+import ViewFormRender from "../builder/ViewFormRender";
 
 const locationData = [
   {
@@ -283,7 +284,9 @@ const Credentials = () => {
           customSelectedOption={customSelectedOption}
           setCustomSelectedOption={setCustomSelectedOption}
         />
-      );
+        // <ViewFormRender/>
+        );
+        console.log('✅ integrationData?.data?.data?.auth    ', integrationData?.data?.data?.auth)
     }
   };
 
