@@ -58,7 +58,7 @@ export default function ProfileUpdate() {
 
   //** ComponentDidMount
   const [avatar, setAvatar] = useState(
-    userData?.profile_photo_url ? userData?.profile_photo_url : ""
+    userData?.profile_photo_path ? userData?.profile_photo_path : ""
   );
   console.log(
     "🚀 ~ file: ProfileUpdate.js:67 ~ ProfileUpdate ~ avatar:",
