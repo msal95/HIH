@@ -12,14 +12,6 @@ import { getRoutes } from "../router/routes";
 function PrivateRoute(props) {
   const location = useLocation();
 
-  // const { layout } = useLayout();
-
-  // const allRoutes = getRoutes(layout);
-  // console.log(
-  //   "🚀 ~ file: PrivateRoute.js:18 ~ PrivateRoute ~ allRoutes:",
-  //   allRoutes
-  // );
-
   const newToken = () => {
     if (localStorage.getItem("myToken") === null) {
       const token = null;
@@ -30,7 +22,6 @@ function PrivateRoute(props) {
   };
 
   const token = newToken();
-  console.log("🚀 ~ file: PrivateRoute.js:33 ~ PrivateRoute ~ token:", token);
 
   if (token === undefined || token === null) {
     return (

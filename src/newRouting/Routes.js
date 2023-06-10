@@ -57,7 +57,7 @@ export default function MainRoutes() {
       {/* <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}> */}
       {/* {!!token &&  <Header />} */}
       <Routes>
-        <Route path="/login" element={<LoginBasic />} />
+        <Route path="/" element={<LoginBasic />} />
         <Route path="/pages/register-basic" element={<RegisterBasic />} />
         {/* <Route path="/asset/detail/:copyLinkId" element={<CopyLinkPage />} /> */}
         <Route element={<PrivateRoute />}>

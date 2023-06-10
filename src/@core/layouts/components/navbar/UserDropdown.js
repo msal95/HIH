@@ -51,14 +51,13 @@ const UserDropdown = () => {
   }, [selector]);
 
   // ** Selector to access the user data from the Redux store
-  const userDatass = useSelector((state) => state?.auth?.userData);
-  console.log("🚀 ~ file: UserDropdown.js:55 ~ UserDropdown ~ userDatass:", userDatass)
 
   // ** State
   // const [userData, setUserData] = useState(null);
 
   //** Vars
-  const userAvatar = (userData && userData?.profile_photo_path) || defaultAvatar;
+  const userAvatar =
+    (userData && userData?.profile_photo_path) || defaultAvatar;
   return (
     <UncontrolledDropdown tag="li" className="dropdown-user nav-item">
       <DropdownToggle
