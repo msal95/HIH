@@ -7,7 +7,6 @@ import Avatar from "@components/avatar";
 
 // ** Utils
 import { isUserLoggedIn } from "@utils";
-// console.log("🚀 ~ file: UserDropdown.js:10 ~ isUserLoggedIn:", isUserLoggedIn);
 
 // ** Store & Actions
 import { useDispatch, useSelector } from "react-redux";
@@ -53,6 +52,7 @@ const UserDropdown = () => {
 
   // ** Selector to access the user data from the Redux store
   const userDatass = useSelector((state) => state?.auth?.userData);
+  console.log("🚀 ~ file: UserDropdown.js:55 ~ UserDropdown ~ userDatass:", userDatass)
 
   // ** State
   const [userData, setUserData] = useState(null);

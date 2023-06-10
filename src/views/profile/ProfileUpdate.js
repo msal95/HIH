@@ -52,10 +52,6 @@ export default function ProfileUpdate() {
 
   // ** State
   const [userData, setUserData] = useState(null);
-  console.log(
-    "🚀 ~ file: ProfileUpdate.js:48 ~ ProfileUpdate ~ userData:",
-    userData?.profile_photo_path
-  );
 
   //** ComponentDidMount
   const [avatar, setAvatar] = useState(userData?.avatar ? data?.avatar : "");
@@ -79,7 +75,6 @@ export default function ProfileUpdate() {
     // }
   }, []);
   useEffect(() => {
-    console.log("✅ userData    ", userData);
     formik.setFieldValue("name", userData?.name ?? "");
     formik.setFieldValue("email", userData?.email ?? "");
     formik.setFieldValue("user_id", userData?.id ?? "");

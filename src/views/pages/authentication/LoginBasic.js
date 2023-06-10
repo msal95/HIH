@@ -26,6 +26,7 @@ import "../../../style/views/Login/authentication.scss";
 import { Formik } from "formik";
 import { LoginValidationSchema } from "../../../utility/validationSchemas/AuthenticationSchemas";
 import ErrorMessage, {
+    ErrorMessageInline,
   getHomeRouteForLoggedInUser,
 } from "../../../utility/Utils";
 import AuthHeader from "../../../components/AuthHeader/AuthHeader";
@@ -121,24 +122,18 @@ const LoginBasic = () => {
             accessToken: res?.data?.accessToken,
             refreshToken: res?.data?.refreshToken,
           };
-          console.log("🚀 ~ file: LoginBasic.js:75 ~ .then ~ data:", data);
           dispatch(handleLogin(data));
           ability.update(res?.data?.userData?.ability);
           navigate(getHomeRouteForLoggedInUser(data?.role));
         } else {
-          console.log("✅ element    ", message, validationErrors, response);
           Object.keys(validationErrors).forEach((key) => {
             toast.error(validationErrors[key]);
           });
         }
       });
     } catch (error) {
-      console.log(
-        "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
-        error
-      );
+
     }
-    console.log("🚀 ~ file: LoginBasic.js:68 ~ onSubmit ~ data:", data);
   };
 
   return (
@@ -168,7 +163,7 @@ const LoginBasic = () => {
               }) => (
                 <Form className="auth-login-form mt-2" onSubmit={handleSubmit}>
                   <InputField
-                    label="Email *"
+                    label= {(errors?.email && touched?.email) ?  <ErrorMessageInline message={`Email * ${errors.email}`}/> : "Email * "}
                     type="email"
                     name="email"
                     onChange={handleChange}
@@ -176,8 +171,8 @@ const LoginBasic = () => {
                     value={values.email}
                     autoFocus
                     placeholder="email@email.com"
-                    errorType={errors.email && touched.email}
-                    errorMessage={errors.email}
+                    // errorType={errors.email && touched.email}
+                    // errorMessage={errors.email}
                   />
 
                   {/* <InputField
@@ -193,13 +188,10 @@ const LoginBasic = () => {
                     errorMessage={errors.password}
                   /> */}
 
-                <InputPasswordToggle className='mb-2' label='Password *'  htmlFor='basic-default-password'
+                <InputPasswordToggle className='mb-2' label={(errors?.password && touched?.password) ?  <ErrorMessageInline message={`password * ${errors.password}`}/> : "password * "}  htmlFor='basic-default-password'
                         // onChange={handleChange}
                         {...getFieldProps("password")}
                     />
-                    {errors.password && touched.password && <ErrorMessage message={errors.password} />}
-                  {console.log('✅ errors    ', errors, "touched", touched)
-                  }
                   <div className="d-flex justify-content-between">
                     <div className="form-check mb-1">
                       <Input type="checkbox" id="remember-me" />
