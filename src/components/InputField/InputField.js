@@ -169,11 +169,16 @@ export default function InputField(props) {
                 </p>
                 <ChevronDown size={16} />
               </div>
-              {toggleSelect && (
-                <div className="">
-                  <TreeView data={optionsData} handleChange={handleChange} />
-                </div>
-              )}
+              {toggleSelect &&
+                (!optionsData?.length ? (
+                  <h3 className="d-flex align-items-center justify-content-center p-2">
+                    No Location Available
+                  </h3>
+                ) : (
+                  <div className="">
+                    <TreeView data={optionsData} handleChange={handleChange} />
+                  </div>
+                ))}
             </>
           ) : (
             <Select

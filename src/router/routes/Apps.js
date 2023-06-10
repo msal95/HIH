@@ -59,10 +59,10 @@ const AppRoutes = [
     // element: <ProfileUpdate />,
     element: <UpdateProfile />,
     path: "/apps/profile",
-    meta: {
-      appLayout: true,
-      className: "email-application",
-    },
+    // meta: {
+    //   appLayout: true,
+    //   className: "email-application",
+    // },
   },
   {
     element: <Engine />,
