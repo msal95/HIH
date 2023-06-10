@@ -64,6 +64,7 @@ const getRouteMeta = (route) => {
 };
 
 // const token = localStorage.getItem("accessToken");
+// console.log("🚀 ~ file: index.js:67 ~ token:", token);
 
 // axios.defaults.headers.common = {
 //   Authorization: `Bearer ${token}`,

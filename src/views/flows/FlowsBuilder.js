@@ -437,35 +437,30 @@ const FLowsBuilder = () => {
                 onClick={handleRunWorkflow}
               />
             )}
-            <div style={{ width: "12rem" }}>
-              {/* <Button block color="primary" onClick={handleGenerateWebHook}>
-                Copy 
-              </Button> */}
-              <CopyToClipboard text={generatedWebhookUrl}>
+            <div
+              style={{ width: "12rem" }}
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="Generated URL"
+            >
+              <CopyToClipboard
+                text={generatedWebhookUrl}
+                className="cursor-pointer"
+              >
                 <Copy size={16} onClick={handleCopyUrl} />
               </CopyToClipboard>
             </div>
-            <div style={{ width: "12rem" }}>
-              <Button
-                block
-                className="ms-1"
-                color="primary"
-                onClick={handleGenerateWebHook}
-              >
+            <div className="me-1" style={{ width: "14rem" }}>
+              <Button block color="primary" onClick={handleGenerateWebHook}>
                 Generate Webhook
               </Button>
             </div>
-            <div style={{ width: "12rem" }}>
-              <Button
-                block
-                className="ms-1"
-                color="primary"
-                onClick={toggleCanvasEnd}
-              >
+            <div className="me-1" style={{ width: "12rem" }}>
+              <Button block color="primary" onClick={toggleCanvasEnd}>
                 Create Node
               </Button>
             </div>
-            <div className="ms-1" style={{ width: "8rem" }}>
+            <div style={{ width: "8rem" }}>
               <Button block color="primary" onClick={handleOnSave}>
                 Save
               </Button>
@@ -488,17 +483,12 @@ const FLowsBuilder = () => {
             defaultEdgeOptions={edgeOptions}
             minZoom={0.2}
             maxZoom={4}
-            // onNodesDelete={onNodesDelete}
             nodeTypes={nodeTypes}
-            // onInit={onInit}
-            // onDrop={onDrop}
-            // onDragOver={onDragOver}
           >
             <MiniMap />
             <Controls />
             <Background variant="dots" gap={12} size={2} />
           </ReactFlow>
-          {/* <CustomNodes /> */}
         </CardBody>
 
         <CustomOffCanvas
@@ -532,7 +522,7 @@ const FLowsBuilder = () => {
               </div>
               <Divider />
               <div className="container row">
-                {!selectedNode?.data?.events[0]?.params?.events?.length && (
+                {!selectedNode?.data?.events?.length && (
                   <h3 className="d-flex align-items-center justify-content-center p-2">
                     No Events Available for this integration
                   </h3>
