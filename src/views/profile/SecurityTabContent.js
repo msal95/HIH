@@ -62,7 +62,7 @@ const passwordQuery = useUpdatePassword();
       .required(),
     retypeNewPassword: yup
       .string()
-      .min(8, obj => showErrors('Retype New Password', obj.value.length, obj.min))
+      .min(8, obj => showErrors('Confirm Password', obj.value.length, obj.min))
       .required()
       .oneOf([yup.ref(`newPassword`), null], 'Passwords must match')
   })
@@ -169,7 +169,7 @@ const passwordQuery = useUpdatePassword();
                   name='retypeNewPassword'
                   render={({ field }) => (
                     <InputPasswordToggle
-                      label='Retype New Password'
+                      label='Confirm Password'
                       htmlFor='retypeNewPassword'
                       className='input-group-merge'
                       invalid={errors.newPassword && true}

@@ -103,6 +103,9 @@ export default function ProfileUpdate() {
         // setSubmitting(false);
         // setSubmittingClick(false);
         toast.success(message);
+        setTimeout(() => {
+            navigate('/dashboard');
+        }, 3000);
         dispatch(handleUpdateProfile(data));
       } else {
         // setSubmittingSuccess(false);
