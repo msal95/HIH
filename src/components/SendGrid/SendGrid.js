@@ -21,16 +21,20 @@ import CreateNewProject from "../CreateNewProject/CreateNewProject";
 import CustomHeading from "../CustomHeading/CustomHeading";
 import InputField from "../InputField/InputField";
 import ViewFormRender from "../../views/builder/ViewFormRender";
+import { useGetAuthType } from "../../../api/config/AuthTypeQueries";
 // import "./builder.css";
 
-const authOptions = [
-  { id: 1, name: "No Auth", value: "No Auth" },
-  { id: 2, name: "API Key", value: "API Key" },
-  { id: 3, name: "OAuth 2.0", value: "OAuth 2.0" },
-  { id: 4, name: "Bearer Token", value: "Bearer Token" },
-  { id: 5, name: "Auth 1.0", value: "Auth 1.0" },
-  { id: 6, name: "JWT", value: "JWT" },
-];
+// const authOptions = [
+//   { id: 1, name: "No Auth", value: "No Auth" },
+//   { id: 2, name: "API Key", value: "API Key" },
+//   { id: 3, name: "OAuth 2.0", value: "OAuth 2.0" },
+//   { id: 4, name: "Bearer Token", value: "Bearer Token" },
+//   { id: 5, name: "Auth 1.0", value: "Auth 1.0" },
+//   { id: 6, name: "JWT", value: "JWT" },
+// ];
+
+// const jsonValue = ["{\"components\":[{\"label\":\"not auth\",\"type\":\"textfield\",\"layout\":{\"row\":\"Row_0jz0kqc\",\"columns\":null},\"id\":\"Field_0cr3x8d\",\"key\":\"field_0nyi8r7\"},{\"key\":\"make-the-form\",\"label\":\"make the form\",\"type\":\"textfield\",\"validate\":{\"required\":true},\"id\":\"Field_0ojcoxg\",\"layout\":{\"row\":\"Row_17acaag\"}},{\"label\":\"Number\",\"type\":\"number\",\"layout\":{\"row\":\"Row_1wikq3o\",\"columns\":null},\"id\":\"Field_131tvrc\",\"key\":\"field_18x6u6j\"},{\"action\":\"submit\",\"label\":\"Button\",\"type\":\"button\",\"layout\":{\"row\":\"Row_06yz7la\",\"columns\":null},\"id\":\"Field_0uoppwp\",\"key\":\"field_0ybs29u\"}],\"type\":\"default\",\"id\":\"Form_08pufoe\",\"schemaVersion\":8}"];
+
 
 export default function SendGrid(props) {
   const {
@@ -45,21 +49,30 @@ export default function SendGrid(props) {
     setCustomSelectedOption,
   } = props;
 
+  const authQuery = useGetAuthType();
+
+
   const { id, name, data, type } = item ?? {};
 
   const [formsTypeData, setFormsTypeData] = useState(forms);
+  const [authOptions, setauthOptions] = useState([]);
   const [selectAuth, setSelectAuth] = useState(null);
   const [selectedAuthType, setSelectedAuthType] = useState(null);
   const [hasForm, setHasForm] = useState(false);
   const [hasFormJson, setFormJson] = useState(null);
 
 //   const formRender = useRef(null);
+
+useEffect(() => {
+    if (authQuery.isFetched && authQuery.data) {
+        setauthOptions(authQuery.data);
+    }
+}, [authQuery.data, authQuery.isFetched, authQuery.isFetching]);
+
   const [formJson, setSelectedFormJson] = useState(null);
 
   const handleGetFormJson = async (data, errors) => {
     const formValue = JSON.stringify(data);
-    // alert("Testing");
-
     try {
       const formValueData = {
         form_builders_id: formJson?.data?.id,
@@ -73,14 +86,14 @@ export default function SendGrid(props) {
   };
 useEffect(() => {
     const filtered = formsTypeData.filter((item) => item?.name === selectedAuthType);
-        console.log("🚀 ~ file: SendGrid.js:111 ~ useEffect ~ filtered: ", filtered)
-        setSelectAuth(filtered[0]);
-        console.log('✅ bpmn_form  ???????????????  ', filtered[0]?.bpmn_form)
+        setSelectAuth(filtered[0] ?? null);
         if (!(filtered[0]?.bpmn_form === null)) {
             setHasForm(true);
             setFormJson(filtered[0]?.bpmn_form?.json)
         } else {
             setHasForm(false);
+            setFormJson(null)
+            setSelectAuth(null)
         }
 
 }, [selectedAuthType]);
@@ -147,8 +160,8 @@ useEffect(() => {
                   label="Authentication type"
                   name="authType"
                   onChange={(selectedOption) => {
-                    handleChange("authType")(selectedOption.value);
-                    setSelectedAuthType(selectedOption.value);
+                    handleChange("authType")(selectedOption.name);
+                    setSelectedAuthType(selectedOption.name);
                   }}
                   onBlur={handleBlur}
                   value={values.authType}
@@ -158,7 +171,7 @@ useEffect(() => {
                   errorMessage={errors.authType}
                   isSelectorOption
                 />
-                {hasForm  && <ViewFormRender form={hasFormJson} selectedEvent={selectAuth}/>}
+                {selectAuth?.id > 0 && <ViewFormRender form={hasFormJson} selectedEvent={selectAuth}/>}
                 <InputField
                   label="Authorization URL"
                   name="authUrl"

@@ -33,6 +33,9 @@ function laravelApi() {
       postEventFormMake: `${home}/form-builder/event-form-make`,
       getIntegrationAndForms: `${home}/form-builder/integration-and-forms`,
     },
+    authType: {
+      get: `${home}/authtype`,
+    },
   };
 }
 

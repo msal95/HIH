@@ -79,11 +79,6 @@ export default function InputField(props) {
 
   const [inputVisibility, setInputVisibility] = useState(false);
   const [toggleSelect, setToggleSelect] = useState(false);
-  console.log(
-    "🚀 ~ file: InputField.js:82 ~ InputField ~ toggleSelect:",
-    toggleSelect
-  );
-
   const handleToggleSelect = () => {
     setToggleSelect((prevState) => !prevState);
   };

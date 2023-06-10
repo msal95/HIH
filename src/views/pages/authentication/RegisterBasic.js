@@ -27,16 +27,12 @@ import AuthHeader from "../../../components/AuthHeader/AuthHeader";
 import { Formik } from "formik";
 import InputField from "../../../components/InputField/InputField";
 import { SignupValidationSchema } from "../../../utility/validationSchemas/AuthenticationSchemas";
-import ErrorMessage from "../../../utility/Utils";
+import ErrorMessage, { ErrorMessageInline } from "../../../utility/Utils";
 import { AuthSignUp } from "../../../../api/ApiMethods/AuthApiEndPoint";
 
 const RegisterBasic = () => {
   const navigate = useNavigate();
   const onHandleSubmit = (values) => {
-    console.log(
-      "🚀 ~ file: RegisterBasic.js:33 ~ onHandleSubmit ~ values:",
-      values
-    );
     // event.preventDefault();
     // navigate(
     //   "/pages/two-steps-basic"
@@ -57,16 +53,12 @@ const RegisterBasic = () => {
               toast.success(message);
               navigate("/login");
           } else {
-            console.log('✅ element    ', message,
-            validationErrors,
-            response);
             Object.keys(validationErrors).forEach(key => {
               toast.error(validationErrors[key]);
             });
           }
         });
       } catch (error) {
-        console.log("🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:", error);
       }
     // AuthSignUp(values)
   };
@@ -101,7 +93,8 @@ const RegisterBasic = () => {
                   onSubmit={handleSubmit}
                 >
                   <InputField
-                    label="Username *"
+                    // label="Username *"
+                    label= {(errors?.username && touched?.username) ?  <ErrorMessageInline message={`Username * ${errors.username}`}/> : "Username * "}
                     type="text"
                     name="username"
                     onChange={handleChange}
@@ -109,20 +102,21 @@ const RegisterBasic = () => {
                     value={values.username}
                     autoFocus
                     placeholder="Enter User Name"
-                    errorType={errors.username && touched.username}
-                    errorMessage={errors.username}
+                    // errorType={errors.username && touched.username}
+                    // errorMessage={errors.username}
                   />
 
                   <InputField
-                    label="Email *"
+                    // label="Email *"
+                    label= {(errors?.email && touched?.email) ?  <ErrorMessageInline message={`Email * ${errors.email}`}/> : "Email * "}
                     type="email"
                     name="email"
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.email}
                     placeholder="email@email.com"
-                    errorType={errors.email && touched.email}
-                    errorMessage={errors.email}
+                    // errorType={errors.email && touched.email}
+                    // errorMessage={errors.email}
                   />
 
                   {/* <InputField
@@ -138,10 +132,11 @@ const RegisterBasic = () => {
                     errorType={errors.password && touched.password}
                     errorMessage={errors.password}
                   /> */}
-                  <InputPasswordToggle className='mb-2' name="password" label='Password *' htmlFor='basic-default-password'
+                  <InputPasswordToggle className='mb-2' name="password" label= {(errors?.password && touched?.password) ?  <ErrorMessageInline message={`Password * ${errors.password}`}/> : "Password * "}
+ htmlFor='basic-default-password'
                     {...getFieldProps("password")}
                   />
-                  {errors.password && touched.password && <ErrorMessage message={errors.password} />}
+                  {/* {errors.password && touched.password && <ErrorMessage message={errors.password} />} */}
                   <div className="form-check mb-1">
                     <Input type="checkbox" id="terms" />
                     <Label className="form-check-label" for="terms">
