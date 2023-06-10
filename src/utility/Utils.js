@@ -66,6 +66,10 @@ export const getUserData = () => JSON.parse(localStorage.getItem("userData"));
  * @param {String} userRole Role of user
  */
 export const getHomeRouteForLoggedInUser = (userRole) => {
+  console.log(
+    "🚀 ~ file: Utils.js:69 ~ getHomeRouteForLoggedInUser ~ userRole:",
+    userRole
+  );
   if (userRole === "admin") return DefaultRoute;
   if (userRole === "client") return "/access-control";
   return "/login";
@@ -97,19 +101,22 @@ export const errorStyle = {
     fontSize: 12,
     color: "red",
     fontWeight: "400",
-    marginLeft:"4px"
+    marginLeft: "4px",
   },
 };
 
 export default function ErrorMessage({ message }) {
   return (
     <div style={errorStyle.errorContainer}>
-      <h3 style={errorStyle.errorMessage}> {  message ?? `Field is Required`}</h3>
+      <h3 style={errorStyle.errorMessage}> {message ?? `Field is Required`}</h3>
     </div>
   );
 }
 export function ErrorMessageInline({ message }) {
   return (
-      <span style={errorStyle.errorMessageInline}> {  message ?? `Field is Required`}</span>
+    <span style={errorStyle.errorMessageInline}>
+      {" "}
+      {message ?? `Field is Required`}
+    </span>
   );
 }

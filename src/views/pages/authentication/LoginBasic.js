@@ -157,7 +157,7 @@ const LoginBasic = () => {
                 handleChange,
                 handleBlur,
                 handleSubmit,
-                getFieldProps
+                getFieldProps,
                 // isSubmitting,
                 /* and other goodies */
               }) => (

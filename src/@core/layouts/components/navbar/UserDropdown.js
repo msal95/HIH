@@ -42,12 +42,12 @@ const UserDropdown = () => {
 
   const selector = useSelector((select) => select?.auth?.userData);
 
-  const [userDataL, setUserDataL] = useState({});
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
     // Retrieve data from local storage
     const data = UserData.getItem("userData");
-    setUserDataL(data);
+    setUserData(data);
   }, [selector]);
 
   // ** Selector to access the user data from the Redux store
@@ -55,11 +55,10 @@ const UserDropdown = () => {
   console.log("🚀 ~ file: UserDropdown.js:55 ~ UserDropdown ~ userDatass:", userDatass)
 
   // ** State
-  const [userData, setUserData] = useState(null);
+  // const [userData, setUserData] = useState(null);
 
   //** Vars
-  const userAvatar =
-    (userDatass && userDatass?.profile_photo_path) || defaultAvatar;
+  const userAvatar = (userData && userData?.profile_photo_url) || defaultAvatar;
   return (
     <UncontrolledDropdown tag="li" className="dropdown-user nav-item">
       <DropdownToggle
@@ -70,8 +69,7 @@ const UserDropdown = () => {
       >
         <div className="user-nav d-sm-flex d-none">
           <span className="user-name fw-bold">
-            {(!!Object?.keys(userDataL)?.length && userDataL?.name) ||
-              "Emmanuel"}
+            {(!!Object?.keys(userData)?.length && userData?.name) || "Emmanuel"}
           </span>
           {/* <span className='user-status'>{(userData && userData.role) || 'Admin'}</span> */}
         </div>

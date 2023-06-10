@@ -16,7 +16,7 @@ import {
 } from "reactstrap";
 import ErrorMessage, { ErrorMessageInline } from "../../utility/Utils";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { handleUpdateProfile } from "@store/authentication";
 import { useUpdateProfile } from "../../../api/config/userProfile";
 import HIHLogo from "@src/assets/images/logo/hih_Logo.png";
@@ -25,9 +25,9 @@ export default function ProfileUpdate() {
   const userQuery = useUpdateProfile();
   const navigate = useNavigate();
 
-  const [submitting, setSubmitting] = useState(false);
-  const [submittingSuccess, setSubmittingSuccess] = useState(false);
-  const [submittingClick, setSubmittingClick] = useState(false);
+  // const [submitting, setSubmitting] = useState(false);
+  // const [submittingSuccess, setSubmittingSuccess] = useState(false);
+  // const [submittingClick, setSubmittingClick] = useState(false);
 
   const integrationSchema = Yup.object().shape({
     name: Yup.string().required(" Required"),
@@ -41,20 +41,29 @@ export default function ProfileUpdate() {
     },
     validationSchema: integrationSchema,
     onSubmit: (data) => {
-      setSubmittingClick(true);
+      // setSubmittingClick(true);
       userQuery.mutate(data);
     },
   });
+
   const { errors, touched, getFieldProps } = formik;
 
   // ** Store Vars
   const dispatch = useDispatch();
 
+  const selector = useSelector((select) => select?.auth?.userData);
+
   // ** State
   const [userData, setUserData] = useState(null);
 
   //** ComponentDidMount
-  const [avatar, setAvatar] = useState(userData?.avatar ? data?.avatar : "");
+  const [avatar, setAvatar] = useState(
+    userData?.profile_photo_url ? userData?.profile_photo_url : ""
+  );
+  console.log(
+    "🚀 ~ file: ProfileUpdate.js:67 ~ ProfileUpdate ~ avatar:",
+    avatar
+  );
 
   const onChange = (e) => {
     const reader = new FileReader(),
@@ -69,11 +78,13 @@ export default function ProfileUpdate() {
     const file = e.target.files[0];
     formik.setFieldValue("image", file);
   };
+
   useEffect(() => {
     // if (isUserLoggedIn() !== null) {
     setUserData(JSON.parse(localStorage.getItem("userData")));
     // }
-  }, []);
+  }, [selector]);
+
   useEffect(() => {
     formik.setFieldValue("name", userData?.name ?? "");
     formik.setFieldValue("email", userData?.email ?? "");
@@ -88,28 +99,29 @@ export default function ProfileUpdate() {
       const validationErrors = data?.validation_errors;
       const response = data?.response;
       if (response === 200) {
-        setSubmittingSuccess(false);
-        setSubmitting(false);
-        setSubmittingClick(false);
+        // setSubmittingSuccess(false);
+        // setSubmitting(false);
+        // setSubmittingClick(false);
         toast.success(message);
         dispatch(handleUpdateProfile(data));
       } else {
-        setSubmittingSuccess(false);
-        setSubmitting(false);
-        setSubmittingClick(false);
+        // setSubmittingSuccess(false);
+        // setSubmitting(false);
+        // setSubmittingClick(false);
         Object.keys(validationErrors).forEach((key) => {
           toast.error(validationErrors[key]);
         });
       }
-      setSubmitting(false);
+      // setSubmitting(false);
     }
 
     if (userQuery.isError) {
-      setSubmitting(false);
+      // setSubmitting(false);
       const message = "Error occurred while saving the data";
       toast.error(message);
     }
   }, [userQuery.isSuccess, userQuery.isError]);
+
   return (
     <div className="container-xxl overflow-auto">
       <h2 className="text-primary py-2">Profile Update</h2>

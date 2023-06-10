@@ -15,6 +15,7 @@ import { getUserData, getHomeRouteForLoggedInUser } from "../utility/Utils";
 
 // ** GetRoutes
 import { getRoutes } from "./routes";
+import Login from "../views/pages/authentication/Login";
 
 // ** Components
 const Error = lazy(() => import("../views/pages/misc/Error"));
@@ -28,7 +29,6 @@ const Router = () => {
   const { layout } = useLayout();
 
   const allRoutes = getRoutes(layout);
-  console.log("🚀 ~ file: Router.js:31 ~ Router ~ allRoutes:", allRoutes);
   const getHomeRoute = () => {
     const user = getUserData();
     if (user) {
@@ -47,6 +47,7 @@ const Router = () => {
     {
       path: "/login",
       element: <BlankLayout />,
+      // children: [{ path: "/login", element: <Login /> }],
       children: [{ path: "/login", element: <LoginBasic /> }],
     },
     {
