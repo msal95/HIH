@@ -58,7 +58,7 @@ export default function ProfileUpdate() {
 
   //** ComponentDidMount
   const [avatar, setAvatar] = useState(
-    userData?.profile_photo_path ? userData?.profile_photo_path : ""
+    userData?.profile_photo_url ? userData?.profile_photo_url : ""
   );
 
   const onChange = (e) => {
@@ -85,7 +85,7 @@ export default function ProfileUpdate() {
     formik.setFieldValue("name", userData?.name ?? "");
     formik.setFieldValue("email", userData?.email ?? "");
     formik.setFieldValue("user_id", userData?.id ?? "");
-    setAvatar(userData?.profile_photo_path);
+    setAvatar(userData?.profile_photo_url);
   }, [userData]);
 
   useEffect(() => {
@@ -99,6 +99,9 @@ export default function ProfileUpdate() {
         // setSubmitting(false);
         // setSubmittingClick(false);
         toast.success(message);
+        setTimeout(() => {
+            navigate('/dashboard');
+        }, 3000);
         dispatch(handleUpdateProfile(data));
       } else {
         // setSubmittingSuccess(false);
