@@ -31,6 +31,7 @@ const Router = () => {
   const allRoutes = getRoutes(layout);
   const getHomeRoute = () => {
     const user = getUserData();
+    console.log("🚀 ~ file: Router.js:34 ~ getHomeRoute ~ user:", user);
     if (user) {
       return getHomeRouteForLoggedInUser(user.role);
     } else {

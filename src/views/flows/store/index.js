@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   data: [],
   selectedItem: {},
+  edges: [],
 };
 
 const dataSlice = createSlice({
@@ -11,6 +12,9 @@ const dataSlice = createSlice({
   reducers: {
     addData: (state, action) => {
       state.data.push(action.payload);
+    },
+    addNewEdges: (state, action) => {
+      state.edges.push(action.payload);
     },
     onSelectNode: (state, action) => {
       state.selectedItem = action.payload;
@@ -33,6 +37,7 @@ const dataSlice = createSlice({
 
 export const {
   addData,
+  addNewEdges,
   deleteData,
   editData,
   onSelectNode,

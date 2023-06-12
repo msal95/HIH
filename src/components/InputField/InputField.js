@@ -166,7 +166,7 @@ export default function InputField(props) {
               </div>
               {toggleSelect &&
                 (!optionsData?.length ? (
-                  <h3 className="d-flex align-items-center justify-content-center p-2">
+                  <h3 className="d-flex align-items-center justify-content-center p-2 border-1 rounded-1">
                     No Location Available
                   </h3>
                 ) : (

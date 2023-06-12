@@ -38,21 +38,19 @@ import CustomModal from "../../components/CustomModal/CustomModal";
 import Divider from "../../components/Divider/Divider";
 import ViewFormRender from "../builder/ViewFormRender";
 import { useDispatch, useSelector } from "react-redux";
-import { addData, discardSelectedItem } from "./store";
+import { addData, addNewEdges, discardSelectedItem } from "./store";
 import CopyToClipboard from "react-copy-to-clipboard";
-import Avatar from "../components/avatar";
 
 const FLowsBuilder = () => {
+  const { state } = useLocation();
+  // const locationData = !!state ? JSON.parse(state?.nodes) : {};
+
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [active, setActive] = useState("1");
   const [canvasPlacement, setCanvasPlacement] = useState("end");
   const [canvasOpen, setCanvasOpen] = useState(false);
   const [flowsJson, setFlowsJson] = useState(null);
-  // console.log(
-  //   "🚀 ~ file: FlowsBuilder.js:47 ~ FLowsBuilder ~ flowsJson:",
-  //   flowsJson
-  // );
   const [isOutput, setIsOutput] = useState(false);
   const [edgeOptions, setEdgeOptions] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
@@ -62,7 +60,8 @@ const FLowsBuilder = () => {
   const [isSelectedEvent, setIsSelectedEvent] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [submittedEventResponse, setSubmittedEventResponse] = useState(null);
-  const [isSelected, setIsSelected] = useState(false);
+  const [isSaveResponse, setIsSaveResponse] = useState(false);
+  const [isGenerateWebHook, setIsGenerateWebHook] = useState(false);
   const integrationQuery = useGetIntegration();
   const [integration, setIntegration] = useState([]);
   const [formJson, setSelectedFormJson] = useState(null);
@@ -106,24 +105,37 @@ const FLowsBuilder = () => {
     }
   }, [submittedEventResponse]);
 
-  useEffect(() => {
-    if (integrationQuery.isFetched && integrationQuery.data) {
-      setIntegration(integrationQuery.data);
-    }
-  }, [integrationQuery.isFetching]);
-
   // const onInit = (reactFlowInstance) => setReactFlowInstance(reactFlowInstance);
-
-  const { state } = useLocation();
 
   const dispatch = useDispatch();
   const store = useSelector((state) => state.flowsBuilder);
 
   const { selectedItem } = store;
 
+  // useEffect(() => {
+  //   if (!!Object?.keys(JSON.parse(state?.nodes))?.length) {
+  //     console.log(
+  //       "🚀 ~ file: FlowsBuilder.js:119 ~ useEffect ~ !!Object?.keys(JSON.parse(state?.nodes))?.length:",
+  //       !!Object?.keys(JSON.parse(state?.nodes))?.length
+  //     );
+  //     // setNodes(locationNodes);
+  //     // setEdges(locationEdges);
+
+  //     dispatch(addData(state?.nodes?.nodes));
+
+  //     dispatch(addNewEdges(state?.nodes?.edges));
+  //   }
+  // }, [state]);
+
+  useEffect(() => {
+    if (integrationQuery.isFetched && integrationQuery.data) {
+      setIntegration(integrationQuery.data);
+    }
+  }, [integrationQuery.isFetching]);
+
   const onClickDiscardModal = () => {
     setShow(false);
-    setIsSelected(false);
+    // setIsSelected(false);
     setSelectedNode(null);
     setIsSelectedEvent(false);
     setSelectedEvent(null);
@@ -137,11 +149,11 @@ const FLowsBuilder = () => {
   useEffect(() => {
     if (Object.keys(selectedItem)?.length) {
       setSelectedNode(selectedItem);
-      setIsSelected(true);
+      // setIsSelected(true);
       setShow(true);
     } else {
       setSelectedNode(null);
-      setIsSelected(false);
+      // setIsSelected(false);
       setShow(false);
     }
   }, [selectedItem]);
@@ -158,8 +170,16 @@ const FLowsBuilder = () => {
   useEffect(() => {
     if (store?.data?.length) {
       setNodes(store?.data);
+      setEdges(store?.edges);
     } else {
-      setNodes([]);
+      setNodes(
+        // locationData?.updatedNode?.length ? locationData?.updatedNode :
+        []
+      );
+      setEdges(
+        // locationData?.edges?.length ? locationData?.edges :
+        []
+      );
     }
   }, [store?.data]);
 
@@ -201,9 +221,9 @@ const FLowsBuilder = () => {
     }
   };
 
-  const handleOutputOfNodes = () => {
-    setIsOutput((prevState) => !prevState);
-  };
+  // const handleOutputOfNodes = () => {
+  //   setIsOutput((prevState) => !prevState);
+  // };
 
   const addNewNode = (params) => {
     const newNode = {
@@ -233,7 +253,7 @@ const FLowsBuilder = () => {
     toast.success(() => (
       <div className="d-flex">
         <div className="d-flex flex-column">
-          <h6 className="toast-title">Icon Name Copied! 📋</h6>
+          <h6 className="toast-title">Webhook URL Copied! 📋</h6>
           <span role="img" aria-label="toast-text">
             {generatedWebhookUrl}
           </span>
@@ -250,6 +270,8 @@ const FLowsBuilder = () => {
       target,
       // type: "smoothstep",
     };
+
+    dispatch(addNewEdges(newEdge));
 
     setEdges((prevElements) => [...prevElements, newEdge]);
   };
@@ -339,12 +361,9 @@ const FLowsBuilder = () => {
         nodesEdgesJson: json,
       };
       await createWorkflowEngine(wrokflowData).then((res) => {
-        console.log(
-          "🚀 ~ file: FlowsBuilder.js:263 ~ awaitcreateWorkflowEngine ~ res:",
-          res
-        );
-        if (res.status === 200) {
+        if (res.data?.response === 200) {
           toast.success(res.data.message);
+          setIsSaveResponse(true);
           setIsLoader(false);
         }
       });
@@ -363,13 +382,8 @@ const FLowsBuilder = () => {
         workflow_id: state?.id,
       };
       await runWorkflowEngine(workflowData).then((res) => {
-        console.log(
-          "🚀 ~ file: FlowsBuilder.js:368 ~ awaitrunWorkflowEngine ~ res:",
-          res
-        );
-        if (res.status === 200) {
+        if (res.data?.response === 200) {
           toast.success("Workflow started Successfully.");
-
           setIsLoader(false);
         } else {
           toast.error(res.data.message);
@@ -391,14 +405,10 @@ const FLowsBuilder = () => {
         workflow_id: state?.id,
       };
       await generateWebhook(workflowData).then((res) => {
-        console.log(
-          "🚀 ~ file: FlowsBuilder.js:394 ~ awaitgenerateWebhook ~ res:",
-          res
-        );
-
         if (res.data.response === 200) {
           toast.success(res.data.message);
           setGeneratedWebhookUrl(res?.data.data);
+          setIsGenerateWebHook(true);
           setIsLoader(false);
         } else {
           toast.error(res.data.message);
@@ -424,44 +434,60 @@ const FLowsBuilder = () => {
             <h3 className="p-2">FLows Builder</h3>
           </div>
           <div className="col-md-6 d-flex justify-content-end align-items-center">
-            {!isOutput ? (
-              <Play
-                size={22}
-                className="me-1 cursor-pointer"
-                onClick={handleRunWorkflow}
-              />
-            ) : (
-              <Pause
-                size={22}
-                className="me-1 cursor-pointer"
-                onClick={handleRunWorkflow}
-              />
+            {isSaveResponse && (
+              <>
+                {!isOutput ? (
+                  <Play
+                    size={22}
+                    className="me-1 cursor-pointer"
+                    onClick={handleRunWorkflow}
+                  />
+                ) : (
+                  <Pause
+                    size={22}
+                    className="me-1 cursor-pointer"
+                    onClick={handleRunWorkflow}
+                  />
+                )}
+                {isGenerateWebHook ? (
+                  <div
+                    style={{ width: "12rem" }}
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    title="Generated URL"
+                  >
+                    <CopyToClipboard
+                      text={generatedWebhookUrl}
+                      className="cursor-pointer"
+                    >
+                      <Copy size={16} onClick={handleCopyUrl} />
+                    </CopyToClipboard>
+                  </div>
+                ) : (
+                  <div className="me-1" style={{ width: "14rem" }}>
+                    <Button
+                      block
+                      color="primary"
+                      onClick={handleGenerateWebHook}
+                    >
+                      Generate Webhook
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
-            <div
-              style={{ width: "12rem" }}
-              data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              title="Generated URL"
-            >
-              <CopyToClipboard
-                text={generatedWebhookUrl}
-                className="cursor-pointer"
-              >
-                <Copy size={16} onClick={handleCopyUrl} />
-              </CopyToClipboard>
-            </div>
-            <div className="me-1" style={{ width: "14rem" }}>
-              <Button block color="primary" onClick={handleGenerateWebHook}>
-                Generate Webhook
-              </Button>
-            </div>
             <div className="me-1" style={{ width: "12rem" }}>
               <Button block color="primary" onClick={toggleCanvasEnd}>
                 Create Node
               </Button>
             </div>
             <div style={{ width: "8rem" }}>
-              <Button block color="primary" onClick={handleOnSave}>
+              <Button
+                block
+                color="primary"
+                disabled={isSaveResponse}
+                onClick={handleOnSave}
+              >
                 Save
               </Button>
             </div>

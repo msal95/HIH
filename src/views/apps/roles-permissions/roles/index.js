@@ -1,26 +1,63 @@
 // ** React Imports
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from "react";
 
 // ** Roles Components
-import Table from './Table'
-import RoleCards from './RoleCards'
+import Table from "./Table";
+import RoleCards from "./RoleCards";
+import { useQuery } from "react-query";
+import { getRolesListings } from "../../../../../api/rolesPermissions/apiMethods";
+import { Spinner } from "reactstrap";
 
 const Roles = () => {
+  const [rolesData, setRolesData] = useState([]);
+  console.log("🚀 ~ file: index.js:12 ~ Roles ~ rolesData:", rolesData);
+
+  const { isLoading, data, error, isFetching, isError } = useQuery(
+    "rolesData",
+    () => getRolesListings()
+  );
+
+  console.log("🚀 ~ file: index.js:16 ~ Roles ~ data:", data?.data?.data);
+
+  useEffect(() => {
+    setRolesData(data?.data?.data);
+  }, [isFetching]);
+
+  if (isError) {
+    return (
+      <div className="container-xxl d-flex justify-content-center align-items-center">
+        <h3>{error.message}</h3>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center">
+        <Spinner type="grow" color="primary" />
+      </div>
+    );
+  }
+
   return (
     <Fragment>
       <h3>Roles List</h3>
-      <p className='mb-2'>
-        A role provides access to predefined menus and features depending on the assigned role to an administrator that
-        can have access to what he needs.
+      <p className="mb-2">
+        A role provides access to predefined menus and features depending on the
+        assigned role to an administrator that can have access to what he needs.
       </p>
-      <RoleCards />
-      <h3 className='mt-50'>Total users with their roles</h3>
-      <p className='mb-2'>Find all of your company’s administrator accounts and their associate roles.</p>
-      <div className='app-user-list'>
+
+      <RoleCards rolesData={rolesData} />
+      <h3 className="mt-50">Total users with their roles</h3>
+      <p className="mb-2">
+        Find all of your company’s administrator accounts and their associate
+        roles.
+      </p>
+      <div className="app-user-list">
         <Table />
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
-export default Roles
+export default Roles;
