@@ -65,27 +65,15 @@ const WorkFlows = () => {
   const [selectedTab, setSelectedTab] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
   const [isEditProject, setIsEditProject] = useState(false);
-  console.log(
-    "🚀 ~ file: index.js:68 ~ WorkFlows ~ isEditProject:",
-    isEditProject
-  );
   const [isWorkFLow, setIsWorkFLow] = useState(false);
   const [isProjects, setIsProjects] = useState(true);
   const [projects, setProjects] = useState([]);
   const [folders, setFolders] = useState([]);
   const [isActiveMainFolder, setIsActiveMainFolder] = useState(false);
-  console.log(
-    "🚀 ~ file: index.js:77 ~ WorkFlows ~ isActiveMainFolder:",
-    isActiveMainFolder
-  );
   const [searchTerm, setSearchTerm] = useState("");
   const [searchedFromProjects, setSearchedFromProjects] = useState();
   const [searchedFromFolders, setSearchedFromFolders] = useState([]);
   const [isActiveSubFolder, setIsActiveSubFolder] = useState(false);
-  console.log(
-    "🚀 ~ file: index.js:81 ~ WorkFlows ~ isActiveSubFolder:",
-    isActiveSubFolder
-  );
   const [selectedOption, setSelectedOption] = useState();
   const [isEditDetail, setIsEditDetail] = useState(false);
   const [isLoader, setIsLoader] = useState(false);
@@ -363,10 +351,6 @@ const WorkFlows = () => {
   };
 
   const handleEditProjectModal = (node) => {
-    console.log(
-      "🚀 ~ file: index.js:366 ~ handleEditProjectModal ~ node:",
-      node
-    );
     setSelectedNode(node);
     setSelectedItem(node);
     // setCustomSelectedOption(node);

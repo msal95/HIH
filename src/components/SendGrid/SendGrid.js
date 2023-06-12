@@ -35,7 +35,6 @@ import { useGetAuthType } from "../../../api/config/AuthTypeQueries";
 
 // const jsonValue = ["{\"components\":[{\"label\":\"not auth\",\"type\":\"textfield\",\"layout\":{\"row\":\"Row_0jz0kqc\",\"columns\":null},\"id\":\"Field_0cr3x8d\",\"key\":\"field_0nyi8r7\"},{\"key\":\"make-the-form\",\"label\":\"make the form\",\"type\":\"textfield\",\"validate\":{\"required\":true},\"id\":\"Field_0ojcoxg\",\"layout\":{\"row\":\"Row_17acaag\"}},{\"label\":\"Number\",\"type\":\"number\",\"layout\":{\"row\":\"Row_1wikq3o\",\"columns\":null},\"id\":\"Field_131tvrc\",\"key\":\"field_18x6u6j\"},{\"action\":\"submit\",\"label\":\"Button\",\"type\":\"button\",\"layout\":{\"row\":\"Row_06yz7la\",\"columns\":null},\"id\":\"Field_0uoppwp\",\"key\":\"field_0ybs29u\"}],\"type\":\"default\",\"id\":\"Form_08pufoe\",\"schemaVersion\":8}"];
 
-
 export default function SendGrid(props) {
   const {
     isEdit,
@@ -51,7 +50,6 @@ export default function SendGrid(props) {
 
   const authQuery = useGetAuthType();
 
-
   const { id, name, data, type } = item ?? {};
 
   const [formsTypeData, setFormsTypeData] = useState(forms);
@@ -61,13 +59,13 @@ export default function SendGrid(props) {
   const [hasForm, setHasForm] = useState(false);
   const [hasFormJson, setFormJson] = useState(null);
 
-//   const formRender = useRef(null);
+  //   const formRender = useRef(null);
 
-useEffect(() => {
+  useEffect(() => {
     if (authQuery.isFetched && authQuery.data) {
-        setauthOptions(authQuery.data);
+      setauthOptions(authQuery.data);
     }
-}, [authQuery.data, authQuery.isFetched, authQuery.isFetching]);
+  }, [authQuery.data, authQuery.isFetched, authQuery.isFetching]);
 
   const [formJson, setSelectedFormJson] = useState(null);
 
@@ -81,22 +79,22 @@ useEffect(() => {
         user_id: 1,
       };
       const response = await formValueSave(formValueData);
-    } catch (error) {
-    }
+    } catch (error) {}
   };
-useEffect(() => {
-    const filtered = formsTypeData.filter((item) => item?.name === selectedAuthType);
-        setSelectAuth(filtered[0] ?? null);
-        if (!(filtered[0]?.bpmn_form === null)) {
-            setHasForm(true);
-            setFormJson(filtered[0]?.bpmn_form?.json)
-        } else {
-            setHasForm(false);
-            setFormJson(null)
-            setSelectAuth(null)
-        }
-
-}, [selectedAuthType]);
+  useEffect(() => {
+    const filtered = formsTypeData.filter(
+      (item) => item?.name === selectedAuthType
+    );
+    setSelectAuth(filtered[0] ?? null);
+    if (!(filtered[0]?.bpmn_form === null)) {
+      setHasForm(true);
+      setFormJson(filtered[0]?.bpmn_form?.json);
+    } else {
+      setHasForm(false);
+      setFormJson(null);
+      setSelectAuth(null);
+    }
+  }, [selectedAuthType]);
 
   return (
     <>
@@ -171,7 +169,12 @@ useEffect(() => {
                   errorMessage={errors.authType}
                   isSelectorOption
                 />
-                {selectAuth?.id > 0 && <ViewFormRender form={hasFormJson} selectedEvent={selectAuth}/>}
+                {selectAuth?.id > 0 && (
+                  <ViewFormRender
+                    form={hasFormJson}
+                    selectedEvent={selectAuth}
+                  />
+                )}
                 <InputField
                   label="Authorization URL"
                   name="authUrl"
@@ -183,7 +186,7 @@ useEffect(() => {
                   errorMessage={errors.authUrl}
                   placeholder="https://login.microsoftonline.com/common/oauth2/v2.0/token"
                 />
-                <InputField
+                {/* <InputField
                   label="Client ID"
                   name="clientId"
                   type="text"
@@ -193,7 +196,7 @@ useEffect(() => {
                   errorType={errors.clientId && touched.clientId}
                   errorMessage={errors.clientId}
                   placeholder="1890-hwi0"
-                />
+                /> */}
 
                 <Button
                   color="primary"
