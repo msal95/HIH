@@ -48,6 +48,7 @@ export default function SendGrid(props) {
     customSelectedOption,
     setCustomSelectedOption,
   } = props;
+  console.log("🚀 ~ file: SendGrid.js:51 ~ SendGrid ~ props:", props)
 
   const authQuery = useGetAuthType();
 
@@ -56,7 +57,9 @@ export default function SendGrid(props) {
 
   const [formsTypeData, setFormsTypeData] = useState(forms);
   const [authOptions, setauthOptions] = useState([]);
+  const [credentials, setCredentials] = useState([]);
   const [selectAuth, setSelectAuth] = useState(null);
+  console.log("🚀 ~ file: SendGrid.js:62 ~ SendGrid ~ selectAuth:", selectAuth)
   const [selectedAuthType, setSelectedAuthType] = useState(null);
   const [hasForm, setHasForm] = useState(false);
   const [hasFormJson, setFormJson] = useState(null);
@@ -115,6 +118,9 @@ useEffect(() => {
               authType: "",
               authUrl: data?.auth_url ?? "",
               clientId: data?.client_id ?? "",
+              integration_id: item?.id,
+              user_id: item?.user_id,
+            //   auth_id: selectAuth?.id
             }}
             // validationSchema={SendGridValidationSchema}
             onSubmit={handleGetFormJson}
@@ -127,7 +133,7 @@ useEffect(() => {
               handleBlur,
               handleSubmit,
             }) => (
-              <Form className="auth-login-form" onSubmit={handleSubmit}>
+                <Form className="auth-login-form" onSubmit={handleSubmit}>
                 <InputField
                   label="Connection Name"
                   name="name"
@@ -139,7 +145,13 @@ useEffect(() => {
                   placeholder="My Workday Account"
                   errorType={errors.name && touched.name}
                   errorMessage={errors.name}
-                />
+                  />
+                <InputField
+                  name="auth_id"
+                  type="hidden"
+                  value={selectAuth?.id}
+                  />
+                  {console.log('✅ values    ', values)}
                 <InputField
                   label="Location"
                   name="location"
@@ -171,7 +183,9 @@ useEffect(() => {
                   errorMessage={errors.authType}
                   isSelectorOption
                 />
-                {selectAuth?.id > 0 && <ViewFormRender form={hasFormJson} selectedEvent={selectAuth}/>}
+                {setCredentials(values)}
+                {selectAuth?.id > 0 && <ViewFormRender form={hasFormJson} selectedEvent={selectAuth} credentials={credentials} selectAuth={selectAuth?.id}/>}
+                {console.log("🚀 ~ file: SendGrid.js:188 ~ SendGrid ~ credentials:", credentials)}
                 <InputField
                   label="Authorization URL"
                   name="authUrl"
