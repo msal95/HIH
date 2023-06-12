@@ -60,10 +60,6 @@ export default function ProfileUpdate() {
   const [avatar, setAvatar] = useState(
     userData?.profile_photo_url ? userData?.profile_photo_url : ""
   );
-  console.log(
-    "🚀 ~ file: ProfileUpdate.js:67 ~ ProfileUpdate ~ avatar:",
-    avatar
-  );
 
   const onChange = (e) => {
     const reader = new FileReader(),
