@@ -104,7 +104,7 @@ export default function IntegrationImport() {
   };
 
   const handleBlur = () => {
-    alert('blur');
+    // alert('blur');
     // setIsFocused(false);
     // setHasError(false); // Reset the error state when losing focus
   };
