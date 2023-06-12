@@ -214,28 +214,38 @@ const rolesArr = [
 ];
 
 const RoleCards = (props) => {
+  const { rolesData, permData, permError, permIsError, isLoading } = props;
+  console.log(
+    "🚀 ~ file: RoleCards.js:219 ~ RoleCards ~ permData:",
+    !!permData && Object.keys(permData?.module)
+  );
   // ** States
   const [show, setShow] = useState(false);
   const [modalType, setModalType] = useState("Add New");
-  const [permissionData, setPermissionData] = useState([]);
-  console.log(
-    "🚀 ~ file: RoleCards.js:221 ~ RoleCards ~ permissionData:",
-    permissionData
-  );
+  const [permisionKeys, setPermssionKeys] = useState(null);
+  console.log("🚀 ~ file: RoleCards.js:221 ~ permisionKeys:", permisionKeys);
 
-  const {
-    isLoading,
-    data: permData,
-    error,
-    isFetching,
-    isError,
-  } = useQuery("permissionData", () => getPermissionListings());
+  // const {
+  //   isLoading,
+  //   data: permData,
+  //   error,
+  //   isFetching,
+  //   isError,
+  // } = useQuery("permissionData", () => getPermissionListings());
+
+  // useEffect(() => {
+  //   setPermissionData(permData?.data?.data);
+  // }, [isFetching]);
 
   useEffect(() => {
-    setPermissionData(permData?.data?.data);
-  }, [isFetching]);
-
-  const { rolesData } = props;
+    if (permData !== null) {
+      const keys = !!permData && Object.keys(permData?.module);
+      // console.log("🚀 ~ file: RoleCards.js:239 ~ useEffect ~ keys:", keys);
+      if (!!keys?.length) {
+        setPermssionKeys(keys);
+      }
+    }
+  }, [permData]);
 
   // ** Hooks
   const {
@@ -305,9 +315,9 @@ const RoleCards = (props) => {
                 <Spinner type="grow" color="primary" />
               </div>
             )}
-            {isError && (
+            {permIsError && (
               <div className="container-xxl d-flex justify-content-center align-items-center">
-                <h3>{error.message}</h3>
+                <h3>{permError.message}</h3>
               </div>
             )}
             <Table className="table-flush-spacing" responsive>
@@ -329,7 +339,7 @@ const RoleCards = (props) => {
                     </div>
                   </td>
                 </tr>
-                {rolesArr?.map((role, index) => {
+                {permisionKeys?.map((role, index) => {
                   return (
                     <tr key={index}>
                       <td className="text-nowrap fw-bolder">{role}</td>
@@ -391,7 +401,7 @@ const RoleCards = (props) => {
             No Roles Found in Database
           </h3>
         )}
-        {data?.map((item, index) => {
+        {rolesData?.map((item, index) => {
           return (
             <Col key={index} xl={4} md={6}>
               <Card>
@@ -402,7 +412,7 @@ const RoleCards = (props) => {
                   </div>
                   <div className="d-flex justify-content-between align-items-end mt-1 pt-25">
                     <div className="role-heading">
-                      <h4 className="fw-bolder">{item.title}</h4>
+                      <h4 className="fw-bolder">{item.name}</h4>
                       <Link
                         to="/"
                         className="role-edit-modal"
