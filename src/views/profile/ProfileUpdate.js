@@ -58,7 +58,7 @@ export default function ProfileUpdate() {
 
   //** ComponentDidMount
   const [avatar, setAvatar] = useState(
-    userData?.profile_photo_path ? userData?.profile_photo_path : ""
+    userData?.profile_photo_url ? userData?.profile_photo_url : ""
   );
   console.log(
     "🚀 ~ file: ProfileUpdate.js:67 ~ ProfileUpdate ~ avatar:",
@@ -89,7 +89,7 @@ export default function ProfileUpdate() {
     formik.setFieldValue("name", userData?.name ?? "");
     formik.setFieldValue("email", userData?.email ?? "");
     formik.setFieldValue("user_id", userData?.id ?? "");
-    setAvatar(userData?.profile_photo_path);
+    setAvatar(userData?.profile_photo_url);
   }, [userData]);
 
   useEffect(() => {

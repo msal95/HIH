@@ -16,6 +16,8 @@ import InputPasswordToggle from '@components/input-password-toggle'
 import { useUpdatePassword } from '../../../api/config/userProfile'
 import { useDispatch } from 'react-redux'
 
+import { useNavigate } from "react-router-dom";
+
 // ** Demo Components
 
 const showErrors = (field, valueLen, min) => {
@@ -38,6 +40,7 @@ const SecurityTabContent = () => {
 
           // ** Store Vars
   const dispatch = useDispatch()
+  const navigate = useNavigate();
 
   // ** State
   const [userData, setUserData] = useState(null)
@@ -102,6 +105,9 @@ const passwordQuery = useUpdatePassword();
       const response = data?.response;
       if (response === 200) {
         toast.success(message);
+        setTimeout(() => {
+            navigate('/dashboard');
+        }, 3000);
     } else {
         Object.keys(validationErrors).forEach((key) => {
           toast.error(validationErrors[key]);
