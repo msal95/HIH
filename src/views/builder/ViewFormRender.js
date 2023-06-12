@@ -18,12 +18,16 @@ export default function ViewFormRender(props) {
     onClickDiscardModal,
     selectedNode,
     submission_id,
+    credentials,
+    selectAuth
   } = props;
   const location = useLocation();
 
   const formRender = useRef(null);
   const [formJson, setFormJson] = useState(form ?? location?.state?.json);
   const [stateFullData, setStateFullData] = useState(selectedEvent ?? location?.state);
+  const [credentialData, setCredentialsData] = useState(credentials ?? null);
+  console.log("🚀 ~ file: ViewFormRender.js:29 ~ ViewFormRender ~ credentialData:", credentialData)
 
 
   const handleGetFormJson = async (data, errors) => {
@@ -36,6 +40,8 @@ export default function ViewFormRender(props) {
         data: formValue,
         name: stateFullData?.name,
         user_id: 1,
+        credentialData,
+        selectAuth
       };
       const response = await formValueSave(formValueData);
 
@@ -66,6 +72,10 @@ export default function ViewFormRender(props) {
     setFormJson(form ?? location?.state?.json)
     setStateFullData(selectedEvent ?? location?.state)
   }, [form]);
+
+  useEffect(() => {
+    setCredentialsData(credentials ?? null);
+  }, [credentials]);
 
 
   useEffect(() => {
