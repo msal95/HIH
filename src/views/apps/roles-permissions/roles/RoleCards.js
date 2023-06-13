@@ -215,15 +215,25 @@ const rolesArr = [
 
 const RoleCards = (props) => {
   const { rolesData, permData, permError, permIsError, isLoading } = props;
-  console.log(
-    "🚀 ~ file: RoleCards.js:219 ~ RoleCards ~ permData:",
-    !!permData && Object.keys(permData?.module)
-  );
+  console.log("🚀 ~ file: RoleCards.js:219 ~ RoleCards ~ permData:", permData);
   // ** States
   const [show, setShow] = useState(false);
   const [modalType, setModalType] = useState("Add New");
-  const [permisionKeys, setPermssionKeys] = useState(null);
-  console.log("🚀 ~ file: RoleCards.js:221 ~ permisionKeys:", permisionKeys);
+  const [permissionKeys, setPermissionKeys] = useState(null);
+
+  const [selectedItem, setSelectedItem] = useState();
+  const [selectedOption, setSelectedOption] = useState();
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [rolePermissions, setRolePermissions] = useState({});
+  const [noModulePermission, setNoModulePermission] = useState();
+  console.log(
+    "🚀 ~ file: RoleCards.js:229 ~ RoleCards ~ noModulePermission:",
+    noModulePermission
+  );
+  console.log(
+    "🚀 ~ file: RoleCards.js:230 ~ RoleCards ~ rolePermissions:",
+    rolePermissions
+  );
 
   // const {
   //   isLoading,
@@ -236,16 +246,64 @@ const RoleCards = (props) => {
   // useEffect(() => {
   //   setPermissionData(permData?.data?.data);
   // }, [isFetching]);
-
-  useEffect(() => {
-    if (permData !== null) {
-      const keys = !!permData && Object.keys(permData?.module);
-      // console.log("🚀 ~ file: RoleCards.js:239 ~ useEffect ~ keys:", keys);
-      if (!!keys?.length) {
-        setPermssionKeys(keys);
-      }
+  const handleSelectNoModulePermission = (option) => {
+    console.log(
+      "🚀 ~ file: RoleCards.js:250 ~ handleSelectNoModulePermission ~ option:",
+      option
+    );
+    if (!!noModulePermission?.includes(option)) {
+      setNoModulePermission((prevSelected) =>
+        prevSelected.filter((selected) => selected !== option)
+      );
+    } else {
+      setNoModulePermission((prevSelected) => [...prevSelected, option]);
     }
-  }, [permData]);
+  };
+  const handleCheckboxChange = (role, permission) => {
+    setRolePermissions((prevState) => ({
+      ...prevState,
+      [role]: {
+        ...(prevState[role] || {}),
+        [permission]: !prevState[role]?.[permission],
+      },
+    }));
+  };
+
+  const handleSelectAll = () => {
+    const allSelected = Object.entries(permData?.module).every(
+      ([role, permissions]) =>
+        permissions.every((permission) => rolePermissions[role]?.[permission])
+    );
+
+    const updatedRolePermissions = {};
+    const data = !!permData && Object.keys(permData?.module);
+    data.forEach((role) => {
+      updatedRolePermissions[role] = {};
+      console.log(
+        "🚀 ~ file: RoleCards.js:261 ~ handleSelectAll ~ updatedRolePermissions:",
+        updatedRolePermissions
+      );
+
+      data[role].forEach((permission) => {
+        console.log(
+          "🚀 ~ file: RoleCards.js:275 ~ data[role].forEach ~ permission:",
+          permission
+        );
+        updatedRolePermissions[role][permission] = !allSelected;
+      });
+    });
+
+    setRolePermissions(updatedRolePermissions);
+  };
+
+  // useEffect(() => {
+  //   if (permData !== null) {
+  //     const keys = !!permData && Object.keys(permData?.module);
+  //     if (!!keys?.length) {
+  //       setPermissionKeys(keys);
+  //     }
+  //   }
+  // }, [permData]);
 
   // ** Hooks
   const {
@@ -332,30 +390,68 @@ const RoleCards = (props) => {
                   </td>
                   <td>
                     <div className="form-check">
-                      <Input type="checkbox" id="select-all" />
+                      <Input
+                        type="checkbox"
+                        id="select-all"
+                        checked={
+                          !!permData &&
+                          Object.entries(permData?.module).every(
+                            ([role, permissions]) =>
+                              permissions.every(
+                                (permission) =>
+                                  rolePermissions[role]?.[permission]
+                              )
+                          )
+                        }
+                        onChange={handleSelectAll}
+                      />
                       <Label className="form-check-label" for="select-all">
                         Select All
                       </Label>
                     </div>
                   </td>
                 </tr>
-                {permisionKeys?.map((role, index) => {
-                  return (
-                    <tr key={index}>
-                      <td className="text-nowrap fw-bolder">{role}</td>
-                      <td>
-                        <div className="d-flex">
-                          <div className="form-check me-3 me-lg-5">
-                            <Input type="checkbox" id={`read-${role}`} />
-                            <Label
-                              className="form-check-label"
-                              for={`read-${role}`}
-                            >
-                              Read
-                            </Label>
-                          </div>
-                          <div className="form-check me-3 me-lg-5">
-                            <Input type="checkbox" id={`write-${role}`} />
+                {!!permData &&
+                  Object.entries(permData.module).map(
+                    ([role, permissions], index) => {
+                      return (
+                        <tr key={index}>
+                          <td className="text-nowrap fw-bolder">{role}</td>
+                          <td>
+                            <div className="d-flex">
+                              {permissions?.map((perm, pindex) => {
+                                return (
+                                  <div
+                                    className="form-check me-3 me-lg-5"
+                                    key={pindex}
+                                  >
+                                    <Input
+                                      type="checkbox"
+                                      id={`read-${role}`}
+                                      checked={
+                                        rolePermissions[role]?.[perm] || false
+                                      }
+                                      onChange={() =>
+                                        handleCheckboxChange(role, perm)
+                                      }
+                                    />
+                                    <Label
+                                      className="form-check-label"
+                                      for={`read-${role}`}
+                                    >
+                                      {perm}
+                                    </Label>
+                                  </div>
+                                );
+                              })}
+
+                              {/* <div className="form-check me-3 me-lg-5">
+                            <Input
+                              type="checkbox"
+                              id={`write-${role}`}
+                              checked={rolePermissions[role]?.[permission] || false}
+                              onChange={() => handleCheckboxChange(item.id)}
+                            />
                             <Label
                               className="form-check-label"
                               for={`write-${role}`}
@@ -364,19 +460,57 @@ const RoleCards = (props) => {
                             </Label>
                           </div>
                           <div className="form-check">
-                            <Input type="checkbox" id={`create-${role}`} />
+                            <Input
+                              type="checkbox"
+                              id={`create-${role}`}
+                              checked={rolePermissions[role]?.[permission] || false}
+                              onChange={() => handleCheckboxChange(item.id)}
+                            />
                             <Label
                               className="form-check-label"
                               for={`create-${role}`}
                             >
                               Create
                             </Label>
+                          </div> */}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    }
+                  )}
+
+                <tr>
+                  <h4 className="mt-2 pt-50">Other Permissions</h4>
+                  {/* </tr>
+                <tr> */}
+                  <td>
+                    <div className="row">
+                      {permData?.no_module?.map((item, index) => {
+                        return (
+                          <div className="col-md-3" key={index}>
+                            <div className="form-check me-3 me-lg-5">
+                              <Input
+                                type="checkbox"
+                                id={`read-${item}`}
+                                checked={noModulePermission?.includes(item)}
+                                onChange={() =>
+                                  handleSelectNoModulePermission(item)
+                                }
+                              />
+                              <Label
+                                className="form-check-label"
+                                for={`read-${item}`}
+                              >
+                                {item}
+                              </Label>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+                        );
+                      })}
+                    </div>
+                  </td>
+                </tr>
               </tbody>
             </Table>
           </Col>

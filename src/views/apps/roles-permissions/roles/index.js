@@ -14,10 +14,6 @@ import { Spinner } from "reactstrap";
 const Roles = () => {
   const [rolesData, setRolesData] = useState([]);
   const [permissionData, setPermissionData] = useState(null);
-  console.log(
-    "🚀 ~ file: index.js:14 ~ Roles ~ permissionData:",
-    permissionData
-  );
 
   const { isLoading, data, error, isFetching, isError } = useQuery(
     "rolesData",

@@ -653,7 +653,7 @@ const WorkFlows = () => {
                     onClick={handleToggleCreateProjectModal}
                     block
                   >
-                    Create
+                    Create Project
                     <Plus size={20} className="ms-1" color="#fff" />
                   </Button>
                 ) : (
