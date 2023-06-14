@@ -51,6 +51,7 @@ const FLowsBuilder = () => {
   const [canvasPlacement, setCanvasPlacement] = useState("end");
   const [canvasOpen, setCanvasOpen] = useState(false);
   const [flowsJson, setFlowsJson] = useState(null);
+  console.log("🚀 ~ file: FlowsBuilder.js:54 ~ FLowsBuilder ~ flowsJson:", flowsJson)
   const [isOutput, setIsOutput] = useState(false);
   const [edgeOptions, setEdgeOptions] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
@@ -74,11 +75,9 @@ const FLowsBuilder = () => {
       const selectedNodeFiltered = nodes?.filter(
         (node) => node?.id === submittedEventResponse?.selectedNode_id
       );
-
       const selectedNodeIndex = nodes?.findIndex(
         (node) => node?.id === submittedEventResponse?.selectedNode_id
       );
-
       const events = {
         intgId: submittedEventResponse?.intgId,
         eventId: submittedEventResponse?.eventId,
