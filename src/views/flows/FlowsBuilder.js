@@ -381,11 +381,16 @@ const FLowsBuilder = () => {
         workflow_id: state?.id,
       };
       await runWorkflowEngine(workflowData).then((res) => {
-        if (res.data?.response === 200) {
+        console.log(
+          "🚀 ~ file: FlowsBuilder.js:385 ~ awaitrunWorkflowEngine ~ res:",
+          res
+        );
+        if (res.status === 200) {
           toast.success("Workflow started Successfully.");
           setIsLoader(false);
         } else {
           toast.error(res.data.message);
+          setIsLoader(false);
         }
       });
     } catch (error) {

@@ -5,23 +5,36 @@ import { Fragment, useEffect, useState } from "react";
 import Table from "./Table";
 import RoleCards from "./RoleCards";
 import { useQuery } from "react-query";
-import { getRolesListings } from "../../../../../api/rolesPermissions/apiMethods";
+import {
+  getPermissionListings,
+  getRolesListings,
+} from "../../../../../api/rolesPermissions/apiMethods";
 import { Spinner } from "reactstrap";
 
 const Roles = () => {
   const [rolesData, setRolesData] = useState([]);
-  console.log("🚀 ~ file: index.js:12 ~ Roles ~ rolesData:", rolesData);
+  const [permissionData, setPermissionData] = useState(null);
 
   const { isLoading, data, error, isFetching, isError } = useQuery(
     "rolesData",
     () => getRolesListings()
   );
 
-  console.log("🚀 ~ file: index.js:16 ~ Roles ~ data:", data?.data?.data);
+  const {
+    isLoading: permIsLoading,
+    data: permData,
+    error: permError,
+    isFetching: permIsFetching,
+    isError: permIsError,
+  } = useQuery("permissionData", () => getPermissionListings());
 
   useEffect(() => {
     setRolesData(data?.data?.data);
   }, [isFetching]);
+
+  useEffect(() => {
+    setPermissionData(permData?.data?.data);
+  }, [permIsFetching]);
 
   if (isError) {
     return (
@@ -47,7 +60,13 @@ const Roles = () => {
         assigned role to an administrator that can have access to what he needs.
       </p>
 
-      <RoleCards rolesData={rolesData} />
+      <RoleCards
+        rolesData={rolesData}
+        permData={permissionData}
+        permError={permError}
+        permIsError={permIsError}
+        isLoading={permIsLoading}
+      />
       <h3 className="mt-50">Total users with their roles</h3>
       <p className="mb-2">
         Find all of your company’s administrator accounts and their associate

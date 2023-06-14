@@ -1,7 +1,7 @@
 import { Formik } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import { ZapOff } from "react-feather";
-import { Button, Col, Form, Row } from "reactstrap";
+import { Button, Col, Form, Row, Spinner } from "reactstrap";
 import { Form as BuilderForm } from "@bpmn-io/form-js";
 // import schema from './schema.json';
 
@@ -46,8 +46,10 @@ export default function SendGrid(props) {
     forms,
     customSelectedOption,
     setCustomSelectedOption,
+    setSubmittedFormResponse,
+    submittedFormResponse,
+    onDiscardSelectedCredential,
   } = props;
-  console.log("🚀 ~ file: SendGrid.js:51 ~ SendGrid ~ props:", props);
 
   const authQuery = useGetAuthType();
 
@@ -57,12 +59,18 @@ export default function SendGrid(props) {
   const [authOptions, setauthOptions] = useState([]);
   const [credentials, setCredentials] = useState([]);
   const [selectAuth, setSelectAuth] = useState(null);
-  console.log("🚀 ~ file: SendGrid.js:62 ~ SendGrid ~ selectAuth:", selectAuth);
   const [selectedAuthType, setSelectedAuthType] = useState(null);
   const [hasForm, setHasForm] = useState(false);
   const [hasFormJson, setFormJson] = useState(null);
+  const [isLoader, setIsLoader] = useState(false);
 
   //   const formRender = useRef(null);
+
+  useEffect(() => {
+    if (submittedFormResponse?.response === 200) {
+      onDiscardSelectedCredential();
+    }
+  }, submittedFormResponse);
 
   useEffect(() => {
     if (authQuery.isFetched && authQuery.data) {
@@ -101,6 +109,11 @@ export default function SendGrid(props) {
 
   return (
     <>
+      {isLoader && (
+        <div className="container-xxl d-flex justify-content-center align-items-center">
+          <Spinner type="grow" color="primary" />
+        </div>
+      )}
       <CustomHeading
         image={item.image}
         title={item.name}
@@ -118,9 +131,7 @@ export default function SendGrid(props) {
               clientId: data?.client_id ?? "",
               integration_id: item?.id,
               user_id: item?.user_id,
-              //   auth_id: selectAuth?.id
             }}
-            // validationSchema={SendGridValidationSchema}
             onSubmit={handleGetFormJson}
           >
             {({
@@ -149,7 +160,6 @@ export default function SendGrid(props) {
                   type="hidden"
                   value={selectAuth?.id}
                 />
-                {console.log("✅ values    ", values)}
                 <InputField
                   label="Location"
                   name="location"
@@ -188,13 +198,14 @@ export default function SendGrid(props) {
                     selectedEvent={selectAuth}
                     credentials={credentials}
                     selectAuth={selectAuth?.id}
+                    setSubmittedFormResponse={setSubmittedFormResponse}
+                    submittedFormResponse={submittedFormResponse}
+                    onDiscardSelectedCredential={onDiscardSelectedCredential}
+                    setIsLoader={setIsLoader}
                   />
                 )}
-                {console.log(
-                  "🚀 ~ file: SendGrid.js:188 ~ SendGrid ~ credentials:",
-                  credentials
-                )}
-                <InputField
+
+                {/* <InputField
                   label="Authorization URL"
                   name="authUrl"
                   type="text"
@@ -204,7 +215,7 @@ export default function SendGrid(props) {
                   errorType={errors.authUrl && touched.authUrl}
                   errorMessage={errors.authUrl}
                   placeholder="https://login.microsoftonline.com/common/oauth2/v2.0/token"
-                />
+                /> */}
                 {/* <InputField
                   label="Client ID"
                   name="clientId"
@@ -217,14 +228,14 @@ export default function SendGrid(props) {
                   placeholder="1890-hwi0"
                 /> */}
 
-                <Button
+                {/* <Button
                   color="primary"
                   block
                   onClick={handleSubmit}
                   className="connect-btn"
                 >
                   connect
-                </Button>
+                </Button> */}
               </Form>
             )}
           </Formik>

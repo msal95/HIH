@@ -58,9 +58,13 @@ const Credentials = () => {
   const [isSendGridData, setIsSendGridData] = useState(false);
   const [isCredential, setIsCredential] = useState(false);
   const [isSelectedCredential, setIsSelectedCredential] = useState(false);
+  console.log(
+    "🚀 ~ file: index.js:61 ~ Credentials ~ isSelectedCredential:",
+    isSelectedCredential
+  );
   const [allCredentialsData, setAllCredentialsData] = useState();
   const [credentialsData, setCredentialsData] = useState();
-
+  const [submittedFormResponse, setSubmittedFormResponse] = useState();
   const [searchedList, setSearchedList] = useState("");
   const [selectedItem, setSelectedItem] = useState();
   const [isEdit, setIsEdit] = useState(false);
@@ -103,7 +107,7 @@ const Credentials = () => {
   } = useQuery("integrationsList", () => getIntegrationsList());
 
   useEffect(() => {
-    if (!!data?.data?.data.data.length) {
+    if (!!data?.data?.data?.data.length) {
       setCredentialsData(data?.data?.data?.data);
       setAllCredentialsData(data?.data?.data?.data);
     }
@@ -163,6 +167,7 @@ const Credentials = () => {
   };
 
   const onHandleDelete = async (data) => {
+    console.log("🚀 ~ file: index.js:170 ~ onHandleDelete ~ data:", data);
     return MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -175,7 +180,7 @@ const Credentials = () => {
       },
       buttonsStyling: false,
       preConfirm: () => {
-        deleteCredential(data.id);
+        deleteCredential(data);
       },
     }).then(function (result) {
       if (result.value) {
@@ -283,10 +288,12 @@ const Credentials = () => {
           forms={integrationData?.data?.data?.auth}
           customSelectedOption={customSelectedOption}
           setCustomSelectedOption={setCustomSelectedOption}
+          onDiscardSelectedCredential={onDiscardSelectedCredential}
+          setSubmittedFormResponse={setSubmittedFormResponse}
+          submittedFormResponse={submittedFormResponse}
         />
         // <ViewFormRender/>
-        );
-        console.log('✅ integrationData?.data?.data?.auth    ', integrationData?.data?.data?.auth)
+      );
     }
   };
 
