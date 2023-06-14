@@ -85,6 +85,8 @@ const WorkFlowsCard = (props) => {
   //   flowsData
   // );
 
+  const userData = localStorage.getItem("userData");
+
   const navigate = useNavigate();
 
   const [selectedRows, setSelectedRows] = useState([]);
@@ -97,6 +99,11 @@ const WorkFlowsCard = (props) => {
   const [workflowName, setWorkflowName] = useState(selectedItem?.name || "");
   const [count, setCount] = useState(1);
   const [selectedOption, setSelectedOption] = useState();
+  const [userDetail, setUserDetail] = useState(userData ?? {});
+
+  useEffect(() => {
+    setUserDetail(JSON.parse(userData));
+  }, [userData]);
 
   const ref = useRef(null);
 
@@ -539,13 +546,15 @@ const WorkFlowsCard = (props) => {
                           onChange={() => handleCheckboxChange(item, item.id)}
                         />
                       </FormGroup>
-                      <MoreVerticalDropdown
-                        handleView={() =>
-                          navigate(`/apps/flows/${item.id}`, { state: item })
-                        }
-                        handleEdit={() => onPressEditWorkflowName(item)}
-                        handleDelete={() => onHandleDelete(item)}
-                      />
+                      {userDetail?.role !== "admin" && (
+                        <MoreVerticalDropdown
+                          handleView={() =>
+                            navigate(`/apps/flows/${item.id}`, { state: item })
+                          }
+                          handleEdit={() => onPressEditWorkflowName(item)}
+                          handleDelete={() => onHandleDelete(item)}
+                        />
+                      )}
                     </div>
                     <p className="workflow-no-warning">No warning</p>
                   </Col>

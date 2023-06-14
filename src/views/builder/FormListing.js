@@ -32,11 +32,23 @@ export default function FormListing() {
     { id: "name", label: "Form Name", alignRight: false, orderable: true },
     { id: "Actions", label: "Actions", alignRight: true, orderable: false },
   ];
+
+  const userData = localStorage.getItem("userData");
+
   const [formJson, setFormJson] = useState([]);
   const [isLoader, setIsLoader] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [userDetail, setUserDetail] = useState(userData ?? {});
+  console.log(
+    "🚀 ~ file: FormListing.js:42 ~ FormListing ~ userDetail:",
+    userDetail
+  );
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setUserDetail(JSON.parse(userData));
+  }, [userData]);
 
   useEffect(() => {
     const fetchFormJson = async () => {
@@ -135,16 +147,18 @@ export default function FormListing() {
                       onChange={handleSearch}
                     />
                   </Col>
-                  <Col md="4">
-                    <Button
-                      outline
-                      color="primary"
-                      onClick={() => navigate("/apps/editor")}
-                    >
-                      <Plus size={14} />
-                      <span className="align-middle ms-25">Create New</span>
-                    </Button>
-                  </Col>
+                  {userDetail?.role === "admin" && (
+                    <Col md="4">
+                      <Button
+                        outline
+                        color="primary"
+                        onClick={() => navigate("/apps/editor")}
+                      >
+                        <Plus size={14} />
+                        <span className="align-middle ms-25">Create New</span>
+                      </Button>
+                    </Col>
+                  )}
                 </Row>
               </Col>
             </CardBody>

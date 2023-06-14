@@ -33,8 +33,6 @@ const DataTableRender = ({
   const [searchedData, setSearchedData] = useState(data);
   const [selectedRows, setSelectedRows] = useState([]);
 
-  console.log("✅ searchedData    ", searchedData, "data", data);
-
   useEffect(() => {
     // const paginatedData = data;
     setSearchedData(data);
@@ -165,9 +163,16 @@ const DataTableRender = ({
   };
 
   const renderTableBody = () => {
+    const userData = localStorage.getItem("userData");
+
     const startIndex = (currentPage + 1 - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
     const paginatedData = searchedData?.slice(startIndex, endIndex);
+    const [userDetail, setUserDetail] = useState(userData ?? {});
+
+    useEffect(() => {
+      setUserDetail(JSON.parse(userData));
+    }, [userData]);
 
     return (
       <>
@@ -185,17 +190,18 @@ const DataTableRender = ({
             <td>{row?.id}</td>
             <td>{row?.name}</td>
             <td style={{ width: 20 }}>
-              <UncontrolledDropdown>
-                <DropdownToggle
-                  className="icon-btn hide-arrow"
-                  color="transparent"
-                  size="sm"
-                  caret
-                >
-                  <MoreVertical size={15} />
-                </DropdownToggle>
-                <DropdownMenu>
-                  {/* <DropdownItem
+              {userDetail?.role === "admin" && (
+                <UncontrolledDropdown>
+                  <DropdownToggle
+                    className="icon-btn hide-arrow"
+                    color="transparent"
+                    size="sm"
+                    caret
+                  >
+                    <MoreVertical size={15} />
+                  </DropdownToggle>
+                  <DropdownMenu>
+                    {/* <DropdownItem
                     href="/"
                     onClick={(e) => {
                       e.preventDefault();
@@ -205,38 +211,39 @@ const DataTableRender = ({
                     <Edit className="me-50" size={15} />{" "}
                     <span className="align-middle">Create New</span>
                   </DropdownItem> */}
-                  <DropdownItem
-                    href="/"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleRowAction("edit", row);
-                    }}
-                  >
-                    <Edit className="me-50" size={15} />{" "}
-                    <span className="align-middle">Edit</span>
-                  </DropdownItem>
-                  <DropdownItem
-                    href="/"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleRowAction("view", row);
-                    }}
-                  >
-                    <Edit className="me-50" size={15} />{" "}
-                    <span className="align-middle">View</span>
-                  </DropdownItem>
-                  <DropdownItem
-                    href="/"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleRowAction("delete", row);
-                    }}
-                  >
-                    <Trash className="me-50" size={15} />{" "}
-                    <span className="align-middle">Delete</span>
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
+                    <DropdownItem
+                      href="/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleRowAction("edit", row);
+                      }}
+                    >
+                      <Edit className="me-50" size={15} />{" "}
+                      <span className="align-middle">Edit</span>
+                    </DropdownItem>
+                    <DropdownItem
+                      href="/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleRowAction("view", row);
+                      }}
+                    >
+                      <Edit className="me-50" size={15} />{" "}
+                      <span className="align-middle">View</span>
+                    </DropdownItem>
+                    <DropdownItem
+                      href="/"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleRowAction("delete", row);
+                      }}
+                    >
+                      <Trash className="me-50" size={15} />{" "}
+                      <span className="align-middle">Delete</span>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              )}
             </td>
           </tr>
         ))}
