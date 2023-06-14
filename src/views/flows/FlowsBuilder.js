@@ -56,6 +56,7 @@ const FLowsBuilder = () => {
   const [edgeOptions, setEdgeOptions] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
   const [show, setShow] = useState(false);
+  console.log("🚀 ~ file: FlowsBuilder.js:58 ~ FLowsBuilder ~ show:", show);
   // const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [isSelectedEvent, setIsSelectedEvent] = useState(false);
@@ -315,6 +316,7 @@ const FLowsBuilder = () => {
           setSubmittedEventResponse={setSubmittedEventResponse}
           onClickDiscardModal={onClickDiscardModal}
           selectedNode={selectedNode}
+          setIsLoader={setIsLoader}
         />
       </div>
     );

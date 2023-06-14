@@ -22,6 +22,7 @@ export default function ViewFormRender(props) {
     selectAuth,
     setSubmittedFormResponse,
     setIsLoader,
+    isSendGrid = false,
   } = props;
 
   const location = useLocation();
@@ -53,22 +54,24 @@ export default function ViewFormRender(props) {
         submission_id,
         data: formValue,
         name: stateFullData?.name,
-        user_id: 1,
+        user_id: userDetail?.id,
         credentialData,
         selectAuth,
       };
       const response = await formValueSave(formValueData);
 
-      if (response?.response === 200) {
-        setSubmittedFormResponse(response);
-        toast.success(response?.message);
-        setIsLoader(false);
-      }
-
       const message = response?.message;
       const validationErrors = response?.validation_errors;
       const res = response?.response;
-      if (res === 200) {
+      if (response?.response === 200 && isSendGrid) {
+        toast.success(response?.message);
+        setIsLoader(false);
+        setSubmittedFormResponse(response);
+      } else if (response?.response === 200) {
+        toast.success(response?.message);
+        setIsLoader(false);
+        // setSubmittedFormResponse(response);
+
         setSubmittedEventResponse({
           ...response?.data,
           ...{
@@ -77,8 +80,8 @@ export default function ViewFormRender(props) {
             intgId: selectedNode?.data?.intgId,
           },
         });
+
         onClickDiscardModal();
-        toast.success(message);
       } else {
         setIsLoader(false);
         Object.keys(validationErrors).forEach((key) => {
