@@ -34,6 +34,7 @@ const style = {
 };
 
 function CustomNode({ data, selected }) {
+  console.log("🚀 ~ file: CustomNode.js:37 ~ CustomNode ~ data:", data);
   const [isHover, setIsHover] = useState(false);
 
   const dispatch = useDispatch();
