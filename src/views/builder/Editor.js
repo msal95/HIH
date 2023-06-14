@@ -411,18 +411,18 @@ export default function Editor() {
               {!show && <div className="" id="form-editor"></div>}
             </TabPane>
             <TabPane tabId="2">
-              <h3>Tab2</h3>
+              <h3>Coming Soon</h3>
             </TabPane>
             <TabPane tabId="3">
-              <h3>Tab3</h3>
+              <h3>Coming Soon</h3>
             </TabPane>
             <TabPane tabId="4">
               {/* <NotificationsTabContent /> */}
-              <h3>Tab 4</h3>
+              <h3>Coming Soon</h3>
             </TabPane>
             <TabPane tabId="5">
               {/* <ConnectionsTabContent /> */}
-              <h3>Tab 5</h3>
+              <h3>Coming Soon</h3>
             </TabPane>
           </TabContent>
         </Col>
