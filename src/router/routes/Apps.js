@@ -10,6 +10,7 @@ import FormsGenerated from "../../views/builder/FormsGenerated";
 import IntegrationImport from "../../views/integrations/IntegrationImport";
 import ProfileUpdate from "../../views/profile/ProfileUpdate";
 import UpdateProfile from "../../views/profile/UpdateProfile";
+import GoogleSheetScript from "../../views/integrations/googleSheet/GoogleSheetScript";
 
 const Chat = lazy(() => import("../../views/apps/chat"));
 const Todo = lazy(() => import("../../views/apps/todo"));
@@ -71,6 +72,10 @@ const AppRoutes = [
       menuHidden: true,
       layout: "horizontal",
     },
+  },
+  {
+    element: <GoogleSheetScript />,
+    path: "/apps/google/script",
   },
   {
     element: <ViewFormRender />,

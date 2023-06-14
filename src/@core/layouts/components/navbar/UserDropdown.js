@@ -11,6 +11,7 @@ import { isUserLoggedIn } from "@utils";
 // ** Store & Actions
 import { useDispatch, useSelector } from "react-redux";
 import { handleLogout } from "@store/authentication";
+import HIHLogo from "@src/assets/images/logo/hih_Logo.png";
 
 // ** Third Party Components
 import {
@@ -56,7 +57,7 @@ const UserDropdown = () => {
   // const [userData, setUserData] = useState(null);
 
   //** Vars
-  const userAvatar = (userData && userData?.profile_photo_url) || defaultAvatar;
+  const userAvatar = (userData && userData?.profile_photo_url) || HIHLogo;
   return (
     <UncontrolledDropdown tag="li" className="dropdown-user nav-item">
       <DropdownToggle
