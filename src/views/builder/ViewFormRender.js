@@ -63,15 +63,27 @@ export default function ViewFormRender(props) {
         selectAuth,
       };
       const response = await formValueSave(formValueData);
+      console.log(
+        "🚀 ~ file: ViewFormRender.js:62 ~ handleGetFormJson ~ response:",
+        response
+      );
 
       const message = response?.message;
       const validationErrors = response?.validation_errors;
       const res = response?.response;
       if (response?.response === 200 && isSendGrid) {
+        console.log(
+          "🚀 ~ file: ViewFormRender.js:68 ~ handleGetFormJson ~ response?.response === 200 && isSendGrid:",
+          response?.response === 200 && isSendGrid
+        );
         toast.success(response?.message);
         setIsLoader(false);
         setSubmittedFormResponse(response);
       } else if (response?.response === 200) {
+        console.log(
+          "🚀 ~ file: ViewFormRender.js:73 ~ handleGetFormJson ~ response?.response === 200:",
+          response?.response === 200
+        );
         toast.success(response?.message);
         setIsLoader(false);
         // setSubmittedFormResponse(response);
@@ -92,7 +104,14 @@ export default function ViewFormRender(props) {
           toast.error(validationErrors[key]);
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: ViewFormRender.js:104 ~ handleGetFormJson ~ error:",
+        error
+      );
+      setIsLoader(false);
+      toast.error("DB Error");
+    }
   };
 
   useEffect(() => {

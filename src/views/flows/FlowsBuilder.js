@@ -40,6 +40,7 @@ import ViewFormRender from "../builder/ViewFormRender";
 import { useDispatch, useSelector } from "react-redux";
 import { addData, addNewEdges, discardSelectedItem } from "./store";
 import CopyToClipboard from "react-copy-to-clipboard";
+import webhook from "@src/assets/images/icons/Webhook.png";
 
 const FLowsBuilder = () => {
   const { state } = useLocation();
@@ -51,7 +52,10 @@ const FLowsBuilder = () => {
   const [canvasPlacement, setCanvasPlacement] = useState("end");
   const [canvasOpen, setCanvasOpen] = useState(false);
   const [flowsJson, setFlowsJson] = useState(null);
-  console.log("🚀 ~ file: FlowsBuilder.js:54 ~ FLowsBuilder ~ flowsJson:", flowsJson)
+  console.log(
+    "🚀 ~ file: FlowsBuilder.js:54 ~ FLowsBuilder ~ flowsJson:",
+    flowsJson
+  );
   const [isOutput, setIsOutput] = useState(false);
   const [edgeOptions, setEdgeOptions] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
@@ -90,8 +94,16 @@ const FLowsBuilder = () => {
         const { events, ...rest } = obj.data;
         return { ...obj, data: { ...rest } };
       });
+      console.log(
+        "🚀 ~ file: FlowsBuilder.js:98 ~ updatedData ~ updatedData:",
+        updatedData
+      );
 
       const newNode = { ...updatedData[0], ...{ events } };
+      console.log(
+        "🚀 ~ file: FlowsBuilder.js:100 ~ useEffect ~ newNode:",
+        newNode
+      );
 
       setUpdatedNode((prevData) => {
         const updatedData = [...prevData];
@@ -220,6 +232,26 @@ const FLowsBuilder = () => {
       setActive(tab);
     }
   };
+
+  useEffect(() => {
+    const newNode = {
+      id: `node-${nodes?.length + 1}`,
+      type: "input",
+      position: {
+        x: (Math.random(0, 7) * window.innerWidth) / 3,
+        y: (Math.random(0, 7) * window.innerHeight) / 3,
+      },
+      data: {
+        label: `Webhook`,
+        image: webhook,
+      },
+      events: [],
+    };
+
+    dispatch(addData(newNode));
+
+    setUpdatedNode((prevElements) => [...prevElements, newNode]);
+  }, []);
 
   // const handleOutputOfNodes = () => {
   //   setIsOutput((prevState) => !prevState);
