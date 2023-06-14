@@ -225,15 +225,15 @@ const RoleCards = (props) => {
   const [selectedOption, setSelectedOption] = useState();
   const [selectedRows, setSelectedRows] = useState([]);
   const [rolePermissions, setRolePermissions] = useState({});
-  const [noModulePermission, setNoModulePermission] = useState();
-  console.log(
-    "🚀 ~ file: RoleCards.js:229 ~ RoleCards ~ noModulePermission:",
-    noModulePermission
-  );
-  console.log(
-    "🚀 ~ file: RoleCards.js:230 ~ RoleCards ~ rolePermissions:",
-    rolePermissions
-  );
+  const [noModulePermission, setNoModulePermission] = useState([]);
+  // console.log(
+  //   "🚀 ~ file: RoleCards.js:229 ~ RoleCards ~ noModulePermission:",
+  //   noModulePermission
+  // );
+  // console.log(
+  //   "🚀 ~ file: RoleCards.js:230 ~ RoleCards ~ rolePermissions:",
+  //   rolePermissions
+  // );
 
   // const {
   //   isLoading,
@@ -247,14 +247,25 @@ const RoleCards = (props) => {
   //   setPermissionData(permData?.data?.data);
   // }, [isFetching]);
   const handleSelectNoModulePermission = (option) => {
-    if (!!noModulePermission?.includes(option)) {
-      setNoModulePermission((prevSelected) =>
-        prevSelected.filter((selected) => selected !== option)
+    // if (!!noModulePermission?.includes(option)) {
+    //   setNoModulePermission((prevSelected) =>
+    //     prevSelected.filter((selected) => selected !== option)
+    //   );
+    // } else {
+    //   setNoModulePermission((prevSelected) => [...prevSelected, option]);
+    // }
+    const existingItem = noModulePermission?.filter((item) => item === option);
+
+    if (!!existingItem?.length) {
+      setNoModulePermission(
+        noModulePermission?.filter((item) => item !== option)
       );
     } else {
-      setNoModulePermission((prevSelected) => [...prevSelected, option]);
+      // selectedRows.push([id]);
+      setNoModulePermission([...noModulePermission, option]);
     }
   };
+
   const handleCheckboxChange = (role, permission) => {
     setRolePermissions((prevState) => ({
       ...prevState,
@@ -265,32 +276,45 @@ const RoleCards = (props) => {
     }));
   };
 
-  const handleSelectAll = () => {
-    const allSelected = Object.entries(permData?.module).every(
-      ([role, permissions]) =>
-        permissions.every((permission) => rolePermissions[role]?.[permission])
-    );
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  // console.log(
+  //   "🚀 ~ file: RoleCards.js:280 ~ RoleCards ~ selectedOptions:",
+  //   selectedOptions
+  // );
 
-    const updatedRolePermissions = {};
-    const data = !!permData && Object.keys(permData?.module);
-    data.forEach((role) => {
-      updatedRolePermissions[role] = {};
-      console.log(
-        "🚀 ~ file: RoleCards.js:261 ~ handleSelectAll ~ updatedRolePermissions:",
-        updatedRolePermissions
-      );
+  const handleSelectAll = (event) => {
+    const { checked } = event.target;
 
-      data[role].forEach((permission) => {
-        console.log(
-          "🚀 ~ file: RoleCards.js:275 ~ data[role].forEach ~ permission:",
-          permission
-        );
-        updatedRolePermissions[role][permission] = !allSelected;
-      });
-    });
-
-    setRolePermissions(updatedRolePermissions);
+    if (checked) {
+      const allOptions = Object.values(permData?.module).flat();
+      // console.log(
+      //   "🚀 ~ file: RoleCards.js:287 ~ handleSelectAll ~ allOptions:",
+      //   allOptions
+      // );
+      setSelectedOptions(allOptions);
+    } else {
+      setSelectedOptions([]);
+    }
   };
+
+  // const handleSelectAll = () => {
+  //   const allSelected = Object.entries(permData?.module).every(
+  //     ([role, permissions]) =>
+  //       permissions.every((permission) => rolePermissions[role]?.[permission])
+  //   );
+
+  //   const updatedRolePermissions = {};
+  //   const data = !!permData && Object.keys(permData?.module);
+  //   data.forEach((role) => {
+  //     updatedRolePermissions[role] = {};
+
+  //     data[role].forEach((permission) => {
+  //       updatedRolePermissions[role][permission] = !allSelected;
+  //     });
+  //   });
+
+  //   setRolePermissions(updatedRolePermissions);
+  // };
 
   // useEffect(() => {
   //   if (permData !== null) {
@@ -389,15 +413,20 @@ const RoleCards = (props) => {
                       <Input
                         type="checkbox"
                         id="select-all"
+                        // checked={
+                        //   !!permData &&
+                        //   Object.entries(permData?.module).every(
+                        //     ([role, permissions]) =>
+                        //       permissions.every(
+                        //         (permission) =>
+                        //           rolePermissions[role]?.[permission]
+                        //       )
+                        //   )
+                        // }
+
                         checked={
-                          !!permData &&
-                          Object.entries(permData?.module).every(
-                            ([role, permissions]) =>
-                              permissions.every(
-                                (permission) =>
-                                  rolePermissions[role]?.[permission]
-                              )
-                          )
+                          selectedOptions.length === !!permData &&
+                          Object.values(permData?.module).flat().length
                         }
                         onChange={handleSelectAll}
                       />

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Edit3,
   Eye,
@@ -39,6 +39,14 @@ export default function CustomCard(props) {
     isProjects = false,
   } = props;
 
+  const userData = localStorage.getItem("userData");
+
+  const [userDetail, setUserDetail] = useState(userData ?? {});
+
+  useEffect(() => {
+    setUserDetail(JSON.parse(userData));
+  }, [userData]);
+
   return (
     <div className={`col-md-${colNumber} col-sm-12 col-12`}>
       <Card className="custom-card shadow-none ">
@@ -55,11 +63,13 @@ export default function CustomCard(props) {
               )}
             </div>
           )}
-          <MoreVerticalDropdown
-            handleView={() => onHandleView(data)}
-            handleEdit={() => onHandleEdit(data)}
-            handleDelete={() => onHandleDelete(data.id)}
-          />
+          {userDetail?.role === "admin" && (
+            <MoreVerticalDropdown
+              handleView={() => onHandleView(data)}
+              handleEdit={() => onHandleEdit(data)}
+              handleDelete={() => onHandleDelete(data.id)}
+            />
+          )}
         </CardHeader>
         <CardBody>
           <CardTitle

@@ -40,11 +40,6 @@ const locationData = [
     type: "button",
     color: "flat-success",
   },
-  // { name: "ocean", label: "Ocean" },
-  // { name: "blue", label: "Blue" },
-  // { name: "purple", label: "Purple" },
-  // { name: "red", label: "Red" },
-  // { name: "orange", label: "Orange" },
 ];
 
 const MySwal = withReactContent(Swal);
@@ -58,10 +53,6 @@ const Credentials = () => {
   const [isSendGridData, setIsSendGridData] = useState(false);
   const [isCredential, setIsCredential] = useState(false);
   const [isSelectedCredential, setIsSelectedCredential] = useState(false);
-  console.log(
-    "🚀 ~ file: index.js:61 ~ Credentials ~ isSelectedCredential:",
-    isSelectedCredential
-  );
   const [allCredentialsData, setAllCredentialsData] = useState();
   const [credentialsData, setCredentialsData] = useState();
   const [submittedFormResponse, setSubmittedFormResponse] = useState(null);
@@ -91,7 +82,7 @@ const Credentials = () => {
 
   useEffect(() => {
     if (projectsList?.data?.data?.length) {
-      const newOptions = locationData.concat(projectsList?.data?.data);
+      // const newOptions = locationData.concat(projectsList?.data?.data);
 
       setLocationOptions(projectsList?.data?.data);
     }
@@ -167,7 +158,6 @@ const Credentials = () => {
   };
 
   const onHandleDelete = async (data) => {
-    console.log("🚀 ~ file: index.js:170 ~ onHandleDelete ~ data:", data);
     return MySwal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -224,6 +214,7 @@ const Credentials = () => {
     setIsEdit(false);
     setIsNewProject(false);
     setCustomSelectedOption(null);
+    setSubmittedFormResponse(null);
   };
 
   const onClickSendGridCredential = (item) => {

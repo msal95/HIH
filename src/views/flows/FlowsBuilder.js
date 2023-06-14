@@ -60,7 +60,6 @@ const FLowsBuilder = () => {
   const [edgeOptions, setEdgeOptions] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
   const [show, setShow] = useState(false);
-  console.log("🚀 ~ file: FlowsBuilder.js:58 ~ FLowsBuilder ~ show:", show);
   // const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [isSelectedEvent, setIsSelectedEvent] = useState(false);
@@ -94,16 +93,8 @@ const FLowsBuilder = () => {
         const { events, ...rest } = obj.data;
         return { ...obj, data: { ...rest } };
       });
-      console.log(
-        "🚀 ~ file: FlowsBuilder.js:98 ~ updatedData ~ updatedData:",
-        updatedData
-      );
 
       const newNode = { ...updatedData[0], ...{ events } };
-      console.log(
-        "🚀 ~ file: FlowsBuilder.js:100 ~ useEffect ~ newNode:",
-        newNode
-      );
 
       setUpdatedNode((prevData) => {
         const updatedData = [...prevData];
@@ -241,6 +232,7 @@ const FLowsBuilder = () => {
         x: (Math.random(0, 7) * window.innerWidth) / 3,
         y: (Math.random(0, 7) * window.innerHeight) / 3,
       },
+      sourcePosition: "right",
       data: {
         label: `Webhook`,
         image: webhook,

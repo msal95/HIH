@@ -1,5 +1,5 @@
 // ** Router imports
-import { lazy } from "react";
+import { lazy, useEffect, useState } from "react";
 
 // ** Router imports
 import { useRoutes, Navigate } from "react-router-dom";
@@ -27,6 +27,15 @@ const NotAuthorized = lazy(() => import("../views/pages/misc/NotAuthorized"));
 const Router = () => {
   // ** Hooks
   const { layout } = useLayout();
+
+  const userData = localStorage.getItem("userData");
+
+  const [userDetail, setUserDetail] = useState(userData ?? {});
+  console.log("🚀 ~ file: Router.js:34 ~ Router ~ userDetail:", userDetail);
+
+  useEffect(() => {
+    setUserDetail(JSON.parse(userData));
+  }, [userData]);
 
   const allRoutes = getRoutes(layout);
   const getHomeRoute = () => {
