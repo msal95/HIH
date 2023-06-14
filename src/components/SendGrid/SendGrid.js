@@ -202,6 +202,7 @@ export default function SendGrid(props) {
                     submittedFormResponse={submittedFormResponse}
                     onDiscardSelectedCredential={onDiscardSelectedCredential}
                     setIsLoader={setIsLoader}
+                    isSendGrid
                   />
                 )}
 
