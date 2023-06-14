@@ -49,6 +49,7 @@ export default function SendGrid(props) {
     setSubmittedFormResponse,
     submittedFormResponse,
     onDiscardSelectedCredential,
+    refetch
   } = props;
 
   const authQuery = useGetAuthType();
@@ -69,6 +70,7 @@ export default function SendGrid(props) {
   useEffect(() => {
     if (submittedFormResponse?.response === 200) {
       onDiscardSelectedCredential();
+      refetch()
     }
   }, submittedFormResponse);
 

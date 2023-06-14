@@ -116,13 +116,13 @@ const DataTableRender = ({
           >
             {column.label === "select" && (
               <div className="d-flex align-items-center checkbox-container">
-                <Input
+                {/* <Input
                   type="checkbox"
                   className="checkbox-input"
                   checked={allSelected}
                   onChange={handleSelectAllRows}
-                />
-                <UncontrolledDropdown className="chart-dropdown checkbox-icon">
+                /> */}
+                {/* <UncontrolledDropdown className="chart-dropdown checkbox-icon">
                   <DropdownToggle
                     color=""
                     className="bg-transparent btn-sm p-0 "
@@ -149,7 +149,7 @@ const DataTableRender = ({
                       Duplicate Selected
                     </DropdownItem>
                   </DropdownMenu>
-                </UncontrolledDropdown>
+                </UncontrolledDropdown> */}
               </div>
             )}
             {column.label !== "select" && column.label}
@@ -175,11 +175,11 @@ const DataTableRender = ({
           <tr key={row.id}>
             <td style={{ width: 0 }}>
               <div className="form-check">
-                <Input
+                {/* <Input
                   type="checkbox"
                   checked={selectedRows.includes(row.id)}
                   onChange={() => handleItemSelection(row.id)}
-                />
+                /> */}
               </div>
             </td>
             <td>{row?.id}</td>

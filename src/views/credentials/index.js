@@ -291,6 +291,7 @@ const Credentials = () => {
           onDiscardSelectedCredential={onDiscardSelectedCredential}
           setSubmittedFormResponse={setSubmittedFormResponse}
           submittedFormResponse={submittedFormResponse}
+          refetch={refetch}
         />
         // <ViewFormRender/>
       );

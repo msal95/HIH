@@ -74,7 +74,9 @@ export default function IntegrationImport() {
     }
 
     if (importQuery.isError) {
-      setSubmitting(false);
+        setSubmittingSuccess(false);
+        setSubmitting(false);
+        setSubmittingClick(false);
       const message = "Error occurred while saving the data";
       toast.error(message);
     }
