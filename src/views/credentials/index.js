@@ -64,7 +64,7 @@ const Credentials = () => {
   );
   const [allCredentialsData, setAllCredentialsData] = useState();
   const [credentialsData, setCredentialsData] = useState();
-  const [submittedFormResponse, setSubmittedFormResponse] = useState();
+  const [submittedFormResponse, setSubmittedFormResponse] = useState(null);
   const [searchedList, setSearchedList] = useState("");
   const [selectedItem, setSelectedItem] = useState();
   const [isEdit, setIsEdit] = useState(false);

@@ -247,10 +247,6 @@ const RoleCards = (props) => {
   //   setPermissionData(permData?.data?.data);
   // }, [isFetching]);
   const handleSelectNoModulePermission = (option) => {
-    console.log(
-      "🚀 ~ file: RoleCards.js:250 ~ handleSelectNoModulePermission ~ option:",
-      option
-    );
     if (!!noModulePermission?.includes(option)) {
       setNoModulePermission((prevSelected) =>
         prevSelected.filter((selected) => selected !== option)
