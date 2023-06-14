@@ -31,6 +31,7 @@ export default function ViewFormRender(props) {
 
   const formRender = useRef(null);
   const [formJson, setFormJson] = useState(form ?? location?.state?.json);
+  const [userDataLocal, setUserDataLocal] = useState([]);
   const [stateFullData, setStateFullData] = useState(
     selectedEvent ?? location?.state
   );
@@ -44,9 +45,12 @@ export default function ViewFormRender(props) {
     }
   }, [userData]);
 
-  const handleGetFormJson = async (data, errors) => {
+  const handleGetFormJson = async (data, errors, userDataLocal, userDetail) => {
+    console.log("🚀 ~ file: ViewFormRender.js:49 ~ handleGetFormJson ~ userDataLocal:", userDataLocal, userDetail)
     const formValue = JSON.stringify(data);
     setIsLoader(true);
+    const userId = JSON.parse(userDetail);
+    console.log("🚀 ~ file: ViewFormRender.js:53 ~ handleGetFormJson ~ userId:", userId)
 
     try {
       const formValueData = {
@@ -54,7 +58,7 @@ export default function ViewFormRender(props) {
         submission_id,
         data: formValue,
         name: stateFullData?.name,
-        user_id: userDetail?.id,
+        user_id: userId?.id,
         credentialData,
         selectAuth,
       };
@@ -94,10 +98,24 @@ export default function ViewFormRender(props) {
   useEffect(() => {
     setFormJson(form ?? location?.state?.json);
     setStateFullData(selectedEvent ?? location?.state);
+    const userData = localStorage.getItem('userData');
+
+    if (userData) {
+      // Do something with the userData
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>", JSON.parse(userData));
+      setUserDataLocal(JSON.parse(userData));
+    }
   }, [form]);
 
   useEffect(() => {
     setCredentialsData(credentials ?? null);
+    const userData = localStorage.getItem('userData');
+
+    if (userData) {
+      // Do something with the userData
+      console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>", JSON.parse(userData));
+      setUserDataLocal(JSON.parse(userData));
+    }
   }, [credentials]);
 
   useEffect(() => {
@@ -115,7 +133,7 @@ export default function ViewFormRender(props) {
       if (keys.length > 0) {
         // const firstKey = keys[0];
       } else {
-        handleGetFormJson(data, errors);
+        handleGetFormJson(data, errors, userDataLocal, userDetail);
       }
     });
     return () => {
