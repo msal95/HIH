@@ -241,10 +241,6 @@ const WorkFlowsCard = (props) => {
   };
 
   const onPressEditWorkflowName = (item) => {
-    console.log(
-      "🚀 ~ file: WorkFlowsCard.js:244 ~ onPressEditWorkflowName ~ item:",
-      item
-    );
     setSelectedItem(item);
     setWorkflowName(item?.name);
     setIsEdit(true);
@@ -362,46 +358,52 @@ const WorkFlowsCard = (props) => {
         <Row className="justify-content-end mx-0">
           <Col md="4" sm="12">
             <div className="d-flex  align-items-center mt-1">
-              <div className="d-flex align-items-center checkbox-container">
+              <div
+                className={`d-flex align-items-center ${
+                  selectedRows?.length && "checkbox-container"
+                } `}
+              >
                 <Input
                   type="checkbox"
                   className="checkbox-input"
                   checked={allSelected}
                   onChange={handleSelectAllRows}
                 />
-                <UncontrolledDropdown className="chart-dropdown checkbox-icon">
-                  <DropdownToggle
-                    color=""
-                    className="bg-transparent btn-sm p-0 "
-                  >
-                    <ChevronDown
-                      size={18}
-                      className="cursor-pointer"
-                      color="#b9b9c3"
-                    />
-                  </DropdownToggle>
-                  <DropdownMenu end>
-                    <DropdownItem className="w-100" onClick={onHandleDelete}>
-                      Delete Selected
-                    </DropdownItem>
-                    <DropdownItem
-                      className="w-100"
-                      onClick={() => {
-                        handleCheckboxChange(true);
-                      }}
+                {!!selectedRows?.length && (
+                  <UncontrolledDropdown className="chart-dropdown checkbox-icon">
+                    <DropdownToggle
+                      color=""
+                      className="bg-transparent btn-sm p-0 "
                     >
-                      Active Selected
-                    </DropdownItem>
-                    <DropdownItem
-                      className="w-100"
-                      onClick={() => {
-                        handleCheckboxChange(false);
-                      }}
-                    >
-                      InActive Selected
-                    </DropdownItem>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
+                      <ChevronDown
+                        size={18}
+                        className="cursor-pointer"
+                        color="#b9b9c3"
+                      />
+                    </DropdownToggle>
+                    <DropdownMenu end>
+                      <DropdownItem className="w-100" onClick={onHandleDelete}>
+                        Delete Selected
+                      </DropdownItem>
+                      <DropdownItem
+                        className="w-100"
+                        onClick={() => {
+                          handleCheckboxChange(true);
+                        }}
+                      >
+                        Active Selected
+                      </DropdownItem>
+                      <DropdownItem
+                        className="w-100"
+                        onClick={() => {
+                          handleCheckboxChange(false);
+                        }}
+                      >
+                        InActive Selected
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </UncontrolledDropdown>
+                )}
               </div>
               <h4 className="checkbox-title">All Flows</h4>
             </div>

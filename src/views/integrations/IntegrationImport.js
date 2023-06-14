@@ -42,7 +42,7 @@ export default function IntegrationImport() {
     },
     validationSchema: integrationSchema,
     onSubmit: (data) => {
-        setSubmittingClick(true);
+      setSubmittingClick(true);
       console.log("✅ data   >>>>>>>>>>>>>>>>>>>>>> ", data);
       importQuery.mutate(data);
     },
@@ -55,17 +55,17 @@ export default function IntegrationImport() {
       const validationErrors = data?.validation_errors;
       const response = data?.response;
       if (response === 200) {
-        setSubmittingSuccess(false)
+        setSubmittingSuccess(false);
         setSubmitting(false);
         setSubmittingClick(false);
         toast.success(message);
         setTimeout(() => {
-            navigate('/apps/integration');
+          navigate("/apps/integration");
         }, 3000);
-    } else {
-          setSubmittingSuccess(false)
-          setSubmitting(false);
-          setSubmittingClick(false)
+      } else {
+        setSubmittingSuccess(false);
+        setSubmitting(false);
+        setSubmittingClick(false);
         Object.keys(validationErrors).forEach((key) => {
           toast.error(validationErrors[key]);
         });
@@ -75,16 +75,15 @@ export default function IntegrationImport() {
 
     if (importQuery.isError) {
       setSubmitting(false);
-      const message = 'Error occurred while saving the data';
+      const message = "Error occurred while saving the data";
       toast.error(message);
     }
   }, [importQuery.isSuccess, importQuery.isError]);
 
-
-  const { errors, touched, values, handleSubmit, getFieldProps, isSubmitting } = formik;
+  const { errors, touched, values, handleSubmit, getFieldProps, isSubmitting } =
+    formik;
   console.log("✅ values", values, "errors", errors, "touched", touched);
-  console.log("✅ values", values, values?.file?.name.split('.').pop());
-
+  console.log("✅ values", values, values?.file?.name.split(".").pop());
 
   const handleChangeIcon = (e) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -115,9 +114,11 @@ export default function IntegrationImport() {
       <Row className="match-height">
         <Col md="12" sm="12">
           <Card title="Basic" className="p-2">
-          {(submitting || submittingSuccess || submittingClick) && <div className="d-flex justify-content-center align-items-center p-5">
-                            <Spinner type="grow" color="primary" />
-                        </div>}
+            {(submitting || submittingSuccess || submittingClick) && (
+              <div className="d-flex justify-content-center align-items-center p-5">
+                <Spinner type="grow" color="primary" />
+              </div>
+            )}
             <FormikProvider value={formik}>
               <Form
                 autoComplete="off"
@@ -125,30 +126,41 @@ export default function IntegrationImport() {
                 onSubmit={handleSubmit}
               >
                 <Fragment>
-                  <Label for="col-cb">Name * {errors.name && touched?.name &&  <ErrorMessageInline message={errors.name}/>}</Label>
-                     {/* <div class="d-inline">{errors.name && touched?.name && <ErrorMessage message={errors.name} />}</div> */}
+                  <Label for="col-cb">
+                    Name *{" "}
+                    {errors.name && touched?.name && (
+                      <ErrorMessageInline message={errors.name} />
+                    )}
+                  </Label>
+                  {/* <div class="d-inline">{errors.name && touched?.name && <ErrorMessage message={errors.name} />}</div> */}
                   <InputGroup className="mb-2">
                     <Input
                       placeholder="Integration name"
-                      className={(errors.name && touched?.name) ? "" : ""}
+                      className={errors.name && touched?.name ? "" : ""}
                       {...getFieldProps("name")}
                     />
                   </InputGroup>
-                  <Label for="col-cb">Description * {errors.description && touched?.description && <ErrorMessageInline message={errors.description} />}</Label>
+                  <Label for="col-cb">
+                    Description *{" "}
+                    {errors.description && touched?.description && (
+                      <ErrorMessageInline message={errors.description} />
+                    )}
+                  </Label>
                   <InputGroup className="mb-2">
                     <InputGroupText>Description</InputGroupText>
                     <Input
                       type="textarea"
                       {...getFieldProps("description")}
                       className={
-                        (errors.description && touched?.description) ? "" : ""
+                        errors.description && touched?.description ? "" : ""
                       }
                     />
                   </InputGroup>
                   <Label for="col-cb">Integration image *</Label>
                   <Label for="col-cb" className="">
-                    {console.log(errors, values?.image, ">>>>>>>>>>>>>>>>")}
-                    {(errors.image && touched?.image) && <ErrorMessage message={errors.image} />}
+                    {errors.image && touched?.image && (
+                      <ErrorMessage message={errors.image} />
+                    )}
                   </Label>
                   <InputGroup className="mb-2">
                     <Input
@@ -156,17 +168,22 @@ export default function IntegrationImport() {
                       name="image"
                       multiple={false}
                       accept="image/*"
+                      required
                       onChange={handleChangeIcon}
                       onFocus={handleFocus}
                       onBlur={handleBlur}
-                      className={`form-control ${hasError && !isFocused ? 'bg-danger' : ''}`}
+                      className={`form-control ${
+                        hasError && !isFocused ? "bg-danger" : ""
+                      }`}
                     />
                   </InputGroup>
                   <Label for="col-cb">Integration Json File *</Label>
                   <Label for="col-cb" className="">
-                      <span className="p-1">
-                        {(errors.file && touched?.file) && <ErrorMessage message={errors.file} />}
-                      </span>
+                    <span className="p-1">
+                      {errors.file && touched?.file && (
+                        <ErrorMessage message={errors.file} />
+                      )}
+                    </span>
                   </Label>
                   <InputGroup>
                     <Input
@@ -175,11 +192,17 @@ export default function IntegrationImport() {
                       onChange={(event) =>
                         formik.setFieldValue("file", event.target.files[0])
                       }
-                      className={ (errors.file && touched.file) ? "" : ""
-                      }
+                      className={errors.file && touched.file ? "" : ""}
+                      required
                     />
                   </InputGroup>
-                  <Button type="submit" className="mt-2" disabled={(submitting || submittingSuccess || submittingClick)}>
+                  <Button
+                    type="submit"
+                    className="mt-2"
+                    disabled={
+                      submitting || submittingSuccess || submittingClick
+                    }
+                  >
                     Create integration
                   </Button>
                 </Fragment>

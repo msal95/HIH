@@ -19,19 +19,33 @@ export default function ViewFormRender(props) {
     selectedNode,
     submission_id,
     credentials,
-    selectAuth
+    selectAuth,
+    setSubmittedFormResponse,
+    setIsLoader,
   } = props;
+
   const location = useLocation();
+
+  const userData = localStorage?.getItem("userData");
 
   const formRender = useRef(null);
   const [formJson, setFormJson] = useState(form ?? location?.state?.json);
-  const [stateFullData, setStateFullData] = useState(selectedEvent ?? location?.state);
+  const [stateFullData, setStateFullData] = useState(
+    selectedEvent ?? location?.state
+  );
   const [credentialData, setCredentialsData] = useState(credentials ?? null);
-  console.log("🚀 ~ file: ViewFormRender.js:29 ~ ViewFormRender ~ credentialData:", credentialData)
+  const [userDetail, setUserDetail] = useState(userData);
 
+  useEffect(() => {
+    if (!!userData) {
+      console.log("re-render");
+      setUserDetail(JSON.parse(userData));
+    }
+  }, [userData]);
 
   const handleGetFormJson = async (data, errors) => {
     const formValue = JSON.stringify(data);
+    setIsLoader(true);
 
     try {
       const formValueData = {
@@ -41,9 +55,15 @@ export default function ViewFormRender(props) {
         name: stateFullData?.name,
         user_id: 1,
         credentialData,
-        selectAuth
+        selectAuth,
       };
       const response = await formValueSave(formValueData);
+
+      if (response?.response === 200) {
+        setSubmittedFormResponse(response);
+        toast.success(response?.message);
+        setIsLoader(false);
+      }
 
       const message = response?.message;
       const validationErrors = response?.validation_errors;
@@ -60,23 +80,22 @@ export default function ViewFormRender(props) {
         onClickDiscardModal();
         toast.success(message);
       } else {
+        setIsLoader(false);
         Object.keys(validationErrors).forEach((key) => {
           toast.error(validationErrors[key]);
         });
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
-    setFormJson(form ?? location?.state?.json)
-    setStateFullData(selectedEvent ?? location?.state)
+    setFormJson(form ?? location?.state?.json);
+    setStateFullData(selectedEvent ?? location?.state);
   }, [form]);
 
   useEffect(() => {
     setCredentialsData(credentials ?? null);
   }, [credentials]);
-
 
   useEffect(() => {
     const container = document.querySelector("#form");
@@ -88,13 +107,13 @@ export default function ViewFormRender(props) {
       formRender.current = formEditor;
     }
     formRender.current.on("submit", ({ data, errors }) => {
-        const keys = Object.keys(errors);
+      const keys = Object.keys(errors);
 
-        if (keys.length > 0) {
+      if (keys.length > 0) {
         // const firstKey = keys[0];
-        } else {
+      } else {
         handleGetFormJson(data, errors);
-        }
+      }
     });
     return () => {
       if (formRender.current) {
@@ -106,27 +125,34 @@ export default function ViewFormRender(props) {
 
   const targetNodeRef = useRef(null);
 
-useEffect(() => {
-  const callback = (mutationsList, observer) => {
-    for (const mutation of mutationsList) {
-      if (mutation.type === 'childList' || mutation.type === 'characterData') {
-        // DOM has changed, do something
-        // console.log('DOM changed');
-        const labels = document.querySelectorAll('label');
-        labels.forEach(label => {
-          if (label.textContent === 'hidden') {
-            const parentDiv = label.parentNode;
-            parentDiv.style.display = 'none';
-            parentDiv.className = 'bg-danger'; // Note: It should be className, not class
-          }
-        });
+  useEffect(() => {
+    const callback = (mutationsList, observer) => {
+      for (const mutation of mutationsList) {
+        if (
+          mutation.type === "childList" ||
+          mutation.type === "characterData"
+        ) {
+          // DOM has changed, do something
+          // console.log('DOM changed');
+          const labels = document.querySelectorAll("label");
+          labels.forEach((label) => {
+            if (label.textContent === "hidden") {
+              const parentDiv = label.parentNode;
+              parentDiv.style.display = "none";
+              parentDiv.className = "bg-danger"; // Note: It should be className, not class
+            }
+          });
+        }
       }
+    };
+    const observer = new MutationObserver(callback);
+    if (targetNodeRef.current) {
+      observer.observe(targetNodeRef.current, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+      });
     }
-  };
-  const observer = new MutationObserver(callback);
-  if (targetNodeRef.current) {
-    observer.observe(targetNodeRef.current, { attributes: true, childList: true, subtree: true });
-  }
 
     return () => {
       observer.disconnect();
