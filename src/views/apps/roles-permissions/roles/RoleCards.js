@@ -44,8 +44,12 @@ import avatar10 from "@src/assets/images/avatars/10.png";
 import avatar11 from "@src/assets/images/avatars/11.png";
 import avatar12 from "@src/assets/images/avatars/12.png";
 import CustomModal from "../../../../components/CustomModal/CustomModal";
-import { getPermissionListings } from "../../../../../api/rolesPermissions/apiMethods";
+import {
+  createRole,
+  getPermissionListings,
+} from "../../../../../api/rolesPermissions/apiMethods";
 import { useQuery } from "react-query";
+import { toast } from "react-hot-toast";
 
 // ** Vars
 const data = [
@@ -214,7 +218,8 @@ const rolesArr = [
 ];
 
 const RoleCards = (props) => {
-  const { rolesData, permData, permError, permIsError, isLoading } = props;
+  const { rolesData, permData, permError, permIsError, isLoading, refetch } =
+    props;
   console.log("🚀 ~ file: RoleCards.js:219 ~ RoleCards ~ permData:", permData);
   // ** States
   const [show, setShow] = useState(false);
@@ -225,15 +230,16 @@ const RoleCards = (props) => {
   const [selectedOption, setSelectedOption] = useState();
   const [selectedRows, setSelectedRows] = useState([]);
   const [rolePermissions, setRolePermissions] = useState({});
+  console.log(
+    "🚀 ~ file: RoleCards.js:229 ~ RoleCards ~ rolePermissions:",
+    rolePermissions
+  );
   const [noModulePermission, setNoModulePermission] = useState([]);
-  // console.log(
-  //   "🚀 ~ file: RoleCards.js:229 ~ RoleCards ~ noModulePermission:",
-  //   noModulePermission
-  // );
-  // console.log(
-  //   "🚀 ~ file: RoleCards.js:230 ~ RoleCards ~ rolePermissions:",
-  //   rolePermissions
-  // );
+  console.log(
+    "🚀 ~ file: RoleCards.js:230 ~ RoleCards ~ noModulePermission:",
+    noModulePermission
+  );
+  const [isLoader, setIsLoader] = useState(false);
 
   // const {
   //   isLoading,
@@ -247,13 +253,6 @@ const RoleCards = (props) => {
   //   setPermissionData(permData?.data?.data);
   // }, [isFetching]);
   const handleSelectNoModulePermission = (option) => {
-    // if (!!noModulePermission?.includes(option)) {
-    //   setNoModulePermission((prevSelected) =>
-    //     prevSelected.filter((selected) => selected !== option)
-    //   );
-    // } else {
-    //   setNoModulePermission((prevSelected) => [...prevSelected, option]);
-    // }
     const existingItem = noModulePermission?.filter((item) => item === option);
 
     if (!!existingItem?.length) {
@@ -261,7 +260,6 @@ const RoleCards = (props) => {
         noModulePermission?.filter((item) => item !== option)
       );
     } else {
-      // selectedRows.push([id]);
       setNoModulePermission([...noModulePermission, option]);
     }
   };
@@ -276,54 +274,20 @@ const RoleCards = (props) => {
     }));
   };
 
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  // console.log(
-  //   "🚀 ~ file: RoleCards.js:280 ~ RoleCards ~ selectedOptions:",
-  //   selectedOptions
-  // );
-
-  const handleSelectAll = (event) => {
-    const { checked } = event.target;
-
-    if (checked) {
-      const allOptions = Object.values(permData?.module).flat();
-      // console.log(
-      //   "🚀 ~ file: RoleCards.js:287 ~ handleSelectAll ~ allOptions:",
-      //   allOptions
-      // );
-      setSelectedOptions(allOptions);
-    } else {
-      setSelectedOptions([]);
-    }
+  const handleSelectAll = () => {
+    Object.entries(permData.module).map(([role, permissions], index) => {
+      permissions?.map((permission, pindex) => {
+        setRolePermissions((prevState) => ({
+          ...prevState,
+          [role]: {
+            ...(prevState[role] || {}),
+            [permission]: !prevState[role]?.[permission],
+          },
+        }));
+      });
+    });
+    setNoModulePermission(permData?.no_module);
   };
-
-  // const handleSelectAll = () => {
-  //   const allSelected = Object.entries(permData?.module).every(
-  //     ([role, permissions]) =>
-  //       permissions.every((permission) => rolePermissions[role]?.[permission])
-  //   );
-
-  //   const updatedRolePermissions = {};
-  //   const data = !!permData && Object.keys(permData?.module);
-  //   data.forEach((role) => {
-  //     updatedRolePermissions[role] = {};
-
-  //     data[role].forEach((permission) => {
-  //       updatedRolePermissions[role][permission] = !allSelected;
-  //     });
-  //   });
-
-  //   setRolePermissions(updatedRolePermissions);
-  // };
-
-  // useEffect(() => {
-  //   if (permData !== null) {
-  //     const keys = !!permData && Object.keys(permData?.module);
-  //     if (!!keys?.length) {
-  //       setPermissionKeys(keys);
-  //     }
-  //   }
-  // }, [permData]);
 
   // ** Hooks
   const {
@@ -354,9 +318,51 @@ const RoleCards = (props) => {
     setModalType("Add New");
     setValue("roleName");
   };
+
   const handleToggleModal = () => {
     setShow((prevState) => !prevState);
   };
+
+  const handleCreateRoles = async (values) => {
+    setIsLoader(true);
+    try {
+      const projectData = {
+        name: values?.roleName,
+        permissions: noModulePermission,
+        // user_id: 1,
+      };
+      await createRole(projectData).then((res) => {
+        console.log(
+          "🚀 ~ file: RoleCards.js:332 ~ awaitcreateProjects ~ res:",
+          res
+        );
+        if (res.status === 200) {
+          refetch();
+          toast.success("New Role Added Successfully.");
+          setIsLoader(false);
+          handleToggleModal();
+        } else {
+          toast.error(res.data.message);
+          handleToggleModal();
+        }
+      });
+    } catch (error) {
+      console.log(
+        "🚀 ~ file: index.js:342 ~ handleCreateProject ~ error:",
+        error
+      );
+      toast.error(error?.response?.data?.message);
+      setIsLoader(false);
+    }
+  };
+
+  // if (!permData?.length) {
+  //   return (
+  //     <h3 className="d-flex align-items-center justify-content-center p-2">
+  //       No Roles Found in Database
+  //     </h3>
+  //   );
+  // }
 
   const rolesModalData = () => {
     return (
@@ -365,7 +371,7 @@ const RoleCards = (props) => {
           <h1>{modalType} Role</h1>
           <p>Set role permissions</p>
         </div>
-        <Row tag="form" onSubmit={handleSubmit(onSubmit)}>
+        <Row tag="form" onSubmit={handleSubmit(handleCreateRoles)}>
           <Col xs={12}>
             <Label className="form-label" for="roleName">
               Role Name
@@ -424,10 +430,10 @@ const RoleCards = (props) => {
                         //   )
                         // }
 
-                        checked={
-                          selectedOptions.length === !!permData &&
-                          Object.values(permData?.module).flat().length
-                        }
+                        // checked={
+                        //   selectedOptions.length === !!permData &&
+                        //   Object.values(permData?.module).flat().length
+                        // }
                         onChange={handleSelectAll}
                       />
                       <Label className="form-check-label" for="select-all">
@@ -469,35 +475,6 @@ const RoleCards = (props) => {
                                   </div>
                                 );
                               })}
-
-                              {/* <div className="form-check me-3 me-lg-5">
-                            <Input
-                              type="checkbox"
-                              id={`write-${role}`}
-                              checked={rolePermissions[role]?.[permission] || false}
-                              onChange={() => handleCheckboxChange(item.id)}
-                            />
-                            <Label
-                              className="form-check-label"
-                              for={`write-${role}`}
-                            >
-                              Write
-                            </Label>
-                          </div>
-                          <div className="form-check">
-                            <Input
-                              type="checkbox"
-                              id={`create-${role}`}
-                              checked={rolePermissions[role]?.[permission] || false}
-                              onChange={() => handleCheckboxChange(item.id)}
-                            />
-                            <Label
-                              className="form-check-label"
-                              for={`create-${role}`}
-                            >
-                              Create
-                            </Label>
-                          </div> */}
                             </div>
                           </td>
                         </tr>
@@ -511,28 +488,29 @@ const RoleCards = (props) => {
                 <tr> */}
                   <td>
                     <div className="row">
-                      {permData?.no_module?.map((item, index) => {
-                        return (
-                          <div className="col-md-3" key={index}>
-                            <div className="form-check me-3 me-lg-5">
-                              <Input
-                                type="checkbox"
-                                id={`read-${item}`}
-                                checked={noModulePermission?.includes(item)}
-                                onChange={() =>
-                                  handleSelectNoModulePermission(item)
-                                }
-                              />
-                              <Label
-                                className="form-check-label"
-                                for={`read-${item}`}
-                              >
-                                {item}
-                              </Label>
+                      {!!permData &&
+                        permData?.no_module?.map((item, index) => {
+                          return (
+                            <div className="col-md-3" key={index}>
+                              <div className="form-check me-3 me-lg-5">
+                                <Input
+                                  type="checkbox"
+                                  id={`read-${item}`}
+                                  checked={noModulePermission?.includes(item)}
+                                  onChange={() =>
+                                    handleSelectNoModulePermission(item)
+                                  }
+                                />
+                                <Label
+                                  className="form-check-label"
+                                  for={`read-${item}`}
+                                >
+                                  {item}
+                                </Label>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
                     </div>
                   </td>
                 </tr>
@@ -635,7 +613,12 @@ const RoleCards = (props) => {
         show={show}
         modalClass={"modal-lg"}
       >
-        {rolesModalData()}
+        {!permData && (
+          <h3 className="d-flex align-items-center justify-content-center p-2">
+            No Roles and Permissions available
+          </h3>
+        )}
+        {!!permData && rolesModalData()}
       </CustomModal>
     </Fragment>
   );

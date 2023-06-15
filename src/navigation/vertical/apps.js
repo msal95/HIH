@@ -226,56 +226,56 @@ const apps = [
   //   ],
   // },
 
-  // {
-  //   id: "roles-permissions",
-  //   title: "Roles & Permissions",
-  //   icon: <Shield size={20} />,
-  //   children: [
-  //     {
-  //       id: "roles",
-  //       title: "Roles",
-  //       icon: <Circle size={12} />,
-  //       navLink: "/apps/roles",
-  //     },
-  //     {
-  //       id: "permissions",
-  //       title: "Permissions",
-  //       icon: <Circle size={12} />,
-  //       navLink: "/apps/permissions",
-  //     },
-  //   ],
-  // },
-  // {
-  //   id: "eCommerce",
-  //   title: "eCommerce",
-  //   icon: <ShoppingCart size={20} />,
-  //   children: [
-  //     {
-  //       id: "shop",
-  //       title: "Shop",
-  //       icon: <Circle size={12} />,
-  //       navLink: "/apps/ecommerce/shop",
-  //     },
-  //     {
-  //       id: "detail",
-  //       title: "Details",
-  //       icon: <Circle size={12} />,
-  //       navLink: "/apps/ecommerce/product-detail",
-  //     },
-  //     {
-  //       id: "wishList",
-  //       title: "Wish List",
-  //       icon: <Circle size={12} />,
-  //       navLink: "/apps/ecommerce/wishlist",
-  //     },
-  //     {
-  //       id: "checkout",
-  //       title: "Checkout",
-  //       icon: <Circle size={12} />,
-  //       navLink: "/apps/ecommerce/checkout",
-  //     },
-  //   ],
-  // },
+  {
+    id: "roles-permissions",
+    title: "Roles & Permissions",
+    icon: <Shield size={20} />,
+    children: [
+      {
+        id: "roles",
+        title: "Roles",
+        icon: <Circle size={12} />,
+        navLink: "/apps/roles",
+      },
+      {
+        id: "permissions",
+        title: "Permissions",
+        icon: <Circle size={12} />,
+        navLink: "/apps/permissions",
+      },
+    ],
+  },
+  {
+    id: "eCommerce",
+    title: "eCommerce",
+    icon: <ShoppingCart size={20} />,
+    children: [
+      {
+        id: "shop",
+        title: "Shop",
+        icon: <Circle size={12} />,
+        navLink: "/apps/ecommerce/shop",
+      },
+      {
+        id: "detail",
+        title: "Details",
+        icon: <Circle size={12} />,
+        navLink: "/apps/ecommerce/product-detail",
+      },
+      {
+        id: "wishList",
+        title: "Wish List",
+        icon: <Circle size={12} />,
+        navLink: "/apps/ecommerce/wishlist",
+      },
+      {
+        id: "checkout",
+        title: "Checkout",
+        icon: <Circle size={12} />,
+        navLink: "/apps/ecommerce/checkout",
+      },
+    ],
+  },
 ];
 // } else {
 //   apps = [

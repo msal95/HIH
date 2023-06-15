@@ -5,8 +5,8 @@ export const getRolesListings = async () => {
   return await API_URL.get(`/api/role`);
 };
 
-export const createRole = async (pData) => {
-  return await API_URL.post("/api/role", pData);
+export const createRole = async (rData) => {
+  return await API_URL.post("/api/role", rData);
 };
 
 export const deleteRole = async (pId) => {
@@ -23,7 +23,7 @@ export const getPermissionListings = async () => {
 };
 
 export const createPermission = async (pData) => {
-  return await API_URL.post("/api/role", pData);
+  return await API_URL.post("/api/permission", pData);
 };
 
 export const deletePermission = async (pId) => {

@@ -15,7 +15,7 @@ const Roles = () => {
   const [rolesData, setRolesData] = useState([]);
   const [permissionData, setPermissionData] = useState(null);
 
-  const { isLoading, data, error, isFetching, isError } = useQuery(
+  const { isLoading, data, error, isFetching, isError, refetch } = useQuery(
     "rolesData",
     () => getRolesListings()
   );
@@ -27,6 +27,7 @@ const Roles = () => {
     isFetching: permIsFetching,
     isError: permIsError,
   } = useQuery("permissionData", () => getPermissionListings());
+  // console.log("🚀 ~ file: index.js:30 ~ Roles ~ permData:", permData);
 
   useEffect(() => {
     setRolesData(data?.data?.data);
@@ -66,6 +67,7 @@ const Roles = () => {
         permError={permError}
         permIsError={permIsError}
         isLoading={permIsLoading}
+        refetch={refetch}
       />
       <h3 className="mt-50">Total users with their roles</h3>
       <p className="mb-2">

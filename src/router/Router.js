@@ -31,7 +31,6 @@ const Router = () => {
   const userData = localStorage.getItem("userData");
 
   const [userDetail, setUserDetail] = useState(userData ?? {});
-  console.log("🚀 ~ file: Router.js:34 ~ Router ~ userDetail:", userDetail);
 
   useEffect(() => {
     setUserDetail(JSON.parse(userData));
@@ -40,7 +39,6 @@ const Router = () => {
   const allRoutes = getRoutes(layout);
   const getHomeRoute = () => {
     const user = getUserData();
-    console.log("🚀 ~ file: Router.js:34 ~ getHomeRoute ~ user:", user);
     if (user) {
       return getHomeRouteForLoggedInUser(user.role);
     } else {

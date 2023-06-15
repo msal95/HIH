@@ -4,10 +4,8 @@ import React from "react"; // ** Core Layout Import
 import Layout from "@layouts/VerticalLayout";
 
 // ** Hooks Imports
-import { useLayout } from "@hooks/useLayout";
 // ** Menu Items Array
 import navigation from "@src/navigation/vertical";
-import { getRoutes } from "../router/routes";
 
 function PrivateRoute(props) {
   const location = useLocation();
@@ -25,17 +23,14 @@ function PrivateRoute(props) {
 
   if (token === undefined || token === null) {
     return (
-      <Navigate
-        to={{ pathname: "/login", state: { from: location } }}
-        replace
-      />
+      <Navigate to={{ pathname: "/", state: { from: location } }} replace />
     );
   }
 
   return (
-    <Layout menuData={navigation} {...props}>
-      <Outlet />
-    </Layout>
+    // <Layout menuData={navigation} {...props}>
+    <Outlet />
+    // </Layout>
   );
 }
 
