@@ -30,80 +30,79 @@ const Sidebar = (props) => {
 
   return (
     <>
-      <div
+      {/* <div
         className={classnames("sidebar-left ", {
           show: sidebarOpen,
         })}
+      > */}
+      <div
+        className="overflow-auto bg-white"
+        style={{
+          maxWidth: "290px",
+          // marginTop: 110,
+        }}
       >
         <div
-          className="sidebar overflow-auto bg-white"
+          // className="sidebar-content email-app-sidebar"
           style={{
-            maxWidth: "290px",
+            maxHeight: "auto",
+            minHeight: "100vh",
           }}
         >
-          <div
-            className="sidebar-content email-app-sidebar"
-            style={{
-              maxHeight: "auto",
-              minHeight: "100vh",
-            }}
-          >
-            <div className="email-app-menu">
-              <div
-                className={`d-flex justify-content-between align-items-center px-1  pt-1 ${
-                  selectedTab === null && "bg-primary text-light"
+          <div className="email-app-menu">
+            <div
+              className={`d-flex justify-content-between align-items-center px-1  pt-1 ${
+                selectedTab === null && "bg-primary text-light"
+              }`}
+            >
+              <h3
+                className={`cursor-pointer ${
+                  selectedTab === null && "text-light"
                 }`}
+                onClick={() => {
+                  handleActiveTab(null);
+                  setIsProjects(true);
+                }}
               >
-                <h3
-                  className={`cursor-pointer ${
-                    selectedTab === null && "text-light"
-                  }`}
-                  onClick={() => {
-                    handleActiveTab(null);
-                    setIsProjects(true);
-                  }}
-                >
-                  Projects
-                </h3>
-                <Plus
-                  size={17}
-                  onClick={handleCreateProject}
-                  className="cursor-pointer"
-                />
-              </div>
-
-              {isLoading ? (
-                <div className="d-flex justify-content-center align-items-center">
-                  <Spinner type="grow" color="primary" />
-                </div>
-              ) : !projects?.length ? (
-                <h3 className="d-flex align-items-center justify-content-center p-2">
-                  No Projects and folders exist
-                </h3>
-              ) : (
-                <>
-                  <TreeView
-                    data={projects}
-                    handleActiveTab={handleActiveTabFolders}
-                    selectedTab={selectedTab}
-                    handleToggleCreateFolderModal={
-                      handleToggleCreateFolderModal
-                    }
-                    handleEditProjectModal={handleEditProjectModal}
-                    handleDeleteProject={handleDeleteProject}
-                    handleActiveTabSubFolders={handleActiveTabSubFolders}
-                    handleToggleCreateSubFolderModal={
-                      handleToggleCreateSubFolderModal
-                    }
-                    handleEditFolderModal={handleEditFolderModal}
-                    handleDeleteFolder={handleDeleteFolder}
-                  />
-                </>
-              )}
+                Projects
+              </h3>
+              <Plus
+                size={17}
+                onClick={handleCreateProject}
+                className="cursor-pointer"
+              />
             </div>
+
+            {isLoading ? (
+              <div className="d-flex justify-content-center align-items-center">
+                <Spinner type="grow" color="primary" />
+              </div>
+            ) : !projects?.length ? (
+              <h3 className="d-flex align-items-center justify-content-center p-2">
+                No Projects and folders exist
+              </h3>
+            ) : (
+              <>
+                <TreeView
+                  data={projects}
+                  handleActiveTab={handleActiveTabFolders}
+                  selectedTab={selectedTab}
+                  handleToggleCreateFolderModal={handleToggleCreateFolderModal}
+                  handleEditProjectModal={handleEditProjectModal}
+                  handleDeleteProject={handleDeleteProject}
+                  handleActiveTabSubFolders={handleActiveTabSubFolders}
+                  handleToggleCreateSubFolderModal={
+                    handleToggleCreateSubFolderModal
+                  }
+                  handleEditFolderModal={handleEditFolderModal}
+                  handleDeleteFolder={handleDeleteFolder}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
+      {/* </div> */}
     </>
   );
 };

@@ -115,21 +115,6 @@ const FLowsBuilder = () => {
 
   const { selectedItem } = store;
 
-  // useEffect(() => {
-  //   if (!!Object?.keys(JSON.parse(state?.nodes))?.length) {
-  //     console.log(
-  //       "🚀 ~ file: FlowsBuilder.js:119 ~ useEffect ~ !!Object?.keys(JSON.parse(state?.nodes))?.length:",
-  //       !!Object?.keys(JSON.parse(state?.nodes))?.length
-  //     );
-  //     // setNodes(locationNodes);
-  //     // setEdges(locationEdges);
-
-  //     dispatch(addData(state?.nodes?.nodes));
-
-  //     dispatch(addNewEdges(state?.nodes?.edges));
-  //   }
-  // }, [state]);
-
   useEffect(() => {
     if (integrationQuery.isFetched && integrationQuery.data) {
       setIntegration(integrationQuery.data);
@@ -186,33 +171,6 @@ const FLowsBuilder = () => {
     }
   }, [store?.data]);
 
-  // const onNodesDelete = useCallback(
-  //   (deleted) => {
-  //     setEdges(
-  //       deleted.reduce((acc, node) => {
-  //         const incomers = getIncomers(node, nodes, edges);
-  //         const outgoers = getOutgoers(node, nodes, edges);
-  //         const connectedEdges = getConnectedEdges([node], edges);
-
-  //         const remainingEdges = acc.filter(
-  //           (edge) => !connectedEdges.includes(edge)
-  //         );
-
-  //         const createdEdges = incomers.flatMap(({ id: source }) =>
-  //           outgoers.map(({ id: target }) => ({
-  //             id: `${source}->${target}`,
-  //             source,
-  //             target,
-  //           }))
-  //         );
-
-  //         return [...remainingEdges, ...createdEdges];
-  //       }, edges)
-  //     );
-  //   },
-  //   [nodes, edges]
-  // );
-
   const toggleCanvasEnd = () => {
     setCanvasPlacement("end");
     setCanvasOpen(!canvasOpen);
@@ -244,10 +202,6 @@ const FLowsBuilder = () => {
 
     setUpdatedNode((prevElements) => [...prevElements, newNode]);
   }, []);
-
-  // const handleOutputOfNodes = () => {
-  //   setIsOutput((prevState) => !prevState);
-  // };
 
   const addNewNode = (params) => {
     const newNode = {

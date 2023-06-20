@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Button,
   Col,
+  Container,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
@@ -601,172 +602,150 @@ const WorkFlows = () => {
   }
 
   return (
-    <div className="content-area-wrapper">
-      <Sidebar
-        handleActiveTab={handleActiveTab}
-        handleActiveTabSubFolders={handleActiveTabSubFolders}
-        handleActiveTabFolders={handleActiveTabFolders}
-        handleCreateProject={handleToggleCreateProjectModal}
-        handleToggleCreateFolderModal={handleToggleCreateFolderModal}
-        handleToggleCreateSubFolderModal={handleToggleCreateSubFolderModal}
-        handleCreateSubFolder={handleCreateSubFolder}
-        handleDeleteFolder={onHandleDeleteFolder}
-        handleDeleteProject={onHandleDeleteProject}
-        handleEditFolderModal={handleEditFolderModal}
-        handleEditProjectModal={handleEditProjectModal}
-        selectedTab={selectedTab}
-        projects={projects}
-        folders={folders}
-        isLoading={isLoading}
-        setIsProjects={setIsProjects}
-        setIsActiveMainFolder={setIsActiveMainFolder}
-        setCustomSelectedOption={setCustomSelectedOption}
-        customSelectedOption={customSelectedOption}
-      />
-      <div className="content-right overflow-auto h-100">
-        <div className="content-body">
-          <div
-            className={classnames("body-content-overlay", {
-              show: sidebarOpen,
-            })}
-            onClick={() => setSidebarOpen(false)}
-          ></div>
-          <Col className="container-xxl col-12">
-            <Row>
-              <Col md={9} sm={6} className="content-header-left mb-2">
-                <h2 className="content-header-title float-start mb-0">
-                  {isProjects
-                    ? "Projects"
-                    : isActiveMainFolder
-                    ? `Project: ${selectedTab?.name}`
-                    : `Folder: ${selectedTab?.name}`}
-                </h2>
-              </Col>
-              <Col
-                md={3}
-                sm={6}
-                className="content-header-right text-md-end d-md-block"
-              >
-                {isProjects ? (
-                  <Button
-                    color="primary"
-                    onClick={handleToggleCreateProjectModal}
-                    block
+    <Container fluid>
+      <Row>
+        <Col md={2}>
+          <Sidebar
+            handleActiveTab={handleActiveTab}
+            handleActiveTabSubFolders={handleActiveTabSubFolders}
+            handleActiveTabFolders={handleActiveTabFolders}
+            handleCreateProject={handleToggleCreateProjectModal}
+            handleToggleCreateFolderModal={handleToggleCreateFolderModal}
+            handleToggleCreateSubFolderModal={handleToggleCreateSubFolderModal}
+            handleCreateSubFolder={handleCreateSubFolder}
+            handleDeleteFolder={onHandleDeleteFolder}
+            handleDeleteProject={onHandleDeleteProject}
+            handleEditFolderModal={handleEditFolderModal}
+            handleEditProjectModal={handleEditProjectModal}
+            selectedTab={selectedTab}
+            projects={projects}
+            folders={folders}
+            isLoading={isLoading}
+            setIsProjects={setIsProjects}
+            setIsActiveMainFolder={setIsActiveMainFolder}
+            setCustomSelectedOption={setCustomSelectedOption}
+            customSelectedOption={customSelectedOption}
+          />
+        </Col>
+        <Col md={10}>
+          <div className="overflow-auto w-100 h-100">
+            <div className="content-body">
+              <div
+                className={classnames("body-content-overlay", {
+                  show: sidebarOpen,
+                })}
+                onClick={() => setSidebarOpen(false)}
+              ></div>
+              <Col className="container-xxl col-12">
+                <Row>
+                  <Col md={9} sm={6} className="content-header-left mb-2">
+                    <h2 className="content-header-title float-start mb-0">
+                      {isProjects
+                        ? "Projects"
+                        : isActiveMainFolder
+                        ? `Project: ${selectedTab?.name}`
+                        : `Folder: ${selectedTab?.name}`}
+                    </h2>
+                  </Col>
+                  <Col
+                    md={3}
+                    sm={6}
+                    className="content-header-right text-md-end d-md-block"
                   >
-                    Create Project
-                    <Plus size={20} className="ms-1" color="#fff" />
-                  </Button>
-                ) : (
-                  <UncontrolledDropdown
-                    className="chart-dropdown"
-                    style={{
-                      marginLeft: 2,
-                    }}
-                  >
-                    <DropdownToggle
-                      color="primary"
-                      // onClick={handleToggleModal}
-                      block
-                    >
-                      Create
-                      <Plus size={20} className="ms-1" color="#fff" />
-                    </DropdownToggle>
-                    <DropdownMenu end>
-                      <DropdownItem
-                        className="w-100"
-                        onClick={() => onHandleCreateWorkFLows(selectedNode)}
+                    {isProjects ? (
+                      <Button
+                        color="primary"
+                        onClick={handleToggleCreateProjectModal}
+                        block
                       >
-                        Flows
-                      </DropdownItem>
-                      <DropdownItem
-                        className="w-100"
-                        onClick={onHandleCredentials}
-                      >
-                        Credentials
-                      </DropdownItem>
-                      <DropdownItem
-                        className="w-100"
-                        onClick={() => {
-                          // setIsActiveMainFolder(true);
-                          // setIsActiveSubFolder(false);
-                          handleToggleCreateFolderModal(selectedNode);
+                        Create Project
+                        <Plus size={20} className="ms-1" color="#fff" />
+                      </Button>
+                    ) : (
+                      <UncontrolledDropdown
+                        className="chart-dropdown"
+                        style={{
+                          marginLeft: 2,
                         }}
                       >
-                        Folder
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
+                        <DropdownToggle
+                          color="primary"
+                          // onClick={handleToggleModal}
+                          block
+                        >
+                          Create
+                          <Plus size={20} className="ms-1" color="#fff" />
+                        </DropdownToggle>
+                        <DropdownMenu end>
+                          <DropdownItem
+                            className="w-100"
+                            onClick={() =>
+                              onHandleCreateWorkFLows(selectedNode)
+                            }
+                          >
+                            Flows
+                          </DropdownItem>
+                          <DropdownItem
+                            className="w-100"
+                            onClick={onHandleCredentials}
+                          >
+                            Credentials
+                          </DropdownItem>
+                          <DropdownItem
+                            className="w-100"
+                            onClick={() => {
+                              // setIsActiveMainFolder(true);
+                              // setIsActiveSubFolder(false);
+                              handleToggleCreateFolderModal(selectedNode);
+                            }}
+                          >
+                            Folder
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
+                    )}
+                  </Col>
+                </Row>
+
+                <Divider />
+                {!isActiveSubFolder && (
+                  <CredentialsFilter
+                    searchClass="col-md-6"
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    handleSearchTerm={handleSearchTerm}
+                    sortOptions={sortOptions}
+                    handleOnSelectSort={handleOnSelectSort}
+                    selectedOption={selectedOption}
+                  />
                 )}
-              </Col>
-            </Row>
-
-            <Divider />
-            {!isActiveSubFolder && (
-              <CredentialsFilter
-                searchClass="col-md-6"
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                handleSearchTerm={handleSearchTerm}
-                sortOptions={sortOptions}
-                handleOnSelectSort={handleOnSelectSort}
-                selectedOption={selectedOption}
-              />
-            )}
-            <div className="row">
-              <div className="d-flex justify-content-between">
-                <p className="folder-class">{flowsLabel}</p>
-                {!isProjects && isActiveMainFolder && folders?.length > 3 && (
-                  <p className="view-all-class" onClick={handleViewAll}>
-                    {isViewAll ? "View Less" : "View All"}
-                  </p>
-                )}
-              </div>
-              {!searchedFromProjects?.length && !!searchTerm?.length && (
-                <NoRecordFound searchTerm={searchTerm} />
-              )}
-
-              {isLoading && (
-                <div className="d-flex justify-content-center align-items-center">
-                  <Spinner type="grow" color="primary" />
-                </div>
-              )}
-              {!searchedFromProjects?.length ? (
-                <h3 className="d-flex align-items-center justify-content-center p-2">
-                  No Project Found in Database
-                </h3>
-              ) : (
-                isProjects &&
-                searchedFromProjects?.map((item) => {
-                  return (
-                    <Fragment key={item.id}>
-                      <CustomCard
-                        name={item.name}
-                        // image={item.image}
-                        data={item}
-                        isIcon
-                        colNumber={4}
-                        titleClass="custom-card-title"
-                        onHandleEdit={handleEditProjectModal}
-                        onHandleView={handleViewSelectedProject}
-                        onHandleDelete={onHandleDeleteProject}
-                        isProjects={isProjects}
-                      />
-                    </Fragment>
-                  );
-                })
-              )}
-
-              {isActiveMainFolder && (
-                <>
-                  {!searchedFromFolders?.length && !!searchTerm?.length && (
+                <div className="row">
+                  <div className="d-flex justify-content-between">
+                    <p className="folder-class">{flowsLabel}</p>
+                    {!isProjects &&
+                      isActiveMainFolder &&
+                      folders?.length > 3 && (
+                        <p className="view-all-class" onClick={handleViewAll}>
+                          {isViewAll ? "View Less" : "View All"}
+                        </p>
+                      )}
+                  </div>
+                  {!searchedFromProjects?.length && !!searchTerm?.length && (
                     <NoRecordFound searchTerm={searchTerm} />
                   )}
-                  {!folders?.length ? (
+
+                  {isLoading && (
+                    <div className="d-flex justify-content-center align-items-center">
+                      <Spinner type="grow" color="primary" />
+                    </div>
+                  )}
+                  {!searchedFromProjects?.length ? (
                     <h3 className="d-flex align-items-center justify-content-center p-2">
-                      No Folders Found in this Project
+                      No Project Found in Database
                     </h3>
                   ) : (
-                    foldersData.map((item) => {
+                    isProjects &&
+                    searchedFromProjects?.map((item) => {
                       return (
                         <Fragment key={item.id}>
                           <CustomCard
@@ -776,77 +755,110 @@ const WorkFlows = () => {
                             isIcon
                             colNumber={4}
                             titleClass="custom-card-title"
-                            onHandleEdit={handleEditFolderModal}
-                            onHandleView={onHandleViewFolder}
-                            onHandleDelete={onHandleDeleteFolder}
+                            onHandleEdit={handleEditProjectModal}
+                            onHandleView={handleViewSelectedProject}
+                            onHandleDelete={onHandleDeleteProject}
+                            isProjects={isProjects}
                           />
                         </Fragment>
                       );
                     })
                   )}
-                </>
-              )}
+
+                  {isActiveMainFolder && (
+                    <>
+                      {!searchedFromFolders?.length && !!searchTerm?.length && (
+                        <NoRecordFound searchTerm={searchTerm} />
+                      )}
+                      {!folders?.length ? (
+                        <h3 className="d-flex align-items-center justify-content-center p-2">
+                          No Folders Found in this Project
+                        </h3>
+                      ) : (
+                        foldersData.map((item) => {
+                          return (
+                            <Fragment key={item.id}>
+                              <CustomCard
+                                name={item.name}
+                                // image={item.image}
+                                data={item}
+                                isIcon
+                                colNumber={4}
+                                titleClass="custom-card-title"
+                                onHandleEdit={handleEditFolderModal}
+                                onHandleView={onHandleViewFolder}
+                                onHandleDelete={onHandleDeleteFolder}
+                              />
+                            </Fragment>
+                          );
+                        })
+                      )}
+                    </>
+                  )}
+                </div>
+                {(isActiveMainFolder || isActiveSubFolder) && (
+                  <WorkFlowsCard
+                    selectedTab={selectedTab}
+                    isActiveMainFolder={isActiveMainFolder}
+                    isActiveSubFolder={isActiveSubFolder}
+                    isLoading={isWorkflowLoader}
+                    data={workflowData?.data?.data}
+                    error={workflowError}
+                    refetch={workflowRefetch}
+                    isError={isWorkflowError}
+                    isFetching={isWorkflowFetching}
+                    isRefetching={isRefetching}
+                    setFlowsData={setFlowsData}
+                    flowsData={flowsData}
+                  />
+                )}
+              </Col>
             </div>
-            {(isActiveMainFolder || isActiveSubFolder) && (
-              <WorkFlowsCard
-                selectedTab={selectedTab}
-                isActiveMainFolder={isActiveMainFolder}
-                isActiveSubFolder={isActiveSubFolder}
-                isLoading={isWorkflowLoader}
-                data={workflowData?.data?.data}
-                error={workflowError}
-                refetch={workflowRefetch}
-                isError={isWorkflowError}
-                isFetching={isWorkflowFetching}
-                isRefetching={isRefetching}
-                setFlowsData={setFlowsData}
-                flowsData={flowsData}
-              />
-            )}
-          </Col>
-        </div>
-      </div>
-      <CustomModal
-        toggleModal={handleToggleModal}
-        onDiscard={onClickDiscardModal}
-        show={show}
-        modalClass={isWorkFLow ? "modal-fullscreen" : "modal-lg"}
-      >
-        <div className="p-1">
-          <CreateNewProject
-            onCancel={onClickDiscardModal}
-            onSubmit={
-              isWorkFLow
-                ? handleCreateWorkflow
-                : isEditProject
-                ? handleEditProject
-                : isEdit
-                ? handleEditFolder
-                : isActiveSubFolder
-                ? handleCreateSubFolder
-                : isProjects
-                ? handleCreateProject
-                : handleCreateFolder
-            }
-            isEdit={isEdit}
-            data={selectedItem}
-            projects={projects}
-            title={headerTitle}
-            isWorkFLow={isActiveMainFolder || isActiveSubFolder}
-            selectedTab={selectedTab}
-            isEditDetail={isEditDetail}
-            isLoading={isLoader}
-            setCustomSelectedOption={setCustomSelectedOption}
-            customSelectedOption={customSelectedOption}
-            isActiveMainFolder={isActiveMainFolder}
-            setIsActiveMainFolder={setIsActiveMainFolder}
-            setIsActiveSubFolder={setIsActiveSubFolder}
-            isProjects={isProjects}
-            setSelectedNode={setSelectedNode}
-          />
-        </div>
-      </CustomModal>
-    </div>
+          </div>
+        </Col>
+
+        <CustomModal
+          toggleModal={handleToggleModal}
+          onDiscard={onClickDiscardModal}
+          show={show}
+          modalClass={isWorkFLow ? "modal-fullscreen" : "modal-lg"}
+        >
+          <div className="p-1">
+            <CreateNewProject
+              onCancel={onClickDiscardModal}
+              onSubmit={
+                isWorkFLow
+                  ? handleCreateWorkflow
+                  : isEditProject
+                  ? handleEditProject
+                  : isEdit
+                  ? handleEditFolder
+                  : isActiveSubFolder
+                  ? handleCreateSubFolder
+                  : isProjects
+                  ? handleCreateProject
+                  : handleCreateFolder
+              }
+              isEdit={isEdit}
+              data={selectedItem}
+              projects={projects}
+              title={headerTitle}
+              isWorkFLow={isActiveMainFolder || isActiveSubFolder}
+              selectedTab={selectedTab}
+              isEditDetail={isEditDetail}
+              isLoading={isLoader}
+              setCustomSelectedOption={setCustomSelectedOption}
+              customSelectedOption={customSelectedOption}
+              isActiveMainFolder={isActiveMainFolder}
+              setIsActiveMainFolder={setIsActiveMainFolder}
+              setIsActiveSubFolder={setIsActiveSubFolder}
+              isProjects={isProjects}
+              setSelectedNode={setSelectedNode}
+            />
+          </div>
+        </CustomModal>
+      </Row>
+    </Container>
   );
 };
 

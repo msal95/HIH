@@ -50,33 +50,40 @@ export default function MainRoutes(props) {
 
   return (
     <div>
-      <Layout menuData={navigation} {...props}>
-        {/* <Security oktaAuth={oktaAuth} restoreOriginalUri={restoreOriginalUri}> */}
-        {/* {!!token &&  <Header />} */}
-        <Routes>
-          <Route path="/" element={<LoginBasic />} />
-          <Route path="/pages/register-basic" element={<RegisterBasic />} />
-          <Route element={<PrivateRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/apps/flows" element={<WorkFlows />} />
-            <Route path="/apps/credentials" element={<Credentials />} />
-            <Route path="/apps/integration" element={<Integration />} />
-            <Route path="/apps/import" element={<IntegrationImport />} />
-            <Route path="/apps/form/generated" element={<FormsGenerated />} />
-            <Route path="/apps/form/listing" element={<FormListing />} />
-            <Route path="/apps/user/list" element={<UsersList />} />
-            <Route path="/apps/flows-builder" element={<FLowsBuilder />} />
-            <Route path="/apps/settings" element={<Settings />} />
-            <Route path="/apps/email" element={<EmailApp />} />
-            {/* <Route
+      <Routes>
+        <div className="layout-container">
+          <Header />
+          <div className="sidebar-and-content">
+            <Sidebar />
+
+            <div className="content">
+              <Route path="/" element={<LoginBasic />} />
+              <Route path="/pages/register-basic" element={<RegisterBasic />} />
+              <Route element={<PrivateRoute />}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/apps/flows" element={<WorkFlows />} />
+                <Route path="/apps/credentials" element={<Credentials />} />
+                <Route path="/apps/integration" element={<Integration />} />
+                <Route path="/apps/import" element={<IntegrationImport />} />
+                <Route
+                  path="/apps/form/generated"
+                  element={<FormsGenerated />}
+                />
+                <Route path="/apps/form/listing" element={<FormListing />} />
+                <Route path="/apps/user/list" element={<UsersList />} />
+                <Route path="/apps/flows-builder" element={<FLowsBuilder />} />
+                <Route path="/apps/settings" element={<Settings />} />
+                <Route path="/apps/email" element={<EmailApp />} />
+                {/* <Route
             path="*"
             element={<BlankLayout />}
             children={[{ path: "*", element: <Error /> }]}
           /> */}
-          </Route>
-        </Routes>
-      </Layout>
-      {/* </Security> */}
+              </Route>
+            </div>
+          </div>
+        </div>
+      </Routes>
     </div>
   );
 }

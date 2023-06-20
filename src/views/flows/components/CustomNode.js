@@ -1,5 +1,4 @@
-import React, { memo } from "react";
-import { useState } from "react";
+import React, { memo, useState } from "react";
 import { Copy, Edit2, Trash2 } from "react-feather";
 
 import { Handle, NodeToolbar, Position, useNodeId } from "reactflow";
@@ -25,8 +24,6 @@ const style = {
     position: "relative",
     padding: "8px 32px",
     flexGrow: 1,
-    // backgroundColor: "#eee",
-    // borderRadius: "10px",
   },
   contentWrapper: {
     padding: "8px 0px",
@@ -34,7 +31,6 @@ const style = {
 };
 
 function CustomNode({ data, selected }) {
-  console.log("🚀 ~ file: CustomNode.js:37 ~ CustomNode ~ data:", data);
   const [isHover, setIsHover] = useState(false);
 
   const dispatch = useDispatch();
@@ -110,11 +106,11 @@ function CustomNode({ data, selected }) {
           padding: 5,
         }}
       >
-        {/* <Edit2
+        <Edit2
           size={16}
           className="me-1  cursor-pointer"
           onClick={handleEdit}
-        /> */}
+        />
         <Trash2
           size={16}
           className="me-1 cursor-pointer"

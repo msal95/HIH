@@ -175,7 +175,7 @@ const VerticalLayout = (props) => {
       >
         <div className="navbar-container d-flex content">
           <div className="w-50 mx-auto">
-            <InputGroup className="input-group-merge w-50  ">
+            {/* <InputGroup className="input-group-merge w-50  ">
               <InputGroupText
               // className="round"
               >
@@ -187,7 +187,7 @@ const VerticalLayout = (props) => {
                 placeholder="Search or start a new chat"
                 // onChange={handleFilter}
               />
-            </InputGroup>
+            </InputGroup> */}
           </div>
           {navbar ? (
             navbar({ skin, setSkin, setMenuVisibility })
