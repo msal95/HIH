@@ -50,6 +50,7 @@ import DropDown from "../../../components/DropDown/DropDown";
 import AreaChart from "./ChartjsAreaChart";
 import ApexAreaCharts from "./ApexAreaCharts";
 import ApexBarChart from "../../charts/apex/ApexBarChart";
+import { LayoutContext } from "../../../newLayout/LayoutProvider";
 
 const options = [
   { id: 1, title: "Option 1" },
@@ -62,6 +63,20 @@ const Dashboard = () => {
   // ** Context
   const [activeTab, setActiveTab] = useState("1");
   const [data, setData] = useState(null);
+
+  // const { setShowHeader, setShowSidebar } = useContext(LayoutContext);
+
+  // useEffect(() => {
+  //   // Hide the header and sidebar on the LoginScreen
+  //   setShowHeader(false);
+  //   setShowSidebar(false);
+
+  //   return () => {
+  //     // Reset the header and sidebar visibility when leaving the LoginScreen
+  //     setShowHeader(true);
+  //     setShowSidebar(true);
+  //   };
+  // }, [setShowHeader, setShowSidebar]);
 
   const { colors } = useContext(ThemeColors),
     { skin } = useSkin(),

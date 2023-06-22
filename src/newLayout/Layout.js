@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import HorizontalMenu from "./Horizontal";
 import Sidebar from "./Vertical";
 import { Col, Container, Row } from "reactstrap";
 import "./styles.css";
 import MainRoutes from "./Routes";
+import { LayoutContext } from "./LayoutProvider";
 
 export default function Layout() {
+  const { showSidebar, showHeader } = useContext(LayoutContext);
   return (
     // <Row>
     //   <Col md={12}>
@@ -28,13 +30,13 @@ export default function Layout() {
     //   </Container>
     // </Row>
     <div className="layout-container">
-      <HorizontalMenu />
+      {showHeader && <HorizontalMenu />}
       <Container fluid className="sidebar-and-content">
         <Row>
-          <Col md="1" className="sidebar-col">
-            <Sidebar />
+          <Col lg="1" md="2" sm="3" className="sidebar-col pe-0">
+            {showSidebar && <Sidebar />}
           </Col>
-          <Col md="11" className="content-col">
+          <Col lg="11" md="10" sm="9" className="content-col ps-0">
             {/* <h1>Dummy Content</h1>
             <p>This is some dummy content for the body area.</p> */}
             <MainRoutes />

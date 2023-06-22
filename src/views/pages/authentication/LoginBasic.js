@@ -26,7 +26,7 @@ import "../../../style/views/Login/authentication.scss";
 import { Formik } from "formik";
 import { LoginValidationSchema } from "../../../utility/validationSchemas/AuthenticationSchemas";
 import ErrorMessage, {
-    ErrorMessageInline,
+  ErrorMessageInline,
   getHomeRouteForLoggedInUser,
 } from "../../../utility/Utils";
 import AuthHeader from "../../../components/AuthHeader/AuthHeader";
@@ -41,6 +41,8 @@ import { AbilityContext } from "@src/utility/context/Can";
 import { toast } from "react-hot-toast";
 import { AuthLogin } from "../../../../api/ApiMethods/AuthApiEndPoint";
 import InputPasswordToggle from "@components/input-password-toggle";
+import { LayoutContext } from "../../../newLayout/LayoutProvider";
+import { useEffect } from "react";
 
 const ToastContent = ({ t, name, role }) => {
   return (
@@ -109,6 +111,20 @@ const LoginBasic = () => {
   //     }
   //   }
 
+  const { setShowHeader, setShowSidebar } = useContext(LayoutContext);
+
+  useEffect(() => {
+    // Hide the header and sidebar on the LoginScreen
+    setShowHeader(false);
+    setShowSidebar(false);
+
+    return () => {
+      // Reset the header and sidebar visibility when leaving the LoginScreen
+      setShowHeader(true);
+      setShowSidebar(true);
+    };
+  }, [setShowHeader, setShowSidebar]);
+
   const onSubmit = (data) => {
     try {
       AuthLogin(data).then((res) => {
@@ -131,9 +147,7 @@ const LoginBasic = () => {
           });
         }
       });
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   return (
@@ -163,7 +177,15 @@ const LoginBasic = () => {
               }) => (
                 <Form className="auth-login-form mt-2" onSubmit={handleSubmit}>
                   <InputField
-                    label= {(errors?.email && touched?.email) ?  <ErrorMessageInline message={`Email * ${errors.email}`}/> : "Email * "}
+                    label={
+                      errors?.email && touched?.email ? (
+                        <ErrorMessageInline
+                          message={`Email * ${errors.email}`}
+                        />
+                      ) : (
+                        "Email * "
+                      )
+                    }
                     type="email"
                     name="email"
                     onChange={handleChange}
@@ -188,10 +210,21 @@ const LoginBasic = () => {
                     errorMessage={errors.password}
                   /> */}
 
-                <InputPasswordToggle className='mb-2' label={(errors?.password && touched?.password) ?  <ErrorMessageInline message={`password * ${errors.password}`}/> : "password * "}  htmlFor='basic-default-password'
-                        // onChange={handleChange}
-                        {...getFieldProps("password")}
-                    />
+                  <InputPasswordToggle
+                    className="mb-2"
+                    label={
+                      errors?.password && touched?.password ? (
+                        <ErrorMessageInline
+                          message={`password * ${errors.password}`}
+                        />
+                      ) : (
+                        "password * "
+                      )
+                    }
+                    htmlFor="basic-default-password"
+                    // onChange={handleChange}
+                    {...getFieldProps("password")}
+                  />
                   <div className="d-flex justify-content-between">
                     <div className="form-check mb-1">
                       <Input type="checkbox" id="remember-me" />

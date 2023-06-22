@@ -7,7 +7,6 @@ export const getCredentialsList = async () =>
   await API_URL.get("/api/credential");
 
 export const deleteCredential = async (cId) => {
-  console.log("🚀 ~ file: apiMethods.js:10 ~ deleteCredential ~ cId:", cId);
   return await API_URL.delete(`/api/credential/${cId}`);
 };
 

@@ -3,10 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 // ** ThemeConfig Import
 import themeConfig from "@configs/themeConfig";
-console.log(
-  "🚀 ~ file: layout.js:6 ~ themeConfig:",
-  themeConfig.layout.menu.isCollapsed
-);
 
 const initialMenuCollapsed = () => {
   const item = window.localStorage.getItem("menuCollapsed");

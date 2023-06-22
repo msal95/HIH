@@ -57,6 +57,10 @@ const Sidebar = () => {
     setActiveSubMenu(activeSubMenu === submenu ? "" : submenu);
     setCollapsed(false);
     setIsSubMenu(false);
+    if (!submenu?.length) {
+      setSubMenuItem("");
+    }
+
     // setIsSubMenu(activeSubMenu === submenu ? isSubmenu : !isSubmenu);
     // setCollapsed(false);
   };
@@ -99,7 +103,7 @@ const Sidebar = () => {
         style={{
           background: "white",
           borderRight: "2px solid rgba(173, 172, 172, 0.1)",
-          marginTop: "6rem",
+          marginTop: "4.5rem",
         }}
       >
         <Nav vertical className="flex-column">
@@ -109,6 +113,7 @@ const Sidebar = () => {
             activeSubMenu={activeSubMenu}
             iconName={Home}
             link="/dashboard"
+            className={({ isActive }) => (isActive ? "link-active" : "link")}
           />
           {/* <NavItem>
             <NavLink to="/dashboard" onClick={handleMenuItemClick}>
@@ -124,6 +129,7 @@ const Sidebar = () => {
             activeSubMenu={activeSubMenu}
             iconName={Table}
             link="/apps/credentials"
+            className={({ isActive }) => (isActive ? "link-active" : "link")}
           />
 
           <VerticalMenuItem
@@ -135,6 +141,8 @@ const Sidebar = () => {
             onClickChildMenu={handleSubmenuItem}
             isChildMenu
             isSubmenu={isSubmenu}
+            subMenuItem={subMenuItem}
+            className={({ isActive }) => (isActive ? "link-active" : "link")}
           />
 
           <VerticalMenuItem
@@ -142,10 +150,12 @@ const Sidebar = () => {
             onClickMainMenu={handleMenuItemClick}
             activeSubMenu={activeSubMenu}
             iconName={Mail}
-            // link="/apps/credentials"
+            SubMenus={builderSubMenus}
             onClickChildMenu={handleSubmenuItem}
             isChildMenu
             isSubmenu={isSubmenu}
+            subMenuItem={subMenuItem}
+            className={({ isActive }) => (isActive ? "link-active" : "link")}
           />
 
           <VerticalMenuItem
@@ -154,6 +164,7 @@ const Sidebar = () => {
             activeSubMenu={activeSubMenu}
             iconName={GitBranch}
             link="/apps/flows"
+            className={({ isActive }) => (isActive ? "link-active" : "link")}
           />
           <VerticalMenuItem
             mainMenuTitle="Users"
@@ -161,6 +172,7 @@ const Sidebar = () => {
             activeSubMenu={activeSubMenu}
             iconName={User}
             link="/apps/user/list"
+            className={({ isActive }) => (isActive ? "link-active" : "link")}
           />
           <VerticalMenuItem
             mainMenuTitle="Settings"
@@ -168,6 +180,7 @@ const Sidebar = () => {
             activeSubMenu={activeSubMenu}
             iconName={Settings}
             link="/apps/settings"
+            className={({ isActive }) => (isActive ? "link-active" : "link")}
           />
 
           <VerticalMenuItem
@@ -175,10 +188,12 @@ const Sidebar = () => {
             onClickMainMenu={handleMenuItemClick}
             activeSubMenu={activeSubMenu}
             iconName={Shield}
-            // link="/apps/credentials"
+            SubMenus={rolesPermissionSubMenus}
             onClickChildMenu={handleSubmenuItem}
             isChildMenu
             isSubmenu={isSubmenu}
+            subMenuItem={subMenuItem}
+            className={({ isActive }) => (isActive ? "link-active" : "link")}
           />
 
           {/* <NavItem>

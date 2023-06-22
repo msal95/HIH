@@ -29,6 +29,7 @@ import GoogleSheetScript from "../views/integrations/googleSheet/GoogleSheetScri
 import Engine from "../views/workflowBuilder/Engine";
 import UpdateProfile from "../views/profile/UpdateProfile";
 import Editor from "../views/builder/Editor";
+import LayoutProvider from "./LayoutProvider";
 
 export default function MainRoutes(props) {
   const location = useLocation();
@@ -45,7 +46,6 @@ export default function MainRoutes(props) {
   };
 
   const token = newToken();
-  console.log("🚀 ~ file: Routes.js:42 ~ MainRoutes ~ token:", token);
 
   const restoreOriginalUri = async (_oktaAuth, originalUri) => {
     navigate(originalUri, window.location.origin, {

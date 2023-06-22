@@ -115,7 +115,6 @@ const CustomHeader = ({
 const Table = (props) => {
   // ** Store Vars & Hooks
   const { data, refetch } = props;
-  console.log("🚀 ~ file: Table.js:118 ~ Table ~ data:", data);
   const dispatch = useDispatch();
   const store = useSelector((state) => state.permissions);
   const {
@@ -135,7 +134,6 @@ const Table = (props) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isLoader, setIsLoader] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  console.log("🚀 ~ file: Table.js:136 ~ Table ~ isChecked:", isChecked);
 
   // ** Get data on mount
   useEffect(() => {

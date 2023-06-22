@@ -12,7 +12,7 @@ import {
   NavbarBrand,
   UncontrolledDropdown,
 } from "reactstrap";
-import HIHLogo from "@src/assets/images/logo/hih_Logo.png";
+import HIHLogo from "@src/assets/images/logo/hih_icon.png";
 import "./styles.css";
 import { Power, User } from "react-feather";
 import { handleLogout } from "@store/authentication";
@@ -24,7 +24,7 @@ export default function HorizontalMenu() {
     // <Container>
     <Navbar light expand="md" className="header-navbar pt-1 pb-1">
       <NavLink to="/">
-        <img src={HIHLogo} width={70} height={70} alt="HIH Logo" />
+        <img src={HIHLogo} width={32} height={32} alt="HIH Logo" />
       </NavLink>
 
       <Nav className="ml-auto" navbar>

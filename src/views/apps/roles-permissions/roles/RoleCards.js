@@ -220,7 +220,6 @@ const rolesArr = [
 const RoleCards = (props) => {
   const { rolesData, permData, permError, permIsError, isLoading, refetch } =
     props;
-  console.log("🚀 ~ file: RoleCards.js:219 ~ RoleCards ~ permData:", permData);
   // ** States
   const [show, setShow] = useState(false);
   const [modalType, setModalType] = useState("Add New");
@@ -230,15 +229,9 @@ const RoleCards = (props) => {
   const [selectedOption, setSelectedOption] = useState();
   const [selectedRows, setSelectedRows] = useState([]);
   const [rolePermissions, setRolePermissions] = useState({});
-  console.log(
-    "🚀 ~ file: RoleCards.js:229 ~ RoleCards ~ rolePermissions:",
-    rolePermissions
-  );
+
   const [noModulePermission, setNoModulePermission] = useState([]);
-  console.log(
-    "🚀 ~ file: RoleCards.js:230 ~ RoleCards ~ noModulePermission:",
-    noModulePermission
-  );
+
   const [isLoader, setIsLoader] = useState(false);
 
   // const {

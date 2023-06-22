@@ -36,7 +36,6 @@ export default function MainRoutes(props) {
   };
 
   const token = newToken();
-  console.log("🚀 ~ file: Routes.js:42 ~ MainRoutes ~ token:", token);
 
   const restoreOriginalUri = async (_oktaAuth, originalUri) => {
     navigate(originalUri, window.location.origin, {

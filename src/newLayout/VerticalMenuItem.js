@@ -1,7 +1,8 @@
-import React from "react";
-import { Circle, FileText } from "react-feather";
+import React, { useState } from "react";
+import { Circle, FileText, StopCircle } from "react-feather";
 import { NavLink } from "react-router-dom";
 import { Collapse, Nav, NavItem } from "reactstrap";
+import "./styles.css";
 
 export default function VerticalMenuItem(props) {
   const {
@@ -15,24 +16,31 @@ export default function VerticalMenuItem(props) {
     isChildMenu = false,
     iconName = FileText,
     link,
+    subMenuItem,
   } = props;
-  console.log(
-    "🚀 ~ file: VerticalMenuItem.js:12 ~ VerticalMenuItem ~ mainMenuTitle:",
-    mainMenuTitle,
-    activeSubMenu
-  );
+
+  const [isActiveLink, setIsActiveLink] = useState(false);
+
+  const [currentLink, setCurrentLink] = useState("test");
 
   const IconComponent = iconName;
   return (
-    <NavItem>
+    <NavItem key={mainMenuTitle}>
       <NavLink
         to={!isChildMenu && link}
         onClick={
           isChildMenu ? () => onClickMainMenu(mainMenuTitle) : onClickMainMenu
         }
+        className={({ isActive }) => {
+          setIsActiveLink(isActive);
+        }}
       >
-        <div className="menu-item">
-          <IconComponent size={20} />
+        <div
+          className={`menu-item ${
+            isActiveLink && !isChildMenu ? "link-active" : ""
+          } ${currentLink === subMenuItem && "link-active"}`}
+        >
+          <IconComponent size={24} />
           <span className="menu-title">{mainMenuTitle}</span>
         </div>
       </NavLink>
@@ -41,29 +49,36 @@ export default function VerticalMenuItem(props) {
           isOpen={isSubmenu ? !isSubmenu : activeSubMenu === mainMenuTitle}
         >
           <Nav vertical className="submenu">
-            <NavItem>
-              <NavLink
-                to="/apps/integration"
-                // href="#" onClick={handleSubMenuItemClick}
-                onClick={() => onClickChildMenu("Integrations")}
-              >
-                <div className="submenu-item ">
-                  <Circle size={12} className="me-1" />
-                  <span className="menu-title">Integrations</span>
-                </div>
-              </NavLink>
-            </NavItem>
-            {/* <NavItem>
-            <NavLink
-              to="/apps/import"
-              onClick={() => handleSubmenuItem("Integrations Import")}
-            >
-              <div className="submenu-item ">
-                <Circle className="me-1" size={12} />
-                <span className="menu-title">Integrations Import</span>
-              </div>
-            </NavLink>
-          </NavItem> */}
+            {SubMenus?.map((subMenu) => {
+              return (
+                <NavItem key={subMenu?.id}>
+                  <NavLink
+                    to={subMenu?.link}
+                    onClick={() => {
+                      onClickChildMenu(subMenu?.name);
+                      setIsActiveLink(true);
+                      setCurrentLink(subMenu?.name);
+                    }}
+                    // className={({ isActive }) => {}}
+                  >
+                    <div
+                      className={`submenu-item ${
+                        isActiveLink && currentLink === subMenu?.name
+                          ? "link-active"
+                          : ""
+                      }`}
+                    >
+                      {subMenuItem === subMenu?.name ? (
+                        <StopCircle size={12} className="me-1" />
+                      ) : (
+                        <Circle size={12} className="me-1" />
+                      )}
+                      <span className="menu-title">{subMenu?.name}</span>
+                    </div>
+                  </NavLink>
+                </NavItem>
+              );
+            })}
           </Nav>
         </Collapse>
       )}

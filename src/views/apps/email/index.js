@@ -38,7 +38,6 @@ const EmailApp = () => {
   // ** Store Variables
   const dispatch = useDispatch();
   const store = useSelector((state) => state.email);
-  console.log("🚀 ~ file: index.js:41 ~ EmailApp ~ store:", store);
 
   // ** Vars
   const params = useParams();
