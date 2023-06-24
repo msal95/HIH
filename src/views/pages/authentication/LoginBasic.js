@@ -80,6 +80,23 @@ const LoginBasic = () => {
   const navigate = useNavigate();
   const ability = useContext(AbilityContext);
 
+  const newToken = () => {
+    if (localStorage.getItem("myToken") === null) {
+      const token = null;
+      return token;
+    }
+    const token = localStorage.getItem("myToken");
+    return token;
+  };
+
+  const token = newToken();
+
+  // useEffect(() => {
+  //   if (!!token) {
+  //     navigate("/dashboard", { replace: true });
+  //   }
+  // }, [token, navigate]);
+
   //   const onSubmit = data => {
   //     if (Object.values(data).every(field => field.length > 0)) {
   //       useJwt

@@ -74,9 +74,9 @@ export default function IntegrationImport() {
     }
 
     if (importQuery.isError) {
-        setSubmittingSuccess(false);
-        setSubmitting(false);
-        setSubmittingClick(false);
+      setSubmittingSuccess(false);
+      setSubmitting(false);
+      setSubmittingClick(false);
       const message = "Error occurred while saving the data";
       toast.error(message);
     }
@@ -111,7 +111,7 @@ export default function IntegrationImport() {
   };
 
   return (
-    <div className="container-xxl overflow-auto">
+    <div className="container-xxl overflow-auto" style={{ height: "100vh" }}>
       <h2 className="text-primary py-2">Integration Import</h2>
       <Row className="match-height">
         <Col md="12" sm="12">

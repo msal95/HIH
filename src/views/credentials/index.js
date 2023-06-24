@@ -387,7 +387,7 @@ const Credentials = () => {
   return (
     <>
       <div className="row container-fluid overflow-auto">
-        <Col className="col-12">
+        <Col className="col-12" style={{ height: "100vh" }}>
           <div className="row">
             <div className="content-header-left col-md-9 col-12 mb-2">
               <div className="col-12">

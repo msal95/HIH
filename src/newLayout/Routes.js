@@ -1,9 +1,6 @@
 import React, { useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
-import BlankLayout from "@layouts/BlankLayout";
-import navigation from "@src/navigation/vertical";
-
 import LoginBasic from "../views/pages/authentication/LoginBasic";
 import RegisterBasic from "../views/pages/authentication/RegisterBasic";
 import Dashboard from "../views/dashboard/dashboard";
@@ -30,11 +27,16 @@ import Engine from "../views/workflowBuilder/Engine";
 import UpdateProfile from "../views/profile/UpdateProfile";
 import Editor from "../views/builder/Editor";
 import LayoutProvider from "./LayoutProvider";
+import PrivateRoute from "./PrivateRoute";
+import { toast } from "react-hot-toast";
 
-export default function MainRoutes(props) {
-  const location = useLocation();
-
+export default function MainRoutes() {
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log(
+    "🚀 ~ file: Routes.js:36 ~ MainRoutes ~ location.pathname:",
+    location.pathname
+  );
 
   const newToken = () => {
     if (localStorage.getItem("myToken") === null) {
@@ -47,22 +49,17 @@ export default function MainRoutes(props) {
 
   const token = newToken();
 
-  const restoreOriginalUri = async (_oktaAuth, originalUri) => {
-    navigate(originalUri, window.location.origin, {
-      replace: true,
-    });
-  };
-
   useEffect(() => {
-    restoreOriginalUri();
-  }, []);
+    if (!!token) {
+      navigate(`${location.pathname}`, { replace: true });
+    }
+  }, [token]);
 
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<LoginBasic />} />
-        <Route path="/pages/register-basic" element={<RegisterBasic />} />
-        {/* <Route element={<PrivateRoute />}> */}
+    <Routes>
+      <Route path="/login" element={<LoginBasic />} />
+      <Route path="/pages/register-basic" element={<RegisterBasic />} />
+      <Route element={<PrivateRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/apps/flows" element={<WorkFlows />} />
         <Route path="/apps/credentials" element={<Credentials />} />
@@ -83,15 +80,12 @@ export default function MainRoutes(props) {
         <Route path="/apps/profile" element={<UpdateProfile />} />
         <Route path="/apps/editor" element={<Editor />} />
         <Route path="/apps/email" element={<EmailApp />} />
-        {/* <Route
-            path="*"
-            element={<BlankLayout />}
-            children={[{ path: "*", element: <Error /> }]}
-          /> */}
-        {/* </Route> */}
-      </Routes>
-      {/* </Layout> */}
-      {/* </Security> */}
-    </div>
+        <Route
+          path="*"
+          element={<Error />}
+          // children={[{ path: "*", element: <Error /> }]}
+        />
+      </Route>
+    </Routes>
   );
 }

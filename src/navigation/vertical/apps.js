@@ -159,67 +159,67 @@ const apps = [
     icon: <Settings size={20} />,
     navLink: "/apps/settings",
   },
-  // {
-  //   id: "email",
-  //   title: "Email",
-  //   icon: <Mail size={20} />,
-  //   navLink: "/apps/email",
-  // },
-  // {
-  //   id: "chat",
-  //   title: "Chat",
-  //   icon: <MessageSquare size={20} />,
-  //   navLink: "/apps/chat",
-  // },
-  // {
-  //   id: "todo",
-  //   title: "Todo",
-  //   icon: <CheckSquare size={20} />,
-  //   navLink: "/apps/todo",
-  // },
-  // {
-  //   id: "calendar",
-  //   title: "Calendar",
-  //   icon: <Calendar size={20} />,
-  //   navLink: "/apps/calendar",
-  // },
-  // {
-  //   id: "kanban",
-  //   title: "Kanban",
-  //   icon: <CheckSquare size={20} />,
-  //   navLink: "/apps/kanban",
-  // },
-  // {
-  //   id: "invoiceApp",
-  //   title: "Invoice",
-  //   icon: <FileText size={20} />,
-  //   children: [
-  //     {
-  //       id: "invoiceList",
-  //       title: "List",
-  //       icon: <Circle size={12} />,
-  //       navLink: "/apps/invoice/list",
-  //     },
-  //     {
-  //       id: "invoicePreview",
-  //       title: "Preview",
-  //       icon: <Circle size={12} />,
-  //       navLink: "/apps/invoice/preview",
-  //     },
-  //     {
-  //       id: "invoiceEdit",
-  //       title: "Edit",
-  //       icon: <Circle size={12} />,
-  //       navLink: "/apps/invoice/edit",
-  //     },
-  //     {
-  //       id: "invoiceAdd",
-  //       title: "Add",
-  //       icon: <Circle size={12} />,
-  //       navLink: "/apps/invoice/add",
-  //     },
-  //   ],
-  // },
+  {
+    id: "email",
+    title: "Email",
+    icon: <Mail size={20} />,
+    navLink: "/apps/email",
+  },
+  {
+    id: "chat",
+    title: "Chat",
+    icon: <MessageSquare size={20} />,
+    navLink: "/apps/chat",
+  },
+  {
+    id: "todo",
+    title: "Todo",
+    icon: <CheckSquare size={20} />,
+    navLink: "/apps/todo",
+  },
+  {
+    id: "calendar",
+    title: "Calendar",
+    icon: <Calendar size={20} />,
+    navLink: "/apps/calendar",
+  },
+  {
+    id: "kanban",
+    title: "Kanban",
+    icon: <CheckSquare size={20} />,
+    navLink: "/apps/kanban",
+  },
+  {
+    id: "invoiceApp",
+    title: "Invoice",
+    icon: <FileText size={20} />,
+    children: [
+      {
+        id: "invoiceList",
+        title: "List",
+        icon: <Circle size={12} />,
+        navLink: "/apps/invoice/list",
+      },
+      {
+        id: "invoicePreview",
+        title: "Preview",
+        icon: <Circle size={12} />,
+        navLink: "/apps/invoice/preview",
+      },
+      {
+        id: "invoiceEdit",
+        title: "Edit",
+        icon: <Circle size={12} />,
+        navLink: "/apps/invoice/edit",
+      },
+      {
+        id: "invoiceAdd",
+        title: "Add",
+        icon: <Circle size={12} />,
+        navLink: "/apps/invoice/add",
+      },
+    ],
+  },
 
   {
     id: "roles-permissions",

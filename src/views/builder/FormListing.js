@@ -39,10 +39,6 @@ export default function FormListing() {
   const [isLoader, setIsLoader] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [userDetail, setUserDetail] = useState(userData ?? {});
-  console.log(
-    "🚀 ~ file: FormListing.js:42 ~ FormListing ~ userDetail:",
-    userDetail
-  );
 
   const navigate = useNavigate();
 
@@ -120,7 +116,7 @@ export default function FormListing() {
   };
 
   return (
-    <div className="container-xxl overflow-auto">
+    <div className="container-xxl overflow-auto" style={{ height: "100vh" }}>
       <Row>
         <Col sm="12">
           <Card title="Striped">

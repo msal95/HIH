@@ -15,6 +15,7 @@ import {
   Alert,
   Progress,
   Button,
+  Container,
 } from "reactstrap";
 import axios from "axios";
 
@@ -51,6 +52,10 @@ import AreaChart from "./ChartjsAreaChart";
 import ApexAreaCharts from "./ApexAreaCharts";
 import ApexBarChart from "../../charts/apex/ApexBarChart";
 import { LayoutContext } from "../../../newLayout/LayoutProvider";
+import { greetingMessage } from "../../../utility/customUtils/CustomUtils";
+import DashboardCards from "../../../components/DashboardCards/DashboardCards";
+import ApexLineChart from "./ApexLineChart";
+import { Folder, GitPullRequest, Layers, Package } from "react-feather";
 
 const options = [
   { id: 1, title: "Option 1" },
@@ -59,24 +64,37 @@ const options = [
   { id: 4, title: "Option 4" },
 ];
 
+const dashboardData = [
+  {
+    id: 1,
+    total: 33,
+    title: "Total Projects",
+    icon: Layers,
+  },
+  {
+    id: 2,
+    total: 28,
+    title: "Total Folders",
+    icon: Folder,
+  },
+  {
+    id: 3,
+    total: 2,
+    title: "Total Workflows",
+    icon: GitPullRequest,
+  },
+  {
+    id: 4,
+    total: 4,
+    title: "Total Applications",
+    icon: Package,
+  },
+];
+
 const Dashboard = () => {
   // ** Context
   const [activeTab, setActiveTab] = useState("1");
   const [data, setData] = useState(null);
-
-  // const { setShowHeader, setShowSidebar } = useContext(LayoutContext);
-
-  // useEffect(() => {
-  //   // Hide the header and sidebar on the LoginScreen
-  //   setShowHeader(false);
-  //   setShowSidebar(false);
-
-  //   return () => {
-  //     // Reset the header and sidebar visibility when leaving the LoginScreen
-  //     setShowHeader(true);
-  //     setShowSidebar(true);
-  //   };
-  // }, [setShowHeader, setShowSidebar]);
 
   const { colors } = useContext(ThemeColors),
     { skin } = useSkin(),
@@ -90,8 +108,9 @@ const Dashboard = () => {
     setActiveTab(tab);
   };
 
-  const token = localStorage.getItem("accessToken");
-  console.log("🚀 ~ file: apiEndPoint.js:4 ~ token:", token);
+  const userData = JSON.parse(localStorage.getItem("userData"));
+
+  const greeting = greetingMessage();
 
   useEffect(() => {
     axios
@@ -107,7 +126,9 @@ const Dashboard = () => {
         title="Dashboard"
         // data={[{ title: "Pages" }, { title: "Account Settings" }]}
       /> */}
-      <h2 className="text-primary py-2">Dashboard</h2>
+      <h2 className="text-secondary py-2">
+        {greeting}, {userData?.name}
+      </h2>
       {data !== null ? (
         <Row className="mb-2">
           <Col xs={12}>
@@ -119,8 +140,19 @@ const Dashboard = () => {
 
             <TabContent activeTab={activeTab}>
               <TabPane tabId="1">
-                {/* <h3>Tab 1</h3> */}
-                <div className="d-flex justify-content-between align-items-center">
+                <Row md={4}>
+                  {dashboardData.map((item) => (
+                    <Col key={item?.id}>
+                      <DashboardCards
+                        color={item.color}
+                        title={item.title}
+                        total={item.total}
+                        icon={item.icon}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+                {/* <div className="d-flex justify-content-between align-items-center">
                   <div className="d-flex">
                     <DropDown
                       title="All Projects"
@@ -144,70 +176,29 @@ const Dashboard = () => {
                   <Row>
                     <h5>Dashboard last updated 30 minutes ago</h5>
                   </Row>
-                </div>
+                </div> */}
                 <div className="my-2">
-                  <Row>
-                    <Col md="8">
-                      <ApexAreaCharts
+                  <Row md="8">
+                    <Col>
+                      {/* <ApexAreaCharts
                         blueColor={blueColor}
                         labelColor={labelColor}
                         gridLineColor={gridLineColor}
                         blueLightColor={blueLightColor}
                         greyLightColor={greyLightColor}
-                      />
-                    </Col>
-                    <Col md="4">
-                      <Card className="plan-card border-primary">
-                        <CardBody>
-                          <div className="d-flex justify-content-between align-items-start">
-                            <Badge color="light-primary">Standard</Badge>
-                            <div className="d-flex justify-content-center">
-                              <sup className="h5 pricing-currency text-primary mt-1 mb-0">
-                                $
-                              </sup>
-                              <span className="fw-bolder display-5 mb-0 text-primary">
-                                99
-                              </span>
-                              <sub className="pricing-duration font-small-4 ms-25 mt-auto mb-2">
-                                /month
-                              </sub>
-                            </div>
-                          </div>
-                          <ul className="ps-1 mb-2">
-                            <li className="mb-50">10 Users</li>
-                            <li className="mb-50">Up to 10 GB storage</li>
-                            <li>Basic Support</li>
-                          </ul>
-                          <div className="d-flex justify-content-between align-items-center fw-bolder mb-50">
-                            <span>Days</span>
-                            <span>4 of 30 Days</span>
-                          </div>
-                          <Progress
-                            className="mb-50"
-                            value={85}
-                            style={{ height: "8px" }}
-                          />
-                          <span>4 days remaining</span>
-                          <div className="d-grid w-100 mt-2">
-                            <Button
-                              color="primary"
-                              // onClick={() => setShow(true)}
-                            >
-                              Upgrade Plan
-                            </Button>
-                          </div>
-                        </CardBody>
-                      </Card>
+                      /> */}
+
+                      <ApexLineChart direction="ltr" />
                     </Col>
                   </Row>
                 </div>
-                <div className="my-1">
+                {/* <div className="my-1">
                   <h5>What happened in all my recipes for the last 7 days?</h5>
                   <Divider />
                   <Col xl="12" md="12" xs="12">
                     <StatsCard cols={{ xl: "3", sm: "6" }} />
                   </Col>
-                </div>
+                </div> */}
                 {/* <AccountTabContent data={data.general} /> */}
               </TabPane>
               <TabPane tabId="2">
