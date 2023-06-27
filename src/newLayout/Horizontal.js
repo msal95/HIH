@@ -46,7 +46,10 @@ export default function HorizontalMenu() {
         <UncontrolledDropdown nav inNavbar>
           <DropdownToggle nav caret className="user-dropdown">
             <div className="user-avatar" />
-            <span className="username">{userData?.name}</span>
+            <span className="username">
+              {/* Usama Khizer */}
+              {userData?.name}
+            </span>
           </DropdownToggle>
           <DropdownMenu right style={{ marginLeft: -5 }}>
             <DropdownItem tag={Link} to="/apps/profile">

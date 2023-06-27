@@ -33,10 +33,6 @@ import { toast } from "react-hot-toast";
 export default function MainRoutes() {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(
-    "🚀 ~ file: Routes.js:36 ~ MainRoutes ~ location.pathname:",
-    location.pathname
-  );
 
   const newToken = () => {
     if (localStorage.getItem("myToken") === null) {
@@ -51,7 +47,10 @@ export default function MainRoutes() {
 
   useEffect(() => {
     if (!!token) {
-      navigate(`${location.pathname}`, { replace: true });
+      navigate(
+        `${location.pathname === "/login" ? "/dashboard" : location.pathname}`,
+        { replace: true }
+      );
     }
   }, [token]);
 

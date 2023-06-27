@@ -29,9 +29,26 @@ import InputField from "../../../components/InputField/InputField";
 import { SignupValidationSchema } from "../../../utility/validationSchemas/AuthenticationSchemas";
 import ErrorMessage, { ErrorMessageInline } from "../../../utility/Utils";
 import { AuthSignUp } from "../../../../api/ApiMethods/AuthApiEndPoint";
+import { useContext, useEffect } from "react";
+import { LayoutContext } from "../../../newLayout/LayoutProvider";
 
 const RegisterBasic = () => {
   const navigate = useNavigate();
+
+  const { setShowHeader, setShowSidebar } = useContext(LayoutContext);
+
+  useEffect(() => {
+    // Hide the header and sidebar on the LoginScreen
+    setShowHeader(false);
+    setShowSidebar(false);
+
+    return () => {
+      // Reset the header and sidebar visibility when leaving the LoginScreen
+      setShowHeader(true);
+      setShowSidebar(true);
+    };
+  }, [setShowHeader, setShowSidebar]);
+
   const onHandleSubmit = (values) => {
     // event.preventDefault();
     // navigate(
@@ -45,21 +62,20 @@ const RegisterBasic = () => {
     // );
 
     try {
-        AuthSignUp(values).then((res) => {
-          const message = res?.message;
-          const validationErrors = res?.validation_errors;
-          const response = res?.response;
-          if (response === 200) {
-              toast.success(message);
-              navigate("/login");
-          } else {
-            Object.keys(validationErrors).forEach(key => {
-              toast.error(validationErrors[key]);
-            });
-          }
-        });
-      } catch (error) {
-      }
+      AuthSignUp(values).then((res) => {
+        const message = res?.message;
+        const validationErrors = res?.validation_errors;
+        const response = res?.response;
+        if (response === 200) {
+          toast.success(message);
+          navigate("/login");
+        } else {
+          Object.keys(validationErrors).forEach((key) => {
+            toast.error(validationErrors[key]);
+          });
+        }
+      });
+    } catch (error) {}
     // AuthSignUp(values)
   };
   return (
@@ -84,7 +100,7 @@ const RegisterBasic = () => {
                 handleChange,
                 handleBlur,
                 handleSubmit,
-                getFieldProps
+                getFieldProps,
                 // isSubmitting,
                 /* and other goodies */
               }) => (
@@ -94,7 +110,15 @@ const RegisterBasic = () => {
                 >
                   <InputField
                     // label="Username *"
-                    label= {(errors?.username && touched?.username) ?  <ErrorMessageInline message={`Username * ${errors.username}`}/> : "Username * "}
+                    label={
+                      errors?.username && touched?.username ? (
+                        <ErrorMessageInline
+                          message={`Username * ${errors.username}`}
+                        />
+                      ) : (
+                        "Username * "
+                      )
+                    }
                     type="text"
                     name="username"
                     onChange={handleChange}
@@ -108,7 +132,15 @@ const RegisterBasic = () => {
 
                   <InputField
                     // label="Email *"
-                    label= {(errors?.email && touched?.email) ?  <ErrorMessageInline message={`Email * ${errors.email}`}/> : "Email * "}
+                    label={
+                      errors?.email && touched?.email ? (
+                        <ErrorMessageInline
+                          message={`Email * ${errors.email}`}
+                        />
+                      ) : (
+                        "Email * "
+                      )
+                    }
                     type="email"
                     name="email"
                     onChange={handleChange}
@@ -132,8 +164,19 @@ const RegisterBasic = () => {
                     errorType={errors.password && touched.password}
                     errorMessage={errors.password}
                   /> */}
-                  <InputPasswordToggle className='mb-2' name="password" label= {(errors?.password && touched?.password) ?  <ErrorMessageInline message={`Password * ${errors.password}`}/> : "Password * "}
- htmlFor='basic-default-password'
+                  <InputPasswordToggle
+                    className="mb-2"
+                    name="password"
+                    label={
+                      errors?.password && touched?.password ? (
+                        <ErrorMessageInline
+                          message={`Password * ${errors.password}`}
+                        />
+                      ) : (
+                        "Password * "
+                      )
+                    }
+                    htmlFor="basic-default-password"
                     {...getFieldProps("password")}
                   />
                   {/* {errors.password && touched.password && <ErrorMessage message={errors.password} />} */}

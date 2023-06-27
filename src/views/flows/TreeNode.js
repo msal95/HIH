@@ -144,7 +144,10 @@ function TreeNode(props) {
             {node.tree.map((childNode) => {
               // handleLevel();
               return (
-                <ListGroupItem key={childNode.id} className={`pt-1 pb-0 pe-0 `}>
+                <ListGroupItem
+                  key={childNode.id}
+                  className={`pt-1 pb-0 pe-0 border-0`}
+                >
                   <TreeNode
                     node={childNode}
                     handleActiveTab={handleActiveTab}

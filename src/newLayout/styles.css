@@ -59,6 +59,7 @@
   color: #212529;
   text-decoration: none;
   transition: background-color 0.2s ease-in-out;
+  font-size: 0.6875rem;
 }
 
 .submenu-item:hover {
@@ -127,10 +128,10 @@
 
 .content-container {
   /* background-color: #736; */
-  /* width: 100dvw;
-  height: 100dvh; */
+  width: 100%;
+  height: 100dvh;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   /* overflow-x: hidden; */
 }
 
@@ -138,16 +139,14 @@
   background-color: #f4f4f4;
   padding: 20px;
   min-height: 100%;
-  /* width: 10dvw; */
-  flex: 0.1;
+  max-width: 6.125rem;
 }
 
 .content-col {
   padding: 20px;
   background-color: #f4f4f4;
-  /* width: 88dvw; */
-  /* float: left; */
-  flex: 0.9;
+  flex: 1;
+  margin-left: 6.129rem;
 }
 
 /* Active Link */

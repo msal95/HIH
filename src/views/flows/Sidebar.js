@@ -11,7 +11,6 @@ import TreeView from "./TreeView";
 const Sidebar = (props) => {
   // ** Props
   const {
-    sidebarOpen,
     handleActiveTab,
     selectedTab,
     projects,
@@ -38,7 +37,7 @@ const Sidebar = (props) => {
       <div
         className="overflow-auto bg-white"
         style={{
-          maxWidth: "290px",
+          width: "17rem",
           // marginTop: 110,
         }}
       >

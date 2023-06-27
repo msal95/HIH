@@ -23,13 +23,10 @@ import VerticalMenuItem from "./VerticalMenuItem";
 // import { NavLink } from "react-router-dom";
 
 const integrationSubMenus = [
-  { id: 1, name: "Integrations", link: "/apps/integration" },
-  { id: 2, name: "Integrations Import", link: "/apps/import" },
-];
-
-const builderSubMenus = [
-  { id: 1, name: "Forms List", link: "/apps/form/listing" },
-  { id: 2, name: "Form Builder", link: "/apps/form/generated" },
+  { id: 1, name: "Applications", link: "/apps/integration" },
+  { id: 2, name: "Applications Import", link: "/apps/import" },
+  { id: 3, name: "Forms List", link: "/apps/form/listing" },
+  { id: 4, name: "Form Builder", link: "/apps/form/generated" },
 ];
 
 const rolesPermissionSubMenus = [
@@ -124,16 +121,16 @@ const Sidebar = () => {
             </NavLink>
           </NavItem> */}
           <VerticalMenuItem
-            mainMenuTitle="Credentials"
+            mainMenuTitle="Flows"
             onClickMainMenu={handleMenuItemClick}
             activeSubMenu={activeSubMenu}
-            iconName={Table}
-            link="/apps/credentials"
+            iconName={GitBranch}
+            link="/apps/flows"
             className={({ isActive }) => (isActive ? "link-active" : "link")}
           />
 
           <VerticalMenuItem
-            mainMenuTitle="Integrations"
+            mainMenuTitle="Applications"
             onClickMainMenu={handleMenuItemClick}
             activeSubMenu={activeSubMenu}
             iconName={FileText}
@@ -146,6 +143,15 @@ const Sidebar = () => {
           />
 
           <VerticalMenuItem
+            mainMenuTitle="Credentials"
+            onClickMainMenu={handleMenuItemClick}
+            activeSubMenu={activeSubMenu}
+            iconName={Table}
+            link="/apps/credentials"
+            className={({ isActive }) => (isActive ? "link-active" : "link")}
+          />
+
+          {/* <VerticalMenuItem
             mainMenuTitle="Builder"
             onClickMainMenu={handleMenuItemClick}
             activeSubMenu={activeSubMenu}
@@ -156,30 +162,14 @@ const Sidebar = () => {
             isSubmenu={isSubmenu}
             subMenuItem={subMenuItem}
             className={({ isActive }) => (isActive ? "link-active" : "link")}
-          />
+          /> */}
 
-          <VerticalMenuItem
-            mainMenuTitle="Flows"
-            onClickMainMenu={handleMenuItemClick}
-            activeSubMenu={activeSubMenu}
-            iconName={GitBranch}
-            link="/apps/flows"
-            className={({ isActive }) => (isActive ? "link-active" : "link")}
-          />
           <VerticalMenuItem
             mainMenuTitle="Users"
             onClickMainMenu={handleMenuItemClick}
             activeSubMenu={activeSubMenu}
             iconName={User}
             link="/apps/user/list"
-            className={({ isActive }) => (isActive ? "link-active" : "link")}
-          />
-          <VerticalMenuItem
-            mainMenuTitle="Settings"
-            onClickMainMenu={handleMenuItemClick}
-            activeSubMenu={activeSubMenu}
-            iconName={Settings}
-            link="/apps/settings"
             className={({ isActive }) => (isActive ? "link-active" : "link")}
           />
 
@@ -193,6 +183,14 @@ const Sidebar = () => {
             isChildMenu
             isSubmenu={isSubmenu}
             subMenuItem={subMenuItem}
+            className={({ isActive }) => (isActive ? "link-active" : "link")}
+          />
+          <VerticalMenuItem
+            mainMenuTitle="Settings"
+            onClickMainMenu={handleMenuItemClick}
+            activeSubMenu={activeSubMenu}
+            iconName={Settings}
+            link="/apps/settings"
             className={({ isActive }) => (isActive ? "link-active" : "link")}
           />
 

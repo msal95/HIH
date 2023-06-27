@@ -36,7 +36,7 @@ const Settings = () => {
   }, []);
 
   return (
-    <div className="overflow-auto container-xxl">
+    <div className="overflow-auto">
       <Breadcrumbs title="Settings" data={[{ title: "Settings" }]} />
       {data !== null ? (
         <Row>

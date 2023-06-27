@@ -15,7 +15,7 @@ export default function Layout() {
       <Container fluid className="sidebar-and-content">
         <div className="content-container">
           <div className="sidebar-col pe-0">{showSidebar && <Sidebar />}</div>
-          <div className="content-col ps-0">
+          <div className="content-col">
             <MainRoutes />
           </div>
         </div>

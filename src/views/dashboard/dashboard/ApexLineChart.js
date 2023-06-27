@@ -95,12 +95,12 @@ const ApexLineChart = ({ direction, warning }) => {
       colors: ["#82868B"],
     },
     {
-      name: "Folders",
+      name: "Use Cases",
       data: [23, 12, 54, 61, 32, 56, 81, 31],
       colors: ["#28C76F"],
     },
     {
-      name: "Flows",
+      name: "Workflows",
       data: [20, 1, 24, 91, 2, 56, 31, 41],
       colors: ["#EA5455"],
     },

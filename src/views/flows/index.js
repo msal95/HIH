@@ -1,10 +1,11 @@
 // ** React Imports
-import classnames from "classnames";
 import { Fragment, useEffect, useState } from "react";
 import { Plus } from "react-feather";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
+  Card,
+  CardBody,
   Col,
   Container,
   DropdownItem,
@@ -45,11 +46,11 @@ import Sidebar from "./Sidebar";
 const sortOptions = [
   {
     id: 1,
-    title: "ASC",
+    title: "A to Z",
   },
   {
     id: 2,
-    title: "DESC",
+    title: "Z to A",
   },
 ];
 
@@ -57,10 +58,8 @@ const MySwal = withReactContent(Swal);
 
 const WorkFlows = () => {
   // ** States
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isViewAll, setIsViewAll] = useState(false);
   const [show, setShow] = useState(false);
-  // const [isNewProject, setIsNewProject] = useState(false);
   const [selectedItem, setSelectedItem] = useState();
   const [selectedNode, setSelectedNode] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
@@ -84,7 +83,7 @@ const WorkFlows = () => {
   let headerTitle;
 
   if (isEdit) {
-    headerTitle = "Update Folder";
+    headerTitle = "Update Use Case";
   } else if (isEditProject) {
     headerTitle = "Update Project";
   } else if (isWorkFLow) {
@@ -92,7 +91,7 @@ const WorkFlows = () => {
   } else if (isProjects) {
     headerTitle = "Create Project";
   } else {
-    headerTitle = "Create Folder";
+    headerTitle = "Create Use Case";
   }
 
   let flowsLabel;
@@ -100,7 +99,7 @@ const WorkFlows = () => {
   if (isProjects) {
     flowsLabel = "All Projects";
   } else if (isActiveMainFolder) {
-    flowsLabel = "Folders";
+    flowsLabel = "Use Cases";
   }
 
   const { isLoading, data, error, refetch, isFetching, isError } = useQuery(
@@ -223,10 +222,6 @@ const WorkFlows = () => {
         }
       });
     } catch (error) {
-      console.log(
-        "🚀 ~ file: index.js:207 ~ handleCreateWorkflow ~ error:",
-        error
-      );
       toast.error(error?.response?.data?.message);
       setIsLoader(false);
     }
@@ -270,15 +265,11 @@ const WorkFlows = () => {
           refetch();
           setIsLoader(false);
           handleToggleModal();
-          toast.success("New Folder Added Successfully.");
+          toast.success("New Use Case Added Successfully.");
           setCustomSelectedOption(null);
         }
       });
     } catch (error) {
-      console.log(
-        "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
-        error
-      );
       toast.error(error?.response?.data?.message);
       setIsLoader(false);
     }
@@ -311,7 +302,7 @@ const WorkFlows = () => {
         if (res.status === 201) {
           refetch();
           setIsLoader(false);
-          toast.success("New Sub Folder Added Successfully.");
+          toast.success("New Use Case Added Successfully.");
           setCustomSelectedOption(null);
           // setIsNewProject(false);
           // setSelectedNode(null);
@@ -319,10 +310,6 @@ const WorkFlows = () => {
         }
       });
     } catch (error) {
-      console.log(
-        "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
-        error
-      );
       toast.error(error?.response?.data?.message);
       setIsLoader(false);
     }
@@ -385,10 +372,6 @@ const WorkFlows = () => {
         }
       });
     } catch (error) {
-      console.log(
-        "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
-        error
-      );
       toast.error(error?.response?.data?.message);
       setIsLoader(false);
     }
@@ -415,7 +398,7 @@ const WorkFlows = () => {
       await editFolder(projectData, selectedNode.id).then((res) => {
         if (res.status === 201) {
           refetch();
-          toast.success("Folder Edited Successfully.");
+          toast.success("Use Case Edited Successfully.");
           setSelectedItem(null);
           setIsLoader(false);
           handleToggleModal();
@@ -424,11 +407,6 @@ const WorkFlows = () => {
         }
       });
     } catch (error) {
-      console.log(
-        "🚀 ~ file: index.js:169 ~ handleCreateProject ~ error:",
-        error
-      );
-
       toast.error(error?.response?.data?.message);
       setIsLoader(false);
     }
@@ -454,10 +432,6 @@ const WorkFlows = () => {
         }
       });
     } catch (error) {
-      console.log(
-        "🚀 ~ file: index.js:342 ~ handleCreateProject ~ error:",
-        error
-      );
       toast.error(error?.response?.data?.message);
       setIsLoader(false);
     }
@@ -481,7 +455,7 @@ const WorkFlows = () => {
   const onHandleDeleteProject = async (data) => {
     return MySwal.fire({
       title: "Are you sure?",
-      text: "Folders and Workflows will be deleted.",
+      text: "Use Cases and Workflows will be deleted.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
@@ -510,7 +484,7 @@ const WorkFlows = () => {
   const onHandleDeleteFolder = async (data) => {
     return MySwal.fire({
       title: "Are you sure?",
-      text: "Sub folders and workflows will be deleted.",
+      text: "Use Cases and workflows will be deleted.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it!",
@@ -528,7 +502,7 @@ const WorkFlows = () => {
         MySwal.fire({
           icon: "success",
           title: "Deleted!",
-          text: "Your Folder has been deleted.",
+          text: "Your Use Case has been deleted.",
           customClass: {
             confirmButton: "btn btn-success",
           },
@@ -567,7 +541,7 @@ const WorkFlows = () => {
 
   const handleOnSelectSort = (value) => {
     setSelectedOption(value);
-    if (value === "ASC") {
+    if (value === "A to Z") {
       const sortedList = [...searchedFrom].sort((a, b) =>
         a.name.localeCompare(b.name)
       );
@@ -577,7 +551,7 @@ const WorkFlows = () => {
       } else if (isActiveMainFolder) {
         setSearchedFromFolders(sortedList);
       }
-    } else if (value === "DESC") {
+    } else if (value === "Z to A") {
       const sortedList = [...searchedFrom].sort((a, b) =>
         b.name.localeCompare(a.name)
       );
@@ -604,7 +578,7 @@ const WorkFlows = () => {
   return (
     <Container fluid>
       <Row>
-        <Col md={2}>
+        <Col lg={3} md={3} sm={3}>
           <Sidebar
             handleActiveTab={handleActiveTab}
             handleActiveTabSubFolders={handleActiveTabSubFolders}
@@ -627,79 +601,107 @@ const WorkFlows = () => {
             customSelectedOption={customSelectedOption}
           />
         </Col>
-        <Col md={10}>
-          <div className="overflow-auto w-100 h-100">
+        <Col lg={9} md={9} sm={9}>
+          <div className=" w-100 h-100">
             <div className="content-body">
               <Row>
-                <Col md={9} sm={6} className="content-header-left mb-2">
+                <Col md={8} sm={6} className="content-header-left mb-2">
                   <h2 className="content-header-title float-start mb-0">
                     {isProjects
                       ? "Projects"
                       : isActiveMainFolder
                       ? `Project: ${selectedTab?.name}`
-                      : `Folder: ${selectedTab?.name}`}
+                      : `Use Case: ${selectedTab?.name}`}
                   </h2>
                 </Col>
                 <Col
-                  md={3}
+                  md={4}
                   sm={6}
                   className="content-header-right text-md-end d-md-block"
                 >
-                  {isProjects ? (
-                    <Button
-                      color="primary"
-                      onClick={handleToggleCreateProjectModal}
-                      block
-                    >
-                      Create Project
-                      <Plus size={20} className="ms-1" color="#fff" />
-                    </Button>
-                  ) : (
-                    <UncontrolledDropdown
-                      className="chart-dropdown"
-                      style={{
-                        marginLeft: 2,
-                      }}
-                    >
-                      <DropdownToggle
+                  {!!projects?.length ? (
+                    isProjects ? (
+                      <Button
                         color="primary"
-                        // onClick={handleToggleModal}
+                        onClick={handleToggleCreateProjectModal}
                         block
                       >
-                        Create
+                        Create Project
                         <Plus size={20} className="ms-1" color="#fff" />
-                      </DropdownToggle>
-                      <DropdownMenu end>
-                        <DropdownItem
-                          className="w-100"
-                          onClick={() => onHandleCreateWorkFLows(selectedNode)}
+                      </Button>
+                    ) : (
+                      <UncontrolledDropdown
+                        className="chart-dropdown"
+                        style={{
+                          marginLeft: 2,
+                        }}
+                      >
+                        <DropdownToggle
+                          color="primary"
+                          // onClick={handleToggleModal}
+                          block
                         >
-                          Flows
-                        </DropdownItem>
-                        <DropdownItem
-                          className="w-100"
-                          onClick={onHandleCredentials}
-                        >
-                          Credentials
-                        </DropdownItem>
-                        <DropdownItem
-                          className="w-100"
-                          onClick={() => {
-                            // setIsActiveMainFolder(true);
-                            // setIsActiveSubFolder(false);
-                            handleToggleCreateFolderModal(selectedNode);
-                          }}
-                        >
-                          Folder
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </UncontrolledDropdown>
-                  )}
+                          Create
+                          <Plus size={20} className="ms-1" color="#fff" />
+                        </DropdownToggle>
+                        <DropdownMenu end>
+                          <DropdownItem
+                            className="w-100"
+                            onClick={() =>
+                              onHandleCreateWorkFLows(selectedNode)
+                            }
+                          >
+                            Flows
+                          </DropdownItem>
+                          <DropdownItem
+                            className="w-100"
+                            onClick={onHandleCredentials}
+                          >
+                            Credentials
+                          </DropdownItem>
+                          <DropdownItem
+                            className="w-100"
+                            onClick={() => {
+                              // setIsActiveMainFolder(true);
+                              // setIsActiveSubFolder(false);
+                              handleToggleCreateFolderModal(selectedNode);
+                            }}
+                          >
+                            Use Case
+                          </DropdownItem>
+                        </DropdownMenu>
+                      </UncontrolledDropdown>
+                    )
+                  ) : null}
                 </Col>
               </Row>
 
               <Divider />
-              {!isActiveSubFolder && (
+              {!projects?.length && (
+                // <Col md={9} lg={10}>
+                <Card className="shadow-none">
+                  <CardBody
+                    className="d-flex flex-column align-items-center justify-content-center text-center overflow-hidden"
+                    style={{ height: "90dvh" }}
+                  >
+                    <h3>Create Your First Project</h3>
+                    <p>lorem Ipsum enim ullamco ea commodo consequat.</p>
+                    <div style={{ width: "14rem !important" }}>
+                      <Button
+                        color="primary"
+                        onClick={handleToggleCreateProjectModal}
+                        block
+                      >
+                        Create Project
+                        <Plus size={20} className="ms-1" color="#fff" />
+                      </Button>
+                    </div>
+                  </CardBody>
+                </Card>
+                // </Col>
+              )}
+
+              {!isActiveSubFolder && projects?.length && (
                 <CredentialsFilter
                   searchClass="col-md-6"
                   searchTerm={searchTerm}
@@ -710,81 +712,87 @@ const WorkFlows = () => {
                   selectedOption={selectedOption}
                 />
               )}
-              <div className="row">
-                <div className="d-flex justify-content-between">
-                  <p className="folder-class">{flowsLabel}</p>
-                  {!isProjects && isActiveMainFolder && folders?.length > 3 && (
-                    <p className="view-all-class" onClick={handleViewAll}>
-                      {isViewAll ? "View Less" : "View All"}
-                    </p>
+
+              {!!projects?.length && (
+                <div className="row">
+                  <div className="d-flex justify-content-between">
+                    <p className="folder-class">{flowsLabel}</p>
+                    {!isProjects &&
+                      isActiveMainFolder &&
+                      folders?.length > 3 && (
+                        <p className="view-all-class" onClick={handleViewAll}>
+                          {isViewAll ? "View Less" : "View All"}
+                        </p>
+                      )}
+                  </div>
+                  {!searchedFromProjects?.length && !!searchTerm?.length && (
+                    <NoRecordFound searchTerm={searchTerm} />
+                  )}
+
+                  {isLoading && (
+                    <div className="d-flex justify-content-center align-items-center">
+                      <Spinner type="grow" color="primary" />
+                    </div>
+                  )}
+                  {!searchedFromProjects?.length ? (
+                    <h3 className="d-flex align-items-center justify-content-center p-2">
+                      No Project Found in Database
+                    </h3>
+                  ) : (
+                    isProjects &&
+                    searchedFromProjects?.map((item) => {
+                      return (
+                        <Fragment key={item.id}>
+                          <CustomCard
+                            name={item.name}
+                            // image={item.image}
+                            data={item}
+                            isIcon
+                            colNumber={4}
+                            titleClass="custom-card-title"
+                            onHandleEdit={handleEditProjectModal}
+                            onHandleView={handleViewSelectedProject}
+                            onHandleDelete={onHandleDeleteProject}
+                            isProjects={isProjects}
+                          />
+                        </Fragment>
+                      );
+                    })
+                  )}
+
+                  {isActiveMainFolder && (
+                    <>
+                      {!searchedFromFolders?.length && !!searchTerm?.length && (
+                        <NoRecordFound searchTerm={searchTerm} />
+                      )}
+                      {!folders?.length ? (
+                        <h3 className="d-flex align-items-center justify-content-center p-2">
+                          No Use Cases Found in this Project
+                        </h3>
+                      ) : (
+                        foldersData.map((item) => {
+                          return (
+                            <Fragment key={item.id}>
+                              <CustomCard
+                                name={item.name}
+                                // image={item.image}
+                                data={item}
+                                isIcon
+                                colNumber={4}
+                                titleClass="custom-card-title"
+                                onHandleEdit={handleEditFolderModal}
+                                onHandleView={onHandleViewFolder}
+                                onHandleDelete={onHandleDeleteFolder}
+                              />
+                            </Fragment>
+                          );
+                        })
+                      )}
+                    </>
                   )}
                 </div>
-                {!searchedFromProjects?.length && !!searchTerm?.length && (
-                  <NoRecordFound searchTerm={searchTerm} />
-                )}
+              )}
 
-                {isLoading && (
-                  <div className="d-flex justify-content-center align-items-center">
-                    <Spinner type="grow" color="primary" />
-                  </div>
-                )}
-                {!searchedFromProjects?.length ? (
-                  <h3 className="d-flex align-items-center justify-content-center p-2">
-                    No Project Found in Database
-                  </h3>
-                ) : (
-                  isProjects &&
-                  searchedFromProjects?.map((item) => {
-                    return (
-                      <Fragment key={item.id}>
-                        <CustomCard
-                          name={item.name}
-                          // image={item.image}
-                          data={item}
-                          isIcon
-                          colNumber={4}
-                          titleClass="custom-card-title"
-                          onHandleEdit={handleEditProjectModal}
-                          onHandleView={handleViewSelectedProject}
-                          onHandleDelete={onHandleDeleteProject}
-                          isProjects={isProjects}
-                        />
-                      </Fragment>
-                    );
-                  })
-                )}
-
-                {isActiveMainFolder && (
-                  <>
-                    {!searchedFromFolders?.length && !!searchTerm?.length && (
-                      <NoRecordFound searchTerm={searchTerm} />
-                    )}
-                    {!folders?.length ? (
-                      <h3 className="d-flex align-items-center justify-content-center p-2">
-                        No Folders Found in this Project
-                      </h3>
-                    ) : (
-                      foldersData.map((item) => {
-                        return (
-                          <Fragment key={item.id}>
-                            <CustomCard
-                              name={item.name}
-                              // image={item.image}
-                              data={item}
-                              isIcon
-                              colNumber={4}
-                              titleClass="custom-card-title"
-                              onHandleEdit={handleEditFolderModal}
-                              onHandleView={onHandleViewFolder}
-                              onHandleDelete={onHandleDeleteFolder}
-                            />
-                          </Fragment>
-                        );
-                      })
-                    )}
-                  </>
-                )}
-              </div>
               {(isActiveMainFolder || isActiveSubFolder) && (
                 <WorkFlowsCard
                   selectedTab={selectedTab}

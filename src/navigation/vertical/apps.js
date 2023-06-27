@@ -20,62 +20,6 @@ const apps = [
   //   header: "Apps & Pages",
   // },
   {
-    id: "credentials",
-    title: "Credentials",
-    icon: <Table size={20} />,
-    navLink: "/apps/credentials",
-  },
-  {
-    id: "integration",
-    title: "Integrations",
-    icon: <FileText size={20} />,
-    children: [
-      {
-        id: "integrations-listing",
-        title: "Integrations",
-        icon: <Circle size={12} />,
-        navLink: "/apps/integration",
-      },
-      {
-        id: "integration-import",
-        title: "Integrations Import",
-        icon: <Circle size={12} />,
-        navLink: "/apps/import",
-      },
-    ],
-  },
-  {
-    id: "builderApp",
-    title: "Builder",
-    icon: <FileText size={20} />,
-    children: [
-      {
-        id: "form-generated",
-        title: "Form generated",
-        icon: <Circle size={12} />,
-        navLink: "/apps/form/generated",
-      },
-      {
-        id: "Formlisting",
-        title: "Listing",
-        icon: <Circle size={12} />,
-        navLink: "/apps/form/listing",
-      },
-      // {
-      //   id: "editor",
-      //   title: "Editor",
-      //   icon: <Circle size={12} />,
-      //   navLink: "/apps/editor",
-      // },
-      //   {
-      //     id: "view",
-      //     title: "View",
-      //     icon: <Circle size={12} />,
-      //     navLink: "/apps/view",
-      //   },
-    ],
-  },
-  {
     id: "flows",
     title: "Flows",
     icon: (
@@ -111,16 +55,55 @@ const apps = [
           fill="currentColor"
         />
       </svg>
-      // <img
-      //   src={flows}
-      //   width={20}
-      //   height={20}
-      //   className="me-1"
-      //   alt="Flows Icon"
-      // />
     ),
     navLink: "/apps/flows",
   },
+  {
+    id: "integration",
+    title: "Applications",
+    icon: <FileText size={20} />,
+    children: [
+      {
+        id: "integrations-listing",
+        title: "Applications",
+        icon: <Circle size={12} />,
+        navLink: "/apps/integration",
+      },
+      {
+        id: "integration-import",
+        title: "Applications Import",
+        icon: <Circle size={12} />,
+        navLink: "/apps/import",
+      },
+    ],
+  },
+  {
+    id: "credentials",
+    title: "Credentials",
+    icon: <Table size={20} />,
+    navLink: "/apps/credentials",
+  },
+
+  {
+    id: "builderApp",
+    title: "Builder",
+    icon: <FileText size={20} />,
+    children: [
+      {
+        id: "form-generated",
+        title: "Form generated",
+        icon: <Circle size={12} />,
+        navLink: "/apps/form/generated",
+      },
+      {
+        id: "Formlisting",
+        title: "Listing",
+        icon: <Circle size={12} />,
+        navLink: "/apps/form/listing",
+      },
+    ],
+  },
+
   {
     id: "users",
     title: "User",

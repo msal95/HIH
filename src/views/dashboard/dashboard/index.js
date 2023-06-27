@@ -38,6 +38,7 @@ import Tabs from "./Tabs";
 import { useSkin } from "@hooks/useSkin";
 import { basicData } from "./data";
 import Timeline from "@components/timeline";
+// import CardTransactions from "@src/views/ui-elements/cards/advance/CardTransactions";
 
 // ** Context
 // import { ThemeColors } from "@src/utility/context/ThemeColors";
@@ -74,7 +75,7 @@ const dashboardData = [
   {
     id: 2,
     total: 28,
-    title: "Total Folders",
+    title: "Total Use Cases",
     icon: Folder,
   },
   {
@@ -127,7 +128,8 @@ const Dashboard = () => {
         // data={[{ title: "Pages" }, { title: "Account Settings" }]}
       /> */}
       <h2 className="text-secondary py-2">
-        {greeting}, {userData?.name}
+        {greeting},{/* <b>Usama Khizer</b> */}
+        <b>{userData?.name}</b>
       </h2>
       {data !== null ? (
         <Row className="mb-2">
@@ -290,24 +292,24 @@ const Dashboard = () => {
             warning={colors.warning.main}
           />
         </Col>
-      </Row>
+      </Row> */}
       <Row className="match-height">
-        <Col lg="8" xs="12">
+        {/* <Col lg="8" xs="12">
           <CompanyTable />
-        </Col>
-        <Col lg="4" md="6" xs="12">
+        </Col> */}
+        {/* <Col lg="4" md="6" xs="12">
           <CardMeetup />
         </Col>
         <Col lg="4" md="6" xs="12">
           <CardBrowserStates colors={colors} trackBgColor={trackBgColor} />
+        </Col> */}
+        <Col lg="4" md="6" xs="12">
+          {/* <GoalOverview success="green" /> */}
         </Col>
         <Col lg="4" md="6" xs="12">
-          <GoalOverview success={colors.success.main} />
+          {/* <CardTransactions /> */}
         </Col>
-        <Col lg="4" md="6" xs="12">
-          <CardTransactions />
-        </Col>
-      </Row> */}
+      </Row>
     </Fragment>
   );
 };

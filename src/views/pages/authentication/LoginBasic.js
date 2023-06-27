@@ -31,7 +31,7 @@ import ErrorMessage, {
 } from "../../../utility/Utils";
 import AuthHeader from "../../../components/AuthHeader/AuthHeader";
 import { useDispatch } from "react-redux";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Avatar from "../../components/avatar";
 // ** Actions
 import { handleLogin } from "@store/authentication";
@@ -42,7 +42,6 @@ import { toast } from "react-hot-toast";
 import { AuthLogin } from "../../../../api/ApiMethods/AuthApiEndPoint";
 import InputPasswordToggle from "@components/input-password-toggle";
 import { LayoutContext } from "../../../newLayout/LayoutProvider";
-import { useEffect } from "react";
 
 const ToastContent = ({ t, name, role }) => {
   return (
@@ -79,17 +78,6 @@ const LoginBasic = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const ability = useContext(AbilityContext);
-
-  const newToken = () => {
-    if (localStorage.getItem("myToken") === null) {
-      const token = null;
-      return token;
-    }
-    const token = localStorage.getItem("myToken");
-    return token;
-  };
-
-  const token = newToken();
 
   // useEffect(() => {
   //   if (!!token) {
@@ -156,8 +144,9 @@ const LoginBasic = () => {
             refreshToken: res?.data?.refreshToken,
           };
           dispatch(handleLogin(data));
-          ability.update(res?.data?.userData?.ability);
-          navigate(getHomeRouteForLoggedInUser(data?.role));
+          // ability.update(res?.data?.userData?.ability);
+          // navigate(getHomeRouteForLoggedInUser(data?.role));
+          navigate("/dashboard");
         } else {
           Object.keys(validationErrors).forEach((key) => {
             toast.error(validationErrors[key]);

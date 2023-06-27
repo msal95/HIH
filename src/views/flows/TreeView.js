@@ -19,7 +19,7 @@ function TreeView(props) {
   return (
     <ListGroup style={{ width: "100%" }}>
       {data.map((node) => (
-        <ListGroupItem key={node.id}>
+        <ListGroupItem key={node.id} className="border-0">
           <TreeNode
             node={node}
             handleActiveTab={handleActiveTab}
